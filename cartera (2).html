@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SilverCloud | Mi Cartera</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Space+Mono:wght@400;700&display=swap');
+  :root{
+    --bg-primary:#0a0e17;--bg-secondary:#111827;--bg-card:#1a2235;--bg-card-hover:#1f2a40;
+    --bg-input:#0d1220;--border:#2a3550;--text-primary:#e8ecf4;--text-secondary:#8892a8;
+    --text-muted:#5a6580;--accent-blue:#4a9eff;--green:#34d399;--green-bg:rgba(52,211,153,0.1);
+    --red:#f87171;--red-bg:rgba(248,113,113,0.1);--gold:#fbbf24;--purple:#a78bfa;--cyan:#22d3ee;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+
+  /* Topnav */
+  .topnav{background:var(--bg-secondary);border-bottom:1px solid var(--border);padding:0.5rem 1.5rem;display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;position:relative;z-index:1}
+  .topnav a{font-family:'Space Mono',monospace;font-size:0.7rem;padding:0.35rem 0.8rem;border-radius:6px;text-decoration:none;color:var(--text-muted);transition:all 0.15s;border:1px solid transparent}
+  .topnav a:hover{color:var(--text-primary);background:var(--bg-card)}
+  .topnav a.active{color:var(--accent-blue);border-color:var(--accent-blue);background:rgba(74,158,255,0.08)}
+  .topnav .home-link{color:var(--text-secondary);font-weight:700;margin-right:0.5rem}
+  .topnav .home-link:hover{color:var(--accent-blue)}
+
+  .container{max-width:1400px;margin:0 auto;padding:1.5rem;position:relative;z-index:1}
+
+  /* Header */
+  .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:0.8rem}
+  .logo-area{display:flex;align-items:center;gap:0.8rem}
+  .logo-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#4a9eff,#a8b8d0);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;color:var(--bg-primary)}
+  .logo-text h1{font-size:1.3rem;font-weight:700;letter-spacing:-0.5px}
+  .logo-text span{font-size:0.65rem;color:var(--text-muted);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:2px}
+  .header-actions{display:flex;gap:0.5rem;flex-wrap:wrap}
+  .btn{font-family:'DM Sans',sans-serif;font-size:0.8rem;padding:0.45rem 0.9rem;border-radius:8px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:0.3rem;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary)}
+  .btn:hover{background:var(--bg-card-hover);color:var(--text-primary);border-color:var(--accent-blue)}
+  .btn-primary{background:var(--accent-blue);color:var(--bg-primary);border-color:var(--accent-blue);font-weight:600}
+  .btn-primary:hover{background:#3a8eef}
+  .btn-danger{border-color:var(--red);color:var(--red)}
+  .btn-danger:hover{background:var(--red-bg)}
+
+  /* FX Bar */
+  .fx-bar{display:flex;gap:1.5rem;margin-bottom:1.5rem;padding:0.8rem 1.2rem;background:var(--bg-secondary);border-radius:10px;border:1px solid var(--border);align-items:center;flex-wrap:wrap}
+  .fx-item{display:flex;align-items:center;gap:0.5rem}
+  .fx-label{font-size:0.6rem;color:var(--text-muted);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:1px}
+  .fx-input{background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--gold);font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;padding:0.3rem 0.5rem;width:100px;text-align:right;outline:none}
+  .fx-input:focus{border-color:var(--accent-blue)}
+  .fx-value{font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;color:var(--text-primary)}
+
+  /* Summary cards */
+  .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
+  .summary-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.2rem}
+  .summary-card .sc-label{font-size:0.6rem;color:var(--text-muted);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.4rem}
+  .summary-card .sc-value{font-family:'Space Mono',monospace;font-size:1.4rem;font-weight:700}
+  .summary-card .sc-sub{font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--text-muted);margin-top:0.2rem}
+
+  /* Composition */
+  .comp-section{display:grid;grid-template-columns:280px 1fr;gap:1rem;margin-bottom:1.5rem}
+  .chart-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;display:flex;flex-direction:column;align-items:center}
+  .chart-card h3{font-size:0.65rem;color:var(--text-muted);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;align-self:flex-start}
+  .comp-bars-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.2rem}
+  .comp-bars-card h3{font-size:0.65rem;color:var(--text-muted);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem}
+  .comp-row{display:flex;align-items:center;gap:0.8rem;margin-bottom:0.6rem}
+  .comp-label{width:120px;font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--text-secondary)}
+  .comp-bar-bg{flex:1;height:22px;background:var(--bg-secondary);border-radius:5px;overflow:hidden}
+  .comp-bar-fill{height:100%;border-radius:5px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-family:'Space Mono',monospace;font-size:0.65rem;font-weight:700;color:var(--bg-primary);min-width:30px;transition:width 0.5s}
+  .comp-amount{width:100px;text-align:right;font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--text-muted)}
+
+  /* Table */
+  .table-section{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem}
+  .table-header{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.2rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:0.5rem}
+  .table-header h3{font-size:0.65rem;color:var(--text-muted);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:2px}
+  .table-scroll{overflow-x:auto;max-height:60vh;overflow-y:auto}
+  table{width:100%;border-collapse:collapse}
+  thead th{font-family:'Space Mono',monospace;font-size:0.55rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);padding:0.6rem 0.7rem;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0;background:var(--bg-card);z-index:2}
+  thead th:first-child,thead th:nth-child(2){text-align:left}
+  tbody tr{border-bottom:1px solid rgba(42,53,80,0.3);transition:background 0.1s}
+  tbody tr:hover{background:var(--bg-card-hover)}
+  tbody td{padding:0.5rem 0.7rem;text-align:right;font-family:'Space Mono',monospace;font-size:0.73rem;color:var(--text-secondary);white-space:nowrap}
+  tbody td:first-child{text-align:left;font-weight:700;color:var(--accent-blue)}
+  tbody td:nth-child(2){text-align:left;font-size:0.6rem;color:var(--text-muted)}
+  .positive{color:var(--green)!important}.negative{color:var(--red)!important}
+
+  .class-badge{font-size:0.55rem;padding:0.12rem 0.4rem;border-radius:4px;font-weight:700;text-transform:uppercase;letter-spacing:0.3px}
+  .class-rv{background:rgba(74,158,255,0.15);color:var(--accent-blue)}
+  .class-rf-ars{background:rgba(52,211,153,0.15);color:var(--green)}
+  .class-rf-usd{background:rgba(167,139,250,0.15);color:var(--purple)}
+  .class-cedear{background:rgba(34,211,238,0.15);color:var(--cyan)}
+  .class-cash{background:rgba(251,191,36,0.15);color:var(--gold)}
+  .class-crypto{background:rgba(251,146,60,0.15);color:#fb923c}
+  .class-otro{background:rgba(90,101,128,0.15);color:var(--text-muted)}
+
+  /* Add position modal */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+  .modal-overlay.open{display:flex}
+  .modal{background:var(--bg-secondary);border:1px solid var(--border);border-radius:16px;width:500px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.5);animation:modalIn 0.2s ease-out}
+  @keyframes modalIn{from{opacity:0;transform:scale(0.95)translateY(10px)}to{opacity:1;transform:none}}
+  .modal-header{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 1.5rem;border-bottom:1px solid var(--border)}
+  .modal-title{font-size:1rem;font-weight:700}
+  .modal-close{background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer;padding:0.2rem 0.5rem;border-radius:6px;line-height:1}
+  .modal-close:hover{background:var(--bg-card);color:var(--text-primary)}
+  .modal-body{padding:1.5rem}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+  .form-group{display:flex;flex-direction:column;gap:0.3rem}
+  .form-group.full{grid-column:1/-1}
+  .form-label{font-size:0.65rem;color:var(--text-muted);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:1px}
+  .form-input{background:var(--bg-input);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-family:'Space Mono',monospace;font-size:0.85rem;padding:0.5rem 0.8rem;outline:none}
+  .form-input:focus{border-color:var(--accent-blue)}
+  .form-select{background:var(--bg-input);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-family:'Space Mono',monospace;font-size:0.85rem;padding:0.5rem 0.8rem;outline:none}
+  .modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:0.5rem}
+
+  /* Flows section */
+  .flows-section{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:1.5rem}
+  .flows-section h3{font-size:0.65rem;color:var(--text-muted);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem}
+  .flow-row{display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;flex-wrap:wrap}
+  .flow-tag{font-family:'Space Mono',monospace;font-size:0.7rem;padding:0.2rem 0.5rem;border-radius:4px;font-weight:700}
+  .flow-in{background:var(--green-bg);color:var(--green)}
+  .flow-out{background:var(--red-bg);color:var(--red)}
+  .flow-date{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text-muted)}
+  .flow-amount{font-family:'Space Mono',monospace;font-size:0.8rem;font-weight:600}
+  .flow-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.8rem;padding:0.2rem 0.4rem;border-radius:4px}
+  .flow-del:hover{color:var(--red);background:var(--red-bg)}
+
+  .footer{text-align:center;padding:1rem 0;color:var(--text-muted);font-size:0.65rem;font-family:'Space Mono',monospace}
+
+  @media(max-width:768px){
+    .container{padding:0.8rem}
+    .comp-section{grid-template-columns:1fr}
+    .summary-grid{grid-template-columns:1fr 1fr}
+    .form-row{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="topnav">
+  <a href="index.html" class="home-link">← SC</a>
+  <a href="crypto.html">Crypto</a>
+  <a href="curva-pesos.html">Curva Tasa Fija</a>
+  <a href="precios-iol.html">Precios IOL</a>
+  <a href="cartera.html" class="active">Mi Cartera</a>
+</div>
+
+<div class="container">
+  <div class="header">
+    <div class="logo-area">
+      <div class="logo-icon">SC</div>
+      <div class="logo-text"><h1>SilverCloud</h1><span>Mi Cartera</span></div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary" onclick="openAddModal()">+ Agregar Posición</button>
+      <button class="btn" onclick="openFlowModal()">$ Flujo</button>
+      <button class="btn" onclick="exportData()">↓ Exportar</button>
+      <button class="btn" onclick="document.getElementById('importFile').click()">↑ Importar</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+      <button class="btn btn-danger" onclick="clearAll()">✕ Limpiar</button>
+    </div>
+  </div>
+
+  <!-- FX Rate -->
+  <div class="fx-bar">
+    <div class="fx-item">
+      <span class="fx-label">Dólar MEP</span>
+      <input class="fx-input" type="text" id="fxMep" value="" placeholder="0,00" onchange="updateFX()">
+    </div>
+    <div class="fx-item">
+      <span class="fx-label">Valor 31/12 ARS</span>
+      <input class="fx-input" type="text" id="ytdArs" value="" placeholder="0,00" onchange="saveData();recalc()" style="width:130px">
+    </div>
+    <div class="fx-item">
+      <span class="fx-label">Valor 31/12 USD</span>
+      <input class="fx-input" type="text" id="ytdUsd" value="" placeholder="0,00" onchange="saveData();recalc()" style="width:130px">
+    </div>
+    <div class="fx-item">
+      <span class="fx-label">Moneda Vista</span>
+      <select class="form-select" id="viewCurrency" onchange="recalc()" style="padding:0.3rem 0.5rem;font-size:0.8rem">
+        <option value="ARS">ARS $</option>
+        <option value="USD">USD u$s</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-grid" id="summaryGrid"></div>
+
+  <!-- Composition -->
+  <div class="comp-section">
+    <div class="chart-card">
+      <h3>Composición</h3>
+      <canvas id="pieChart" width="220" height="220"></canvas>
+    </div>
+    <div class="comp-bars-card">
+      <h3>Distribución por Asset Class</h3>
+      <div id="compBars"></div>
+    </div>
+  </div>
+
+  <!-- Positions table -->
+  <div class="table-section">
+    <div class="table-header">
+      <h3>Posiciones</h3>
+      <span style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text-muted)" id="posCount"></span>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead><tr>
+          <th style="text-align:left">Ticker</th>
+          <th style="text-align:left">Clase</th>
+          <th>Moneda</th>
+          <th>Cantidad</th>
+          <th>Px Compra</th>
+          <th>Px Actual</th>
+          <th>Costo</th>
+          <th>Valor</th>
+          <th>P&L $</th>
+          <th>P&L %</th>
+          <th>Peso %</th>
+          <th>Acciones</th>
+        </tr></thead>
+        <tbody id="posBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Flows -->
+  <div class="flows-section">
+    <h3>Flujos de Fondos (Ingresos / Egresos)</h3>
+    <div id="flowsList"></div>
+    <div style="margin-top:0.5rem;font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--text-muted)" id="flowsSummary"></div>
+  </div>
+
+  <div class="footer">SilverCloud &copy; 2026 — Datos guardados en tu navegador</div>
+</div>
+
+<!-- Add Position Modal -->
+<div class="modal-overlay" id="addModal" onclick="if(event.target===this)closeAddModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modalTitle">Agregar Posición</span>
+      <button class="modal-close" onclick="closeAddModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Ticker</label>
+          <input class="form-input" id="fTicker" placeholder="Ej: GGAL, AL30, MELI">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Asset Class</label>
+          <select class="form-select" id="fClass">
+            <option value="rv">Renta Variable</option>
+            <option value="rf-ars">Renta Fija ARS</option>
+            <option value="rf-usd">Renta Fija USD</option>
+            <option value="cedear">CEDEAR</option>
+            <option value="cash">Cash / MM</option>
+            <option value="crypto">Crypto</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Cantidad</label>
+          <input class="form-input" id="fQty" type="number" step="any" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Moneda</label>
+          <select class="form-select" id="fCurrency">
+            <option value="ARS">ARS</option>
+            <option value="USD">USD</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Precio Compra</label>
+          <input class="form-input" id="fPxBuy" type="number" step="any" placeholder="0,00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Precio Actual</label>
+          <input class="form-input" id="fPxNow" type="number" step="any" placeholder="0,00">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Fecha Compra</label>
+          <input class="form-input" id="fDate" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Valor Inicio Año (YTD)</label>
+          <input class="form-input" id="fPxYtd" type="number" step="any" placeholder="Precio al 31/12 (opcional)">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeAddModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="savePosition()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Flow Modal -->
+<div class="modal-overlay" id="flowModal" onclick="if(event.target===this)closeFlowModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Registrar Flujo</span>
+      <button class="modal-close" onclick="closeFlowModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Tipo</label>
+          <select class="form-select" id="flType">
+            <option value="in">Ingreso (Aporte)</option>
+            <option value="out">Egreso (Retiro)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fecha</label>
+          <input class="form-input" id="flDate" type="date">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Monto</label>
+          <input class="form-input" id="flAmount" type="number" step="any" placeholder="0,00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Moneda</label>
+          <select class="form-select" id="flCurrency">
+            <option value="ARS">ARS</option>
+            <option value="USD">USD</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeFlowModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveFlow()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+let positions = [];  // {id,ticker,assetClass,qty,currency,pxBuy,pxNow,dateBuy,pxYtd}
+let flows = [];      // {id,type,date,amount,currency}
+let fxMep = 0;
+let editingId = null;
+
+const CLASS_LABELS = {
+  'rv':'Renta Variable','rf-ars':'Renta Fija ARS','rf-usd':'Renta Fija USD',
+  'cedear':'CEDEAR','cash':'Cash / MM','crypto':'Crypto','otro':'Otro'
+};
+const CLASS_COLORS = {
+  'rv':'#4a9eff','rf-ars':'#34d399','rf-usd':'#a78bfa',
+  'cedear':'#22d3ee','cash':'#fbbf24','crypto':'#fb923c','otro':'#5a6580'
+};
+const CLASS_CSS = {
+  'rv':'class-rv','rf-ars':'class-rf-ars','rf-usd':'class-rf-usd',
+  'cedear':'class-cedear','cash':'class-cash','crypto':'class-crypto','otro':'class-otro'
+};
+
+// ============================================================
+// PERSISTENCE
+// ============================================================
+function saveData() {
+  const data = {
+    positions, flows,
+    fxMep: parseFloat(document.getElementById('fxMep').value.replace(',','.')) || 0,
+    ytdArs: parseFloat(document.getElementById('ytdArs').value.replace(/\./g,'').replace(',','.')) || 0,
+    ytdUsd: parseFloat(document.getElementById('ytdUsd').value.replace(/\./g,'').replace(',','.')) || 0,
+  };
+  localStorage.setItem('sc_cartera', JSON.stringify(data));
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem('sc_cartera');
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    positions = data.positions || [];
+    flows = data.flows || [];
+    fxMep = data.fxMep || 0;
+    if (fxMep) document.getElementById('fxMep').value = fxMep.toFixed(2).replace('.',',');
+    if (data.ytdArs) document.getElementById('ytdArs').value = data.ytdArs.toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    if (data.ytdUsd) document.getElementById('ytdUsd').value = data.ytdUsd.toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  } catch(e) { console.error('Load error', e); }
+}
+
+function exportData() {
+  const data = { positions, flows, fxMep, exportDate: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'silvercloud-cartera-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.positions) positions = data.positions;
+      if (data.flows) flows = data.flows;
+      if (data.fxMep) { fxMep = data.fxMep; document.getElementById('fxMep').value = fxMep.toFixed(2).replace('.',','); }
+      saveData(); recalc();
+    } catch(err) { alert('Error importando: ' + err.message); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function clearAll() {
+  if (!confirm('¿Borrar toda la cartera? Esta acción no se puede deshacer.')) return;
+  positions = []; flows = []; saveData(); recalc();
+}
+
+function updateFX() {
+  fxMep = parseFloat(document.getElementById('fxMep').value.replace(',','.')) || 0;
+  saveData(); recalc();
+}
+
+// ============================================================
+// POSITION CRUD
+// ============================================================
+function openAddModal(id) {
+  editingId = id || null;
+  const m = document.getElementById('addModal');
+  document.getElementById('modalTitle').textContent = id ? 'Editar Posición' : 'Agregar Posición';
+  if (id) {
+    const p = positions.find(x => x.id === id);
+    if (p) {
+      document.getElementById('fTicker').value = p.ticker;
+      document.getElementById('fClass').value = p.assetClass;
+      document.getElementById('fQty').value = p.qty;
+      document.getElementById('fCurrency').value = p.currency;
+      document.getElementById('fPxBuy').value = p.pxBuy;
+      document.getElementById('fPxNow').value = p.pxNow;
+      document.getElementById('fDate').value = p.dateBuy || '';
+      document.getElementById('fPxYtd').value = p.pxYtd || '';
+    }
+  } else {
+    ['fTicker','fQty','fPxBuy','fPxNow','fDate','fPxYtd'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('fClass').value = 'rv';
+    document.getElementById('fCurrency').value = 'ARS';
+  }
+  m.classList.add('open');
+}
+
+function closeAddModal() { document.getElementById('addModal').classList.remove('open'); editingId = null; }
+
+function savePosition() {
+  const ticker = document.getElementById('fTicker').value.trim().toUpperCase();
+  if (!ticker) { alert('Ingresá un ticker'); return; }
+  const pos = {
+    id: editingId || Date.now().toString(),
+    ticker,
+    assetClass: document.getElementById('fClass').value,
+    qty: parseFloat(document.getElementById('fQty').value) || 0,
+    currency: document.getElementById('fCurrency').value,
+    pxBuy: parseFloat(document.getElementById('fPxBuy').value) || 0,
+    pxNow: parseFloat(document.getElementById('fPxNow').value) || 0,
+    dateBuy: document.getElementById('fDate').value,
+    pxYtd: parseFloat(document.getElementById('fPxYtd').value) || 0,
+  };
+  if (editingId) {
+    const idx = positions.findIndex(x => x.id === editingId);
+    if (idx >= 0) positions[idx] = pos;
+  } else {
+    positions.push(pos);
+  }
+  closeAddModal(); saveData(); recalc();
+}
+
+function deletePosition(id) {
+  if (!confirm('¿Eliminar esta posición?')) return;
+  positions = positions.filter(x => x.id !== id);
+  saveData(); recalc();
+}
+
+// ============================================================
+// FLOWS
+// ============================================================
+function openFlowModal() {
+  document.getElementById('flDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('flAmount').value = '';
+  document.getElementById('flowModal').classList.add('open');
+}
+function closeFlowModal() { document.getElementById('flowModal').classList.remove('open'); }
+
+function saveFlow() {
+  const amount = parseFloat(document.getElementById('flAmount').value) || 0;
+  if (!amount) { alert('Ingresá un monto'); return; }
+  flows.push({
+    id: Date.now().toString(),
+    type: document.getElementById('flType').value,
+    date: document.getElementById('flDate').value,
+    amount,
+    currency: document.getElementById('flCurrency').value,
+  });
+  closeFlowModal(); saveData(); recalc();
+}
+
+function deleteFlow(id) {
+  flows = flows.filter(x => x.id !== id);
+  saveData(); recalc();
+}
+
+// ============================================================
+// CALCULATIONS & RENDER
+// ============================================================
+function toARS(amount, currency) {
+  if (currency === 'ARS') return amount;
+  return amount * (fxMep || 1);
+}
+function toUSD(amount, currency) {
+  if (currency === 'USD') return amount;
+  return fxMep ? amount / fxMep : 0;
+}
+function toView(amount, currency) {
+  const view = document.getElementById('viewCurrency').value;
+  if (view === 'USD') return toUSD(amount, currency);
+  return toARS(amount, currency);
+}
+function viewSymbol() {
+  return document.getElementById('viewCurrency').value === 'USD' ? 'u$s' : '$';
+}
+
+function fmtNum(n) {
+  if (n == null || isNaN(n)) return '--';
+  return n.toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+function fmtPct(n) {
+  if (n == null || isNaN(n)) return '--';
+  return (n >= 0 ? '+' : '') + n.toFixed(2) + '%';
+}
+
+function recalc() {
+  const sym = viewSymbol();
+  const viewUSD = document.getElementById('viewCurrency').value === 'USD';
+
+  // Calculate totals in both currencies
+  let totalCostARS = 0, totalValueARS = 0;
+  let totalCostUSD = 0, totalValueUSD = 0;
+  const classMap = {};
+
+  positions.forEach(p => {
+    const costARS = toARS(p.qty * p.pxBuy, p.currency);
+    const valueARS = toARS(p.qty * p.pxNow, p.currency);
+    const costUSD = toUSD(p.qty * p.pxBuy, p.currency);
+    const valueUSD = toUSD(p.qty * p.pxNow, p.currency);
+
+    p._cost = viewUSD ? costUSD : costARS;
+    p._value = viewUSD ? valueUSD : valueARS;
+
+    totalCostARS += costARS; totalValueARS += valueARS;
+    totalCostUSD += costUSD; totalValueUSD += valueUSD;
+
+    const cls = p.assetClass;
+    if (!classMap[cls]) classMap[cls] = { value:0, cost:0 };
+    classMap[cls].value += p._value;
+    classMap[cls].cost += p._cost;
+  });
+
+  const totalValue = viewUSD ? totalValueUSD : totalValueARS;
+  const totalCost = viewUSD ? totalCostUSD : totalCostARS;
+  const totalPL = totalValue - totalCost;
+  const totalPLpct = totalCost ? (totalPL / totalCost) * 100 : 0;
+
+  // YTD from 31/12 values
+  const ytdStartARS = parseFloat(document.getElementById('ytdArs').value.replace(/\./g,'').replace(',','.')) || 0;
+  const ytdStartUSD = parseFloat(document.getElementById('ytdUsd').value.replace(/\./g,'').replace(',','.')) || 0;
+
+  const ytdPLars = ytdStartARS ? ((totalValueARS - ytdStartARS) / ytdStartARS) * 100 : null;
+  const ytdPLusd = ytdStartUSD ? ((totalValueUSD - ytdStartUSD) / ytdStartUSD) * 100 : null;
+
+  // Flows summary
+  let totalFlowIn = 0, totalFlowOut = 0;
+  flows.forEach(f => {
+    const amt = viewUSD ? toUSD(f.amount, f.currency) : toARS(f.amount, f.currency);
+    if (f.type === 'in') totalFlowIn += amt; else totalFlowOut += amt;
+  });
+
+  // Summary cards
+  document.getElementById('summaryGrid').innerHTML = `
+    <div class="summary-card">
+      <div class="sc-label">Valor Total</div>
+      <div class="sc-value">${sym} ${fmtNum(totalValue)}</div>
+      <div class="sc-sub">${positions.length} posiciones</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">P&L Total</div>
+      <div class="sc-value ${totalPL>=0?'positive':'negative'}">${sym} ${fmtNum(totalPL)}</div>
+      <div class="sc-sub ${totalPLpct>=0?'positive':'negative'}">${fmtPct(totalPLpct)}</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">YTD en Pesos</div>
+      <div class="sc-value ${ytdPLars!==null&&ytdPLars>=0?'positive':ytdPLars!==null?'negative':''}">${ytdPLars !== null ? fmtPct(ytdPLars) : 'Cargar 31/12'}</div>
+      <div class="sc-sub">$ ${fmtNum(totalValueARS)}${ytdStartARS ? ' vs $ ' + fmtNum(ytdStartARS) : ''}</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">YTD en Dólares</div>
+      <div class="sc-value ${ytdPLusd!==null&&ytdPLusd>=0?'positive':ytdPLusd!==null?'negative':''}">${ytdPLusd !== null ? fmtPct(ytdPLusd) : 'Cargar 31/12'}</div>
+      <div class="sc-sub">u$s ${fmtNum(totalValueUSD)}${ytdStartUSD ? ' vs u$s ' + fmtNum(ytdStartUSD) : ''}</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Flujos Netos</div>
+      <div class="sc-value">${sym} ${fmtNum(totalFlowIn - totalFlowOut)}</div>
+      <div class="sc-sub">In: ${fmtNum(totalFlowIn)} | Out: ${fmtNum(totalFlowOut)}</div>
+    </div>
+  `;
+
+  // Composition bars
+  const barsEl = document.getElementById('compBars');
+  const classes = Object.keys(classMap).sort((a,b) => classMap[b].value - classMap[a].value);
+  barsEl.innerHTML = classes.map(c => {
+    const pct = totalValue ? (classMap[c].value / totalValue * 100) : 0;
+    return `<div class="comp-row">
+      <span class="comp-label">${CLASS_LABELS[c] || c}</span>
+      <div class="comp-bar-bg"><div class="comp-bar-fill" style="width:${Math.max(pct,2)}%;background:${CLASS_COLORS[c]||'#5a6580'}">${pct.toFixed(1)}%</div></div>
+      <span class="comp-amount">${sym} ${fmtNum(classMap[c].value)}</span>
+    </div>`;
+  }).join('') || '<div style="color:var(--text-muted);font-size:0.8rem">Sin posiciones</div>';
+
+  // Pie chart
+  drawPie(classes.map(c => ({ label: CLASS_LABELS[c], value: classMap[c].value, color: CLASS_COLORS[c] })));
+
+  // Positions table
+  document.getElementById('posCount').textContent = positions.length + ' posiciones';
+  const tbody = document.getElementById('posBody');
+  if (!positions.length) {
+    tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;padding:2rem;color:var(--text-muted)">Agregá tu primera posición con el botón "+ Agregar Posición"</td></tr>';
+  } else {
+    tbody.innerHTML = positions.map(p => {
+      const pl = p._value - p._cost;
+      const plPct = p._cost ? (pl / p._cost * 100) : 0;
+      const weight = totalValue ? (p._value / totalValue * 100) : 0;
+      return `<tr>
+        <td>${p.ticker}</td>
+        <td><span class="class-badge ${CLASS_CSS[p.assetClass]||'class-otro'}">${CLASS_LABELS[p.assetClass]||p.assetClass}</span></td>
+        <td>${p.currency}</td>
+        <td>${fmtNum(p.qty)}</td>
+        <td>${fmtNum(p.pxBuy)}</td>
+        <td>${fmtNum(p.pxNow)}</td>
+        <td>${sym} ${fmtNum(p._cost)}</td>
+        <td>${sym} ${fmtNum(p._value)}</td>
+        <td class="${pl>=0?'positive':'negative'}">${sym} ${fmtNum(pl)}</td>
+        <td class="${plPct>=0?'positive':'negative'}">${fmtPct(plPct)}</td>
+        <td>${weight.toFixed(1)}%</td>
+        <td>
+          <button class="flow-del" onclick="openAddModal('${p.id}')" title="Editar">✎</button>
+          <button class="flow-del" onclick="deletePosition('${p.id}')" title="Eliminar">✕</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Flows list
+  const flEl = document.getElementById('flowsList');
+  if (!flows.length) {
+    flEl.innerHTML = '<div style="color:var(--text-muted);font-size:0.8rem">Sin flujos registrados</div>';
+  } else {
+    flEl.innerHTML = flows.sort((a,b) => b.date.localeCompare(a.date)).map(f => `
+      <div class="flow-row">
+        <span class="flow-tag ${f.type==='in'?'flow-in':'flow-out'}">${f.type==='in'?'INGRESO':'EGRESO'}</span>
+        <span class="flow-date">${f.date}</span>
+        <span class="flow-amount ${f.type==='in'?'positive':'negative'}">${f.currency==='USD'?'u$s':'$'} ${fmtNum(f.amount)}</span>
+        <button class="flow-del" onclick="deleteFlow('${f.id}')">✕</button>
+      </div>
+    `).join('');
+  }
+  document.getElementById('flowsSummary').textContent = `Total ingresos: ${sym} ${fmtNum(totalFlowIn)} | Total egresos: ${sym} ${fmtNum(totalFlowOut)} | Neto: ${sym} ${fmtNum(totalFlowIn - totalFlowOut)}`;
+}
+
+// ============================================================
+// PIE CHART (Canvas)
+// ============================================================
+function drawPie(slices) {
+  const canvas = document.getElementById('pieChart');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const cx = w/2, cy = h/2, r = Math.min(w,h)/2 - 10;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const total = slices.reduce((s, sl) => s + sl.value, 0);
+  if (!total) {
+    ctx.fillStyle = '#2a3550';
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#5a6580';
+    ctx.font = '12px Space Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText('Sin datos', cx, cy);
+    return;
+  }
+
+  let angle = -Math.PI / 2;
+  slices.forEach(sl => {
+    const sliceAngle = (sl.value / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, angle, angle + sliceAngle);
+    ctx.closePath();
+    ctx.fillStyle = sl.color;
+    ctx.fill();
+
+    // Label
+    if (sl.value / total > 0.05) {
+      const mid = angle + sliceAngle / 2;
+      const lx = cx + Math.cos(mid) * r * 0.65;
+      const ly = cy + Math.sin(mid) * r * 0.65;
+      ctx.fillStyle = '#0a0e17';
+      ctx.font = 'bold 10px Space Mono';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText((sl.value / total * 100).toFixed(0) + '%', lx, ly);
+    }
+    angle += sliceAngle;
+  });
+
+  // Center hole (donut)
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 0.5, 0, Math.PI * 2);
+  ctx.fillStyle = '#1a2235';
+  ctx.fill();
+
+  // Center text
+  ctx.fillStyle = '#e8ecf4';
+  ctx.font = 'bold 13px Space Mono';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(viewSymbol() + ' ' + (total >= 1e6 ? (total/1e6).toFixed(1)+'M' : total >= 1e3 ? (total/1e3).toFixed(0)+'K' : total.toFixed(0)), cx, cy);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeAddModal(); closeFlowModal(); }});
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  recalc();
+});
+</script>
+</body>
+</html>
