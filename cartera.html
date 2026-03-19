@@ -130,6 +130,13 @@
     .summary-grid{grid-template-columns:1fr 1fr}
     .form-row{grid-template-columns:1fr}
   }
+
+  .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#0a0e17;border-top:1px solid #2a3550;z-index:50;padding:0.4rem 0.5rem 0.6rem;justify-content:space-around;align-items:center}
+  .bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:0.15rem;text-decoration:none;color:#5a6580;font-size:0.55rem;font-family:'Space Mono',monospace;padding:0.3rem 0.4rem;border-radius:8px;transition:all 0.15s;min-width:50px}
+  .bottom-nav a:hover,.bottom-nav a.active{color:#4a9eff}
+  .bottom-nav a .bn-icon{font-size:1.2rem;line-height:1}
+  @media(max-width:768px){.bottom-nav{display:flex}body{padding-bottom:70px}}
+
 </style>
 </head>
 <body>
@@ -138,7 +145,8 @@
   <a href="crypto.html">Crypto</a>
   <a href="curva-pesos.html">Curva Tasa Fija</a>
   <a href="precios-iol.html">Precios IOL</a>
-  <a href="cartera.html" class="active">Mi Cartera</a>
+  <a href="cartera.html" class="active" class="active">Mi Cartera</a>
+  <a href="galileo.html">Galileo Fondos</a>
 </div>
 
 <div class="container">
@@ -748,5 +756,12 @@ document.addEventListener('DOMContentLoaded', () => {
   recalc();
 });
 </script>
+<div class="bottom-nav">
+  <a href="index.html"><span class="bn-icon">🏠</span>Home</a>
+  <a href="precios-iol.html"><span class="bn-icon">🏦</span>Precios</a>
+  <a href="crypto.html"><span class="bn-icon">₿</span>Crypto</a>
+  <a href="cartera.html" class="active"><span class="bn-icon">💼</span>Cartera</a>
+  <a href="galileo.html"><span class="bn-icon">📊</span>Fondos</a>
+</div>
 </body>
 </html>
