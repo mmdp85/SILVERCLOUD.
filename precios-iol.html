@@ -114,6 +114,7 @@
   <a href="curva-pesos.html">Curva Tasa Fija</a>
   <a href="precios-iol.html" class="active">Precios IOL</a>
   <a href="cartera.html">Mi Cartera</a>
+  <a href="galileo.html">Galileo Fondos</a>
 </div>
 <div class="container">
   <div class="header">
@@ -177,7 +178,8 @@ async function loadAll(){
     const cl=(cedears.titulos||[]).filter(t=>t.moneda==='1');
     const bl=[...(tp.titulos||[]),...(letras.titulos||[]),...(ons.titulos||[])];
     allData.acciones=al.filter(t=>PANEL_LIDER.includes(t.simbolo));
-    allData.cedears=cl.filter(t=>CEDEARS_TOP.includes(t.simbolo));
+    // CEDEARs: show ALL with volume > 0, sorted by volume desc
+    allData.cedears=cl.filter(t=>(t.volumen||0)>0||(t.cantidadOperaciones||0)>0).sort((a,b)=>(b.volumen||0)-(a.volumen||0));
     allData.bonoshd=bl.filter(t=>BONOS_HD.includes(t.simbolo));
     allData.bonoscer=bl.filter(t=>BONOS_CER.includes(t.simbolo));
     const extra=al.filter(t=>!PANEL_LIDER.includes(t.simbolo)&&t.volumen>0);
