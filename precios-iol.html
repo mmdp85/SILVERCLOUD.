@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SilverCloud | Precios IOL</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg-primary: #0a0e17;
+    --bg-secondary: #111827;
+    --bg-card: #1a2235;
+    --bg-card-hover: #1f2a40;
+    --border: #2a3550;
+    --text-primary: #e8ecf4;
+    --text-secondary: #8892a8;
+    --text-muted: #5a6580;
+    --accent-blue: #4a9eff;
+    --green: #34d399;
+    --green-bg: rgba(52,211,153,0.1);
+    --red: #f87171;
+    --red-bg: rgba(248,113,113,0.1);
+    --gold: #fbbf24;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:0;
+  }
+
+  .container { max-width:1500px; margin:0 auto; padding:1.5rem; position:relative; z-index:1; }
+
+  /* Header */
+  .header {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid var(--border);
+  }
+  .logo-area { display:flex; align-items:center; gap:0.8rem; }
+  .logo-icon {
+    width:40px; height:40px; border-radius:10px;
+    background:linear-gradient(135deg,#4a9eff,#a8b8d0);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Space Mono',monospace; font-weight:700; font-size:1rem; color:var(--bg-primary);
+  }
+  .logo-text h1 { font-size:1.3rem; font-weight:700; letter-spacing:-0.5px; }
+  .logo-text span { font-size:0.65rem; color:var(--text-muted); font-family:'Space Mono',monospace; text-transform:uppercase; letter-spacing:2px; }
+
+  .header-right { display:flex; align-items:center; gap:1.2rem; }
+  .status-badge { display:flex; align-items:center; gap:0.4rem; font-size:0.75rem; color:var(--text-secondary); font-family:'Space Mono',monospace; }
+  .status-dot { width:8px; height:8px; border-radius:50%; background:var(--green); animation:pulse 2s ease-in-out infinite; }
+  .status-dot.error { background:var(--red); animation:none; }
+  .status-dot.loading { background:var(--gold); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .last-update { font-size:0.7rem; color:var(--text-muted); font-family:'Space Mono',monospace; }
+
+  .refresh-btn {
+    background:var(--bg-card); border:1px solid var(--border); color:var(--text-secondary);
+    padding:0.4rem 0.8rem; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif;
+    font-size:0.8rem; transition:all 0.2s; display:flex; align-items:center; gap:0.3rem;
+  }
+  .refresh-btn:hover { background:var(--bg-card-hover); color:var(--text-primary); border-color:var(--accent-blue); }
+
+  /* Tabs */
+  .tabs { display:flex; gap:0.3rem; margin-bottom:1.2rem; flex-wrap:wrap; }
+  .tab {
+    font-family:'Space Mono',monospace; font-size:0.75rem; padding:0.5rem 1.2rem;
+    border-radius:8px; border:1px solid var(--border); background:transparent;
+    color:var(--text-muted); cursor:pointer; transition:all 0.2s; white-space:nowrap;
+  }
+  .tab:hover { border-color:var(--accent-blue); color:var(--text-secondary); }
+  .tab.active { background:var(--accent-blue); border-color:var(--accent-blue); color:var(--bg-primary); font-weight:700; }
+  .tab .count { font-size:0.6rem; opacity:0.7; margin-left:0.3rem; }
+
+  /* Search */
+  .search-bar {
+    display:flex; gap:0.8rem; margin-bottom:1rem; align-items:center; flex-wrap:wrap;
+  }
+  .search-input {
+    background:var(--bg-card); border:1px solid var(--border); border-radius:8px;
+    color:var(--text-primary); font-family:'Space Mono',monospace; font-size:0.8rem;
+    padding:0.5rem 1rem; width:280px; outline:none; transition:border-color 0.2s;
+  }
+  .search-input:focus { border-color:var(--accent-blue); }
+  .search-input::placeholder { color:var(--text-muted); }
+  .result-count { font-size:0.7rem; color:var(--text-muted); font-family:'Space Mono',monospace; }
+
+  /* Table */
+  .table-wrap { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .table-scroll { overflow-x:auto; max-height:75vh; overflow-y:auto; }
+
+  table { width:100%; border-collapse:collapse; font-size:0.8rem; }
+  thead th {
+    font-family:'Space Mono',monospace; font-size:0.6rem; text-transform:uppercase;
+    letter-spacing:1px; color:var(--text-muted); padding:0.7rem 0.8rem; text-align:right;
+    border-bottom:1px solid var(--border); white-space:nowrap;
+    position:sticky; top:0; background:var(--bg-card); z-index:2;
+  }
+  thead th:first-child { text-align:left; }
+  thead th:nth-child(2) { text-align:left; }
+  thead th.sortable { cursor:pointer; user-select:none; }
+  thead th.sortable:hover { color:var(--accent-blue); }
+  thead th .sort-arrow { font-size:0.5rem; margin-left:0.2rem; }
+
+  tbody tr { border-bottom:1px solid rgba(42,53,80,0.3); transition:background 0.1s; }
+  tbody tr:hover { background:var(--bg-card-hover); }
+
+  tbody td {
+    padding:0.55rem 0.8rem; text-align:right;
+    font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--text-secondary); white-space:nowrap;
+  }
+  tbody td:first-child { text-align:left; font-weight:700; color:var(--accent-blue); }
+  tbody td:nth-child(2) { text-align:left; color:var(--text-muted); font-size:0.7rem; max-width:200px; overflow:hidden; text-overflow:ellipsis; }
+
+  .positive { color:var(--green) !important; }
+  .negative { color:var(--red) !important; }
+  .vol-high { color:var(--gold); }
+
+  /* Loading */
+  .loading-box { display:flex; align-items:center; justify-content:center; padding:3rem; gap:0.8rem; }
+  .spinner { width:24px; height:24px; border:3px solid var(--border); border-top-color:var(--accent-blue); border-radius:50%; animation:spin 0.8s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .loading-text { font-family:'Space Mono',monospace; font-size:0.8rem; color:var(--text-muted); }
+
+  /* Error */
+  .error-box { background:var(--red-bg); border:1px solid rgba(248,113,113,0.3); border-radius:10px; padding:1rem; color:var(--red); font-size:0.85rem; margin-bottom:1rem; display:none; }
+  .error-box.visible { display:block; }
+
+  /* Summary bar */
+  .summary-bar {
+    display:flex; gap:1.5rem; margin-bottom:1rem; padding:0.8rem 1.2rem;
+    background:var(--bg-secondary); border-radius:10px; border:1px solid var(--border); flex-wrap:wrap;
+  }
+  .summary-stat { display:flex; flex-direction:column; gap:0.15rem; }
+  .summary-stat .label { font-size:0.6rem; color:var(--text-muted); font-family:'Space Mono',monospace; text-transform:uppercase; letter-spacing:1px; }
+  .summary-stat .value { font-size:0.9rem; font-weight:700; }
+
+  .footer { text-align:center; padding:1.5rem 0 0.5rem; color:var(--text-muted); font-size:0.65rem; font-family:'Space Mono',monospace; }
+
+  @media (max-width:768px) {
+    .container { padding:0.8rem; }
+    .header { flex-direction:column; gap:0.8rem; align-items:flex-start; }
+    .search-input { width:100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="logo-area">
+      <div class="logo-icon">SC</div>
+      <div class="logo-text">
+        <h1>SilverCloud</h1>
+        <span>Precios IOL — En Vivo</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-badge">
+        <div class="status-dot loading" id="statusDot"></div>
+        <span id="statusText">Cargando...</span>
+      </div>
+      <span class="last-update" id="lastUpdate">--:--:--</span>
+      <button class="refresh-btn" onclick="loadAll()">↻ Actualizar</button>
+    </div>
+  </div>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <!-- Tabs -->
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="acciones" onclick="switchTab('acciones',this)">Acciones <span class="count" id="countAcciones"></span></button>
+    <button class="tab" data-tab="cedears" onclick="switchTab('cedears',this)">CEDEARs <span class="count" id="countCedears"></span></button>
+    <button class="tab" data-tab="bonoshd" onclick="switchTab('bonoshd',this)">Bonos HD <span class="count" id="countBonoshd"></span></button>
+    <button class="tab" data-tab="bonoscer" onclick="switchTab('bonoscer',this)">Bonos CER <span class="count" id="countBonoscer"></span></button>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-bar" id="summaryBar"></div>
+
+  <!-- Search -->
+  <div class="search-bar">
+    <input class="search-input" type="text" id="searchInput" placeholder="Buscar ticker o nombre..." oninput="filterTable()">
+    <span class="result-count" id="resultCount"></span>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <div class="table-scroll">
+      <table>
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer">
+    SilverCloud &copy; 2026 — Datos en vivo vía IOL API — Auto-refresh: 60s
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const PROXY = 'https://silvercloud-api.vercel.app/api/iol';
+const REFRESH_MS = 60000;
+
+// Panel líder tickers
+const PANEL_LIDER = [
+  'GGAL','YPF','PAMP','TXAR','ALUA','SUPV','BBAR','BMA','TECO2','LOMA',
+  'MIRG','CRES','TGSU2','EDN','COME','CEPU','BYMA','VALO','IRSA','HARG',
+  'TGNO4','TRAN','METR','AGRO','AUSO','BOLT','CGPA2','CADO','MOLA','MORI',
+  'LONG','INVJ','FIPL','GARO','GBAN','DGCU2','FERR','SEMI','BHIP','RICH',
+  'BPAT','CTIO','GCLA','CAPX','CELU','SAMI','DOME','DYCA','IRCP','INTR',
+  'CARC','MTR','RIGO','ROSE','CVH'
+];
+
+// CEDEARs con alto volumen (>5M ARS/día típico)
+const CEDEARS_TOP = [
+  'MELI','AAPL','MSFT','GOOGL','AMZN','TSLA','NVDA','META','BABA','NU',
+  'GLOB','DESP','AMD','INTC','BA','KO','DIS','PBR','VALE','JPM',
+  'WMT','V','MA','NFLX','PYPL','UBER','COIN','MCD','NKE','GOLD',
+  'SQ','SHOP','SNAP','ABNB','BIDU','JD','PDD','TSM','QCOM','AVGO',
+  'CRM','ORCL','IBM','GS','BAC','C','XOM','CVX','SLB','ADBE'
+];
+
+// Bonos HD - Ley local y NY
+const BONOS_HD = [
+  'AL29','AL29D','AL29C','AL30','AL30D','AL30C','AL35','AL35D','AL35C',
+  'AL41','AL41D','AL41C',
+  'AE38','AE38D','AE38C',
+  'GD29','GD29D','GD29C','GD30','GD30D','GD30C','GD35','GD35D','GD35C',
+  'GD38','GD38D','GD38C','GD41','GD41D','GD41C','GD46','GD46D','GD46C'
+];
+
+// Bonos CER
+const BONOS_CER = [
+  'TZXM6','X15Y6','X29Y6','TZX26','X31L6','X30S6','TZXO6','TX26','X30N6',
+  'TZXD6','TZXM7','TZXA7','TZXY7','TZX27','TZXD7','TZX28','TX28','TX31',
+  'T2X5','T4X5','T5X5','CUAP','DICP','PARP','TC25'
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let allData = { acciones: [], cedears: [], bonoshd: [], bonoscer: [] };
+let currentTab = 'acciones';
+let sortCol = null;
+let sortDir = 1; // 1=asc, -1=desc
+let refreshTimer = null;
+
+// ============================================================
+// FETCH
+// ============================================================
+async function fetchJSON(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+
+async function loadAll() {
+  setStatus('loading', 'Cargando...');
+  try {
+    const [acciones, cedears, bonos] = await Promise.all([
+      fetchJSON(PROXY + '/v2/Cotizaciones/acciones/argentina/Todos'),
+      fetchJSON(PROXY + '/v2/Cotizaciones/cedears/argentina/Todos'),
+      fetchJSON(PROXY + '/v2/Cotizaciones/bonos/argentina/Todos'),
+    ]);
+
+    const accionesList = (acciones.titulos || []).filter(t => t.moneda === '1');
+    const cedearsList = (cedears.titulos || []).filter(t => t.moneda === '1');
+    const bonosList = (bonos.titulos || []).filter(t => true);
+
+    // Filter by our lists
+    allData.acciones = accionesList.filter(t => PANEL_LIDER.includes(t.simbolo));
+    allData.cedears = cedearsList.filter(t => CEDEARS_TOP.includes(t.simbolo));
+    allData.bonoshd = bonosList.filter(t => BONOS_HD.includes(t.simbolo));
+    allData.bonoscer = bonosList.filter(t => BONOS_CER.includes(t.simbolo));
+
+    // Also include acciones not in our list but with high volume
+    const extraAcciones = accionesList.filter(t => !PANEL_LIDER.includes(t.simbolo) && t.volumen > 0);
+    // Keep panel lider at top, add extras sorted by volume
+    allData.acciones = [
+      ...allData.acciones,
+      ...extraAcciones.sort((a,b) => (b.volumen||0) - (a.volumen||0)).slice(0, 10)
+    ];
+
+    // Update counts
+    document.getElementById('countAcciones').textContent = '(' + allData.acciones.length + ')';
+    document.getElementById('countCedears').textContent = '(' + allData.cedears.length + ')';
+    document.getElementById('countBonoshd').textContent = '(' + allData.bonoshd.length + ')';
+    document.getElementById('countBonoscer').textContent = '(' + allData.bonoscer.length + ')';
+
+    setStatus('ok', 'En vivo');
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('es-AR');
+    hideError();
+    renderTab();
+
+  } catch(err) {
+    console.error(err);
+    setStatus('error', 'Error');
+    showError('Error cargando datos: ' + err.message);
+  }
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function switchTab(tab, btn) {
+  currentTab = tab;
+  sortCol = null;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('searchInput').value = '';
+  renderTab();
+}
+
+function renderTab() {
+  renderSummary();
+  renderHead();
+  renderBody();
+}
+
+function renderSummary() {
+  const data = allData[currentTab] || [];
+  const bar = document.getElementById('summaryBar');
+  if (!data.length) { bar.innerHTML = ''; return; }
+
+  const up = data.filter(t => (t.variacionPorcentual||0) > 0).length;
+  const down = data.filter(t => (t.variacionPorcentual||0) < 0).length;
+  const flat = data.length - up - down;
+  const totalVol = data.reduce((s,t) => s + (t.volumen||0), 0);
+  const avgVar = data.reduce((s,t) => s + (t.variacionPorcentual||0), 0) / data.length;
+
+  bar.innerHTML = `
+    <div class="summary-stat"><span class="label">Instrumentos</span><span class="value">${data.length}</span></div>
+    <div class="summary-stat"><span class="label">Suben</span><span class="value positive">${up}</span></div>
+    <div class="summary-stat"><span class="label">Bajan</span><span class="value negative">${down}</span></div>
+    <div class="summary-stat"><span class="label">Sin cambio</span><span class="value">${flat}</span></div>
+    <div class="summary-stat"><span class="label">Var. Promedio</span><span class="value ${avgVar>=0?'positive':'negative'}">${avgVar>=0?'+':''}${avgVar.toFixed(2)}%</span></div>
+    <div class="summary-stat"><span class="label">Vol. Total</span><span class="value">${fmtVol(totalVol)}</span></div>
+  `;
+}
+
+function getColumns() {
+  // Common columns for all tabs
+  return [
+    { key:'simbolo', label:'Ticker', align:'left' },
+    { key:'descripcion', label:'Nombre', align:'left' },
+    { key:'ultimoPrecio', label:'Último', sort:true },
+    { key:'variacionPorcentual', label:'Var %', sort:true },
+    { key:'apertura', label:'Apertura', sort:true },
+    { key:'maximo', label:'Máximo', sort:true },
+    { key:'minimo', label:'Mínimo', sort:true },
+    { key:'ultimoCierre', label:'Cierre Ant.', sort:true },
+    { key:'volumen', label:'Volumen', sort:true },
+    { key:'cantidadOperaciones', label:'Operaciones', sort:true },
+  ];
+}
+
+function renderHead() {
+  const cols = getColumns();
+  const head = document.getElementById('tableHead');
+  head.innerHTML = '<tr>' + cols.map(c => {
+    const cls = c.sort ? 'sortable' : '';
+    const arrow = sortCol === c.key ? (sortDir === 1 ? ' ▲' : ' ▼') : '';
+    const align = c.align === 'left' ? 'text-align:left' : '';
+    return `<th class="${cls}" style="${align}" onclick="${c.sort ? "sortBy('"+c.key+"')" : ''}">${c.label}<span class="sort-arrow">${arrow}</span></th>`;
+  }).join('') + '</tr>';
+}
+
+function renderBody() {
+  let data = [...(allData[currentTab] || [])];
+  const search = document.getElementById('searchInput').value.toUpperCase().trim();
+
+  // Filter
+  if (search) {
+    data = data.filter(t =>
+      (t.simbolo||'').toUpperCase().includes(search) ||
+      (t.descripcion||'').toUpperCase().includes(search)
+    );
+  }
+
+  // Sort
+  if (sortCol) {
+    data.sort((a,b) => {
+      let va = a[sortCol], vb = b[sortCol];
+      if (typeof va === 'string') return sortDir * va.localeCompare(vb);
+      return sortDir * ((va||0) - (vb||0));
+    });
+  }
+
+  document.getElementById('resultCount').textContent = data.length + ' instrumentos';
+
+  const tbody = document.getElementById('tableBody');
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:2rem;color:var(--text-muted)">Sin datos</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = data.map(t => {
+    const vp = t.variacionPorcentual || 0;
+    const vpClass = vp > 0 ? 'positive' : vp < 0 ? 'negative' : '';
+    const vpStr = (vp > 0 ? '+' : '') + vp.toFixed(2) + '%';
+
+    return `<tr>
+      <td>${t.simbolo || '--'}</td>
+      <td>${truncate(t.descripcion || '', 30)}</td>
+      <td>${fmtNum(t.ultimoPrecio)}</td>
+      <td class="${vpClass}" style="font-weight:700">${vpStr}</td>
+      <td>${fmtNum(t.apertura)}</td>
+      <td>${fmtNum(t.maximo)}</td>
+      <td>${fmtNum(t.minimo)}</td>
+      <td>${fmtNum(t.ultimoCierre)}</td>
+      <td class="${t.volumen > 1000000 ? 'vol-high' : ''}">${fmtVol(t.volumen)}</td>
+      <td>${fmtInt(t.cantidadOperaciones)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function sortBy(col) {
+  if (sortCol === col) { sortDir *= -1; }
+  else { sortCol = col; sortDir = -1; } // default desc
+  renderHead();
+  renderBody();
+}
+
+function filterTable() {
+  renderBody();
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function fmtNum(n) {
+  if (n == null || n === 0) return '--';
+  return n.toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+
+function fmtInt(n) {
+  if (n == null || n === 0) return '--';
+  return n.toLocaleString('es-AR');
+}
+
+function fmtVol(n) {
+  if (n == null || n === 0) return '--';
+  if (n >= 1e9) return (n/1e9).toFixed(1) + 'B';
+  if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(1) + 'K';
+  return n.toLocaleString('es-AR');
+}
+
+function truncate(s, len) {
+  return s.length > len ? s.substring(0, len) + '...' : s;
+}
+
+function setStatus(type, msg) {
+  const dot = document.getElementById('statusDot');
+  const txt = document.getElementById('statusText');
+  dot.className = 'status-dot' + (type === 'error' ? ' error' : type === 'loading' ? ' loading' : '');
+  txt.textContent = msg;
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorBox');
+  el.textContent = msg; el.classList.add('visible');
+}
+
+function hideError() {
+  document.getElementById('errorBox').classList.remove('visible');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  loadAll();
+  refreshTimer = setInterval(loadAll, REFRESH_MS);
+});
+</script>
+
+</body>
+</html>
