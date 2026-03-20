@@ -567,7 +567,7 @@ function loadModule(key) {
   const mod = MODULES[key];
   if (!mod) return;
   // Navigate directly to the module page
-  window.location.href = mod.file;
+  window.location.href = './' + mod.file;
 }
 
 function toggleSidebar() {
