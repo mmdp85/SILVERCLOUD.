@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4a9eff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SilverCloud">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-512.png">
+<title>SilverCloud</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg-primary: #060a12;
+    --bg-sidebar: #0a0e17;
+    --bg-sidebar-hover: #111827;
+    --bg-active: #141d2e;
+    --border: #1a2540;
+    --text-primary: #e8ecf4;
+    --text-secondary: #8892a8;
+    --text-muted: #4a5568;
+    --accent-blue: #4a9eff;
+    --accent-glow: rgba(74, 158, 255, 0.08);
+    --sidebar-w: 260px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    height: 100vh;
+    overflow: auto;
+    display: flex;
+  }
+
+  .sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    height: 100vh;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    overflow-y: auto;
+  }
+
+  .sidebar-logo {
+    padding: 1.6rem 1.4rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: default;
+    flex-shrink: 0;
+  }
+
+  .logo-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #4a9eff 0%, #a8b8d0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--bg-primary);
+    flex-shrink: 0;
+  }
+
+  .logo-text .name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  .logo-text .tagline {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .nav-section { padding: 1rem 0.8rem 0.4rem; }
+
+  .nav-section-title {
+    font-size: 0.6rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 0 0.6rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .nav-items { display: flex; flex-direction: column; gap: 2px; }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    position: relative;
+    user-select: none;
+  }
+
+  .nav-item:hover { background: var(--bg-sidebar-hover); color: var(--text-primary); }
+
+  .nav-item.active {
+    background: var(--bg-active);
+    border-color: var(--border);
+    color: var(--text-primary);
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: -0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: var(--accent-blue);
+    border-radius: 0 3px 3px 0;
+  }
+
+  .nav-icon { font-size: 1.1rem; width: 24px; text-align: center; flex-shrink: 0; }
+  .nav-label { font-size: 0.85rem; font-weight: 500; white-space: nowrap; }
+
+  .nav-badge {
+    margin-left: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+
+  .badge-live { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+  .badge-edit { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+  .badge-new  { background: rgba(74, 158, 255, 0.15); color: #4a9eff; }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 1rem 1.4rem;
+    border-top: 1px solid var(--border);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  .main {
+    flex: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .welcome-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 2rem;
+  }
+
+  .welcome-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(74,158,255,0.15) 0%, rgba(168,184,208,0.08) 100%);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--accent-blue);
+  }
+
+  .welcome-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+  }
+
+  .welcome-sub {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-align: center;
+    max-width: 400px;
+    line-height: 1.6;
+  }
+
+  .module-cards {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .module-card {
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    width: 160px;
+  }
+
+  .module-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(74, 158, 255, 0.1);
+  }
+
+  .module-card .mc-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .module-card .mc-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.2rem; }
+  .module-card .mc-desc { font-size: 0.7rem; color: var(--text-muted); }
+
+  .bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--bg-sidebar);
+    border-top: 1px solid var(--border);
+    z-index: 50;
+    padding: 0.4rem 0.5rem 0.6rem;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.55rem;
+    font-family: 'Space Mono', monospace;
+    padding: 0.3rem 0.4rem;
+    border-radius: 8px;
+    transition: all 0.15s;
+    min-width: 50px;
+  }
+
+  .bottom-nav a:hover, .bottom-nav a.active { color: var(--accent-blue); }
+  .bottom-nav a .bn-icon { font-size: 1.2rem; line-height: 1; }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .bottom-nav { display: flex; }
+    body { display: block; overflow: auto; padding-bottom: 70px; }
+    .main { height: auto; overflow: auto; }
+    .welcome-screen { min-height: calc(100vh - 70px); padding: 1.5rem 1rem; }
+    .module-card { width: 140px; padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">SC</div>
+    <div class="logo-text">
+      <span class="name">SilverCloud</span>
+      <span class="tagline">Wealth Platform</span>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Mercados</div>
+    <div class="nav-items">
+      <div class="nav-item" onclick="go('crypto.html')">
+        <span class="nav-icon">₿</span>
+        <span class="nav-label">Crypto</span>
+        <span class="nav-badge badge-live">LIVE</span>
+      </div>
+      <div class="nav-item" onclick="go('curva-pesos.html')">
+        <span class="nav-icon">📈</span>
+        <span class="nav-label">Curva Tasa Fija</span>
+        <span class="nav-badge badge-edit">EDIT</span>
+      </div>
+      <div class="nav-item" onclick="go('precios-iol.html')">
+        <span class="nav-icon">🏦</span>
+        <span class="nav-label">Precios IOL</span>
+        <span class="nav-badge badge-live">LIVE</span>
+      </div>
+      <div class="nav-item" onclick="go('cafci.html')">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">CAFCI NAV</span>
+        <span class="nav-badge badge-live">LIVE</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Portafolio</div>
+    <div class="nav-items">
+      <div class="nav-item" onclick="go('cartera.html')">
+        <span class="nav-icon">💼</span>
+        <span class="nav-label">Mi Cartera</span>
+        <span class="nav-badge badge-edit">EDIT</span>
+      </div>
+      <div class="nav-item" onclick="go('galileo.html')">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Galileo Fondos</span>
+        <span class="nav-badge badge-edit">EDIT</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Herramientas</div>
+    <div class="nav-items">
+      <div class="nav-item" onclick="go('propuesta.html')">
+        <span class="nav-icon">📄</span>
+        <span class="nav-label">Propuesta Inv.</span>
+        <span class="nav-badge badge-new">NEW</span>
+      </div>
+      <div class="nav-item" onclick="go('roa-cliente.html')">
+        <span class="nav-icon">📉</span>
+        <span class="nav-label">ROA</span>
+        <span class="nav-badge badge-new">NEW</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    SilverCloud v2.1 &copy; 2026
+  </div>
+</nav>
+
+<div class="main">
+  <div class="welcome-screen">
+    <div class="welcome-logo">SC</div>
+    <div class="welcome-title">SilverCloud</div>
+    <div class="welcome-sub">Plataforma de análisis financiero. Seleccioná un módulo del menú.</div>
+    <div class="module-cards">
+      <div class="module-card" onclick="go('crypto.html')">
+        <div class="mc-icon">₿</div>
+        <div class="mc-name">Crypto</div>
+        <div class="mc-desc">Dashboard en vivo</div>
+      </div>
+      <div class="module-card" onclick="go('precios-iol.html')">
+        <div class="mc-icon">🏦</div>
+        <div class="mc-name">Precios IOL</div>
+        <div class="mc-desc">Acciones, CEDEARs, Bonos</div>
+      </div>
+      <div class="module-card" onclick="go('cafci.html')">
+        <div class="mc-icon">📋</div>
+        <div class="mc-name">CAFCI NAV</div>
+        <div class="mc-desc">Fondos en tiempo real</div>
+      </div>
+      <div class="module-card" onclick="go('galileo.html')">
+        <div class="mc-icon">📊</div>
+        <div class="mc-name">Galileo Fondos</div>
+        <div class="mc-desc">NAV + Composición</div>
+      </div>
+      <div class="module-card" onclick="go('propuesta.html')">
+        <div class="mc-icon">📄</div>
+        <div class="mc-name">Propuesta Inv.</div>
+        <div class="mc-desc">Generador PDF</div>
+      </div>
+      <div class="module-card" onclick="go('roa-cliente.html')">
+        <div class="mc-icon">📉</div>
+        <div class="mc-name">ROA</div>
+        <div class="mc-desc">Calculadora ROA</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <a href="dashboard.html" class="active"><span class="bn-icon">🏠</span>Home</a>
+  <a href="precios-iol.html"><span class="bn-icon">🏦</span>Precios</a>
+  <a href="cafci.html"><span class="bn-icon">📋</span>CAFCI</a>
+  <a href="galileo.html"><span class="bn-icon">📊</span>Fondos</a>
+  <a href="propuesta.html"><span class="bn-icon">📄</span>Propuesta</a>
+</div>
+
+<script>
+function go(file) {
+  window.location.href = './' + file;
+}
+</script>
+</body>
+</html>
