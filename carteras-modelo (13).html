@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="es" data-darkreader-mode="ignore">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark only">
+<meta name="darkreader-lock">
+<title>SilverCloud Advisors — Carteras Modelo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: dark;
+  }
+  html { color-scheme: dark only; background: #0d1117; }
+  body { color-scheme: dark only; }
+  :root {
+    --bg: #0d1117;
+    --bg-soft: #161b22;
+    --bg-card: #1a2030;
+    --bg-card-2: #1c2330;
+    --border: #2a3343;
+    --border-soft: #1e2533;
+    --text: #d8dee9;
+    --text-bright: #f0f6fc;
+    --text-dim: #8b95a8;
+    --text-light: #6b748a;
+    --navy: #5b86c7;
+    --navy-2: #4b73b0;
+    --navy-3: #3c5f96;
+    --navy-4: #2d4c7c;
+    --navy-5: #243656;
+    --violet: #a37bc7;
+    --violet-2: #8e65b4;
+    --violet-3: #785095;
+    --violet-4: #5e3c79;
+    --violet-5: #3f2854;
+    --gray-light: #B5C1CC;
+    --gray-2: #95a3b0;
+    --gray-3: #7a8896;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --red: #f85149;
+    --c-liquidez: #B5C1CC;
+    --c-lecap: #5b86c7;
+    --c-dual: #4b73b0;
+    --c-cer: #95a3b0;
+    --c-hd: #2d4c7c;
+    --c-equity-ar: #c95757;
+    --c-equity-usa: #a37bc7;
+    --c-etfs: #785095;
+    --c-fci-mm: #d4cee0;
+    --c-fci-tasa: #95a3b0;
+    --c-fci-cer: #c0bbd0;
+    --c-fci-dlk: #8e65b4;
+    --c-fci-usd: #5e3c79;
+    --c-fci-acc: #d2a8ff;
+    --c-fci-pymes: #c95757;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Open Sans', sans-serif; font-weight: 300; font-size: 14px; line-height: 1.6; padding: 24px; }
+  .container { max-width: 1200px; margin: 0 auto; }
+  .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); text-decoration: none; margin-bottom: 16px; transition: color 0.15s; font-weight: 400; }
+  .back-link:hover { color: var(--navy); }
+  .header { border-bottom: 2px solid var(--navy); padding-bottom: 20px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; }
+  .header-brand h1 { margin: 0; font-family: 'Libre Baskerville', serif; font-style: italic; font-weight: 400; font-size: 26px; color: var(--text-bright); }
+  .header-brand h1 strong { color: var(--navy); font-weight: 700; }
+  .header-brand .brand-line { font-weight: 300; color: var(--text-dim); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+  .header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); padding: 7px 14px; font-family: inherit; font-weight: 400; font-size: 11px; cursor: pointer; border-radius: 2px; transition: all 0.15s; text-transform: uppercase; letter-spacing: 0.8px; }
+  .btn:hover { background: var(--navy); color: white; border-color: var(--navy); }
+  .btn-warn:hover { background: var(--yellow); border-color: var(--yellow); color: #1a1a1a; }
+  .btn-danger:hover { background: var(--red); border-color: var(--red); color: white; }
+  .main-tabs { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 1px solid var(--border); overflow-x: auto; }
+  .main-tab { background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--text-dim); padding: 12px 18px; font-family: inherit; font-size: 12px; cursor: pointer; transition: all 0.15s; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; margin-bottom: -1px; }
+  .main-tab:hover { color: var(--text-bright); }
+  .main-tab.active { color: var(--navy); border-bottom-color: var(--navy); font-weight: 600; }
+  .main-tab .edit-dot { color: var(--violet); margin-left: 6px; font-size: 10px; }
+  .overview-section { margin-bottom: 32px; }
+  .overview-section h3 { font-family: 'Libre Baskerville', serif; font-style: italic; color: var(--text-bright); font-size: 18px; font-weight: 400; margin: 0 0 18px 0; padding-bottom: 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .moneda-pill { font-style: normal; font-size: 10px; padding: 3px 10px; border-radius: 2px; font-weight: 600; letter-spacing: 1px; }
+  .moneda-pill.ars { background: var(--violet); color: var(--bg); }
+  .moneda-pill.usd { background: var(--navy); color: white; }
+  .overview-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; align-items: start; }
+  @media (max-width: 800px) { .overview-grid { grid-template-columns: 1fr; } }
+  .overview-section .overview-column { display: grid; grid-template-rows: repeat(3, 1fr); gap: 20px; align-items: stretch; }
+  .overview-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 20px; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; }
+  .overview-card .legend { flex: 1; }
+  .overview-card:hover { border-color: var(--navy); background: var(--bg-card-2); box-shadow: 0 4px 16px rgba(91, 134, 199, 0.15); transform: translateY(-2px); }
+  .overview-card svg { width: 100%; max-width: 200px; height: auto; margin: 0 auto; display: block; }
+  .overview-card .perfil { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; font-weight: 600; }
+  .overview-card .nombre { font-family: 'Libre Baskerville', serif; font-size: 16px; color: var(--text-bright); font-weight: 400; margin-bottom: 14px; }
+  .overview-card .empty { color: var(--text-light); font-size: 11px; margin-top: 10px; font-style: italic; }
+  .legend { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-soft); display: flex; flex-direction: column; gap: 6px; text-align: left; max-height: 220px; overflow-y: auto; }
+  .legend-item { display: flex; align-items: center; gap: 10px; font-size: 11px; }
+  .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .legend-name { color: var(--text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .legend-val { color: var(--text-bright); font-weight: 600; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 28px; margin-bottom: 16px; }
+  .portfolio-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+  .portfolio-title { flex: 1; min-width: 280px; }
+  .portfolio-title h2 { font-family: 'Libre Baskerville', serif; font-style: italic; margin: 10px 0 0 0; font-size: 22px; color: var(--text-bright); font-weight: 400; }
+  .portfolio-title .description { color: var(--text-dim); font-size: 13px; margin-top: 8px; max-width: 600px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 2px; font-size: 10px; font-weight: 600; letter-spacing: 1px; margin-right: 6px; text-transform: uppercase; }
+  .badge-pesos { background: var(--violet); color: var(--bg); }
+  .badge-usd { background: var(--navy); color: white; }
+  .badge-conservador { background: var(--gray-light); color: #1a1a1a; }
+  .badge-moderado { background: var(--yellow); color: var(--bg); }
+  .badge-agresivo { background: var(--red); color: white; }
+  .badge-edited { background: transparent; color: var(--violet); border: 1px solid var(--violet); margin-left: 6px; }
+  .portfolio-actions { display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap; }
+  .main-grid { display: grid; grid-template-columns: minmax(280px, 360px) 1fr; gap: 28px; margin-bottom: 20px; }
+  @media (max-width: 800px) { .main-grid { grid-template-columns: 1fr; } }
+  .donut-wrapper { display: flex; flex-direction: column; align-items: center; }
+  .donut-wrapper svg { width: 100%; max-width: 320px; height: auto; }
+  .meta-line { margin-top: 14px; text-align: center; font-size: 11px; color: var(--text-dim); line-height: 1.8; }
+  .meta-line strong { color: var(--text-bright); font-weight: 600; }
+  table.activos-tabla { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.activos-tabla thead th { text-align: left; color: var(--text-dim); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; padding: 10px 6px; border-bottom: 1px solid var(--border); }
+  table.activos-tabla thead th.right { text-align: right; }
+  table.activos-tabla td { padding: 10px 6px; border-bottom: 1px solid var(--border-soft); vertical-align: middle; }
+  table.activos-tabla td.right { text-align: right; font-variant-numeric: tabular-nums; }
+  .activo-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 10px; vertical-align: middle; }
+  .activo-name { color: var(--text-bright); font-weight: 600; font-size: 13px; }
+  .activo-cat { color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; padding-left: 20px; }
+  tr.cat-subheader td { padding: 14px 6px 6px; border-bottom: 1px solid var(--border); background: var(--bg-soft); color: var(--text-dim); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
+  .cat-subheader-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+  .pct-input { background: var(--bg); border: 1px solid var(--border); color: var(--text-bright); font-family: inherit; font-size: 14px; font-weight: 600; text-align: right; padding: 5px 10px; width: 70px; border-radius: 2px; transition: all 0.15s; font-variant-numeric: tabular-nums; }
+  .pct-input:hover { border-color: var(--text-dim); }
+  .pct-input:focus { outline: none; border-color: var(--navy); background: var(--bg-card-2); box-shadow: 0 0 0 2px rgba(91, 134, 199, 0.15); }
+  .pct-suffix { color: var(--text-dim); font-size: 12px; margin-left: 3px; }
+  .btn-remove { background: transparent; border: 1px solid transparent; color: var(--text-light); width: 24px; height: 24px; cursor: pointer; border-radius: 2px; font-size: 14px; line-height: 1; padding: 0; transition: all 0.15s; margin-left: 8px; }
+  .btn-remove:hover { border-color: var(--red); color: var(--red); background: rgba(248, 81, 73, 0.1); }
+  tr.add-row td { border-bottom: none; padding: 14px 6px; }
+  .add-cta { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; background: var(--bg-soft); border: 1px dashed var(--border); border-radius: 4px; cursor: pointer; transition: all 0.15s; color: var(--text-dim); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+  .add-cta:hover { border-color: var(--violet); color: var(--violet); background: rgba(163, 123, 199, 0.05); }
+  .add-cta-icon { font-size: 16px; }
+  tr.empty-row td { padding: 32px 12px; text-align: center; color: var(--text-dim); font-size: 13px; font-style: italic; border-bottom: none; }
+  tr.total-row td { border-top: 2px solid var(--navy); border-bottom: none; padding-top: 14px; }
+  .total-value { font-family: 'Libre Baskerville', serif; font-weight: 700; font-size: 18px; color: var(--text-bright); }
+  .total-value.error { color: var(--red); }
+  .total-value.warning { color: var(--yellow); }
+  .total-value.ok { color: var(--green); }
+  .total-status { font-size: 10px; color: var(--text-dim); margin-top: 3px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+  .total-status.error { color: var(--red); }
+  .total-status.warning { color: var(--yellow); }
+  .total-status.ok { color: var(--green); }
+  .editor-help { background: var(--bg-soft); border: 1px solid var(--border); border-left: 3px solid var(--navy); border-radius: 0 2px 2px 0; padding: 10px 14px; font-size: 11px; color: var(--text-dim); margin-top: 14px; line-height: 1.7; }
+  .editor-help kbd { background: var(--bg-card); border: 1px solid var(--border); border-radius: 2px; padding: 2px 6px; font-size: 10px; color: var(--navy); font-weight: 600; }
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .modal { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; width: 100%; max-width: 800px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; }
+  .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .modal-title { font-family: 'Libre Baskerville', serif; font-style: italic; color: var(--text-bright); font-size: 18px; font-weight: 400; margin: 0; }
+  .modal-close { background: transparent; border: none; color: var(--text-dim); font-size: 22px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
+  .modal-close:hover { color: var(--red); background: rgba(248, 81, 73, 0.1); }
+  .modal-search { padding: 14px 24px; border-bottom: 1px solid var(--border); background: var(--bg-soft); }
+  .modal-search input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; font-family: inherit; font-size: 13px; border-radius: 3px; }
+  .modal-search input:focus { outline: none; border-color: var(--navy); }
+  .modal-body { flex: 1; overflow-y: auto; padding: 8px 0; }
+  .activo-pick-item { padding: 10px 24px; cursor: pointer; transition: all 0.1s; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-soft); }
+  .activo-pick-item:hover { background: var(--bg-card-2); }
+  .activo-pick-item.disabled { opacity: 0.4; cursor: not-allowed; }
+  .activo-pick-item.disabled:hover { background: transparent; }
+  .activo-pick-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .activo-pick-info { flex: 1; min-width: 0; }
+  .activo-pick-name { color: var(--text-bright); font-weight: 600; font-size: 13px; }
+  .activo-pick-meta { color: var(--text-dim); font-size: 11px; margin-top: 2px; }
+  .activo-pick-cat { color: var(--text-light); font-size: 16px; flex-shrink: 0; padding: 0 4px; }
+  .activo-pick-added { color: var(--green); font-size: 11px; font-weight: 600; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+  .modal-subgroup-header { padding: 14px 24px 6px; color: var(--text-dim); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; background: var(--bg-soft); border-bottom: 1px solid var(--border-soft); border-top: 1px solid var(--border-soft); }
+  .cat-section-title { padding: 16px 24px 8px; color: var(--text-dim); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+  .cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 0 24px 16px; }
+  @media (max-width: 600px) { .cat-grid { grid-template-columns: 1fr; } }
+  .cat-card { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.15s; }
+  .cat-card:hover { border-color: var(--violet); background: var(--bg-card-2); }
+  .cat-card-empty { opacity: 0.5; cursor: not-allowed; }
+  .cat-card-empty:hover { border-color: var(--border); background: var(--bg); }
+  .cat-card-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+  .cat-card-info { flex: 1; min-width: 0; }
+  .cat-card-name { color: var(--text-bright); font-weight: 600; font-size: 13px; margin-bottom: 2px; }
+  .cat-card-meta { color: var(--text-dim); font-size: 11px; }
+  .cat-card-arrow { color: var(--text-light); font-size: 14px; flex-shrink: 0; transition: color 0.15s; }
+  .cat-card:hover .cat-card-arrow { color: var(--violet); }
+  .modal-back { background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); padding: 6px 12px; font-family: inherit; font-size: 11px; cursor: pointer; border-radius: 3px; transition: all 0.15s; text-transform: uppercase; letter-spacing: 0.8px; flex-shrink: 0; }
+  .modal-back:hover { border-color: var(--violet); color: var(--violet); }
+  .footer-note { color: var(--text-light); font-size: 10px; text-align: center; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .footer-note .firm-name { font-family: 'Libre Baskerville', serif; font-style: italic; color: var(--navy); font-size: 11px; }
+
+  .analysis-section { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .analysis-title { font-family: 'Libre Baskerville', serif; font-style: italic; color: var(--text-bright); font-size: 18px; font-weight: 400; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+  .analysis-title-icon { font-size: 16px; opacity: 0.8; }
+  .analysis-block { margin-bottom: 24px; }
+  .analysis-block-header { color: var(--text-dim); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border-soft); display: flex; justify-content: space-between; align-items: center; }
+  .analysis-summary.editing { padding: 0; }
+  .analysis-summary textarea { width: 100%; min-height: 100px; background: var(--bg); border: 1px solid var(--navy); color: var(--text-bright); font-family: inherit; font-size: 13px; line-height: 1.6; padding: 14px 16px; border-radius: 3px; resize: vertical; }
+  .analysis-summary textarea:focus { outline: none; border-color: var(--violet); }
+  .analysis-edit-actions { display: flex; gap: 6px; margin-top: 8px; justify-content: flex-end; }
+  .analysis-edit-btn { background: transparent; border: none; color: var(--violet); font-family: inherit; font-size: 11px; cursor: pointer; padding: 4px 8px; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; border-radius: 2px; }
+  .analysis-edit-btn:hover { color: var(--text-bright); background: var(--bg-card-2); }
+  .analysis-edit-btn.reset { color: var(--text-dim); }
+
+  .bar-chart { display: flex; flex-direction: column; gap: 8px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+  .bar-row .bar-label { flex: 0 0 160px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-row .bar-container { flex: 1; height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+  .bar-row .bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+  .bar-row .bar-val { flex: 0 0 50px; text-align: right; color: var(--text-bright); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .aporte-list { display: flex; flex-direction: column; gap: 10px; }
+  .aporte-item { background: var(--bg-soft); border: 1px solid var(--border-soft); border-radius: 3px; padding: 10px 14px; display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; }
+  .aporte-item .aporte-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; }
+  .aporte-item .aporte-content { min-width: 0; }
+  .aporte-item .aporte-head { color: var(--text-bright); font-weight: 600; font-size: 13px; margin-bottom: 3px; }
+  .aporte-item .aporte-cat { color: var(--text-light); font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+  .aporte-item .aporte-text { color: var(--text); font-size: 12px; line-height: 1.5; }
+  .aporte-item .aporte-empty { color: var(--text-light); font-size: 12px; font-style: italic; }
+  .aporte-item .aporte-pct { color: var(--text-bright); font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; }
+
+  .split-bar { display: flex; height: 64px; border-radius: 4px; overflow: hidden; margin-bottom: 22px; border: 1px solid var(--border-soft); }
+  .split-side { display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; padding: 8px 12px; transition: all 0.3s; }
+  .split-side.rf { background: linear-gradient(135deg, var(--navy-5) 0%, var(--navy) 100%); }
+  .split-side.eq { background: linear-gradient(135deg, var(--violet-5) 0%, var(--violet) 100%); }
+  .split-pct { font-family: 'Libre Baskerville', serif; font-weight: 700; font-size: 22px; line-height: 1; }
+  .split-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px; opacity: 0.9; }
+  .analysis-summary { color: var(--text); font-size: 13px; line-height: 1.75; background: var(--bg-soft); border-left: 3px solid var(--navy); padding: 16px 18px; border-radius: 0 3px 3px 0; white-space: pre-line; }
+
+  /* === TÁCTICAS === */
+  .tacticas-header { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .tacticas-title { font-family: 'Libre Baskerville', serif; font-style: italic; font-size: 22px; color: var(--text-bright); font-weight: 400; }
+  .tacticas-subtitle { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin-top: 4px; }
+  .tacticas-meta { font-size: 10px; color: var(--text-dim); font-family: monospace; letter-spacing: 0.5px; display: flex; align-items: center; gap: 12px; }
+  .tacticas-meta .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: tac-pulse 2s ease-in-out infinite; }
+  .tacticas-meta .status-dot.error { background: var(--red); animation: none; }
+  .tacticas-meta .status-dot.loading { background: var(--yellow); }
+  @keyframes tac-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .tacticas-section { margin-bottom: 32px; }
+  .tacticas-section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .tacticas-section-title { font-family: 'Libre Baskerville', serif; font-style: italic; font-size: 16px; color: var(--text-bright); }
+  .tacticas-section-badge { font-size: 9px; padding: 2px 8px; border-radius: 2px; letter-spacing: 1px; font-weight: 700; }
+  .tacticas-section-badge.ar { background: var(--violet); color: var(--bg); }
+  .tacticas-section-badge.cedears { background: var(--navy); color: white; }
+  .tac-list { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .tac-row { padding: 14px 18px; border-bottom: 1px solid var(--border-soft); display: grid; grid-template-columns: 90px 110px 1fr 130px 100px 24px; gap: 16px; align-items: center; }
+  .tac-row:last-child { border-bottom: none; }
+  .tac-row.cedear { grid-template-columns: 90px 110px 1fr 140px 110px 24px; }
+  .tac-ticker { font-weight: 700; color: var(--text-bright); font-size: 15px; }
+  .tac-name { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+  .tac-sector-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+  .tac-sector-value { font-size: 12px; color: var(--text); margin-top: 2px; }
+  .tac-conv { display: inline-block; font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 2px; letter-spacing: 0.8px; margin-bottom: 4px; text-transform: uppercase; }
+  .tac-conv.especulativo { background: rgba(248, 81, 73, 0.15); color: var(--red); }
+  .tac-conv.tecnico { background: rgba(210, 153, 34, 0.18); color: var(--yellow); }
+  .tac-conv.largo { background: rgba(91, 134, 199, 0.15); color: var(--navy); }
+  .tac-tesis { font-size: 12px; color: var(--text); line-height: 1.45; }
+  .tac-prices-label { font-size: 10px; color: var(--text-dim); text-align: right; }
+  .tac-prices-value { font-family: monospace; font-size: 11px; color: var(--text); margin-top: 2px; text-align: right; }
+  .tac-ytd-label { font-size: 10px; color: var(--text-dim); text-align: right; }
+  .tac-ytd-value { font-family: 'Libre Baskerville', serif; font-size: 17px; font-weight: 700; margin-top: 2px; text-align: right; }
+  .tac-ytd-value.positive { color: var(--green); }
+  .tac-ytd-value.negative { color: var(--red); }
+  .tac-ytd-value.neutral { color: var(--text-light); }
+  .tac-remove { background: transparent; border: none; color: var(--text-light); font-size: 18px; cursor: pointer; padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 2px; transition: all 0.15s; }
+  .tac-remove:hover { color: var(--red); background: rgba(248, 81, 73, 0.1); }
+  .tac-add-cta { margin-top: 10px; padding: 12px; background: var(--bg-card); border: 1px dashed var(--border); border-radius: 4px; text-align: center; color: var(--text-dim); font-size: 12px; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; transition: all 0.15s; }
+  .tac-add-cta:hover { border-color: var(--violet); color: var(--violet); }
+  .tac-empty { padding: 24px 18px; text-align: center; color: var(--text-dim); font-size: 12px; font-style: italic; }
+
+  /* Modal de pick táctico */
+  .tac-edit-grid { display: grid; gap: 14px; padding: 14px 24px; }
+  .tac-edit-label { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; font-weight: 600; }
+  .tac-edit-input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text-bright); padding: 8px 12px; font-family: inherit; font-size: 13px; border-radius: 3px; outline: none; }
+  .tac-edit-input:focus { border-color: var(--navy); }
+  .tac-edit-textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
+  .tac-conv-options { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tac-conv-option { flex: 1; min-width: 100px; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); cursor: pointer; border-radius: 3px; font-size: 10px; text-align: center; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; transition: all 0.15s; }
+  .tac-conv-option:hover { border-color: var(--text-dim); color: var(--text); }
+  .tac-conv-option.selected.especulativo { border-color: var(--red); background: rgba(248, 81, 73, 0.15); color: var(--red); }
+  .tac-conv-option.selected.tecnico { border-color: var(--yellow); background: rgba(210, 153, 34, 0.18); color: var(--yellow); }
+  .tac-conv-option.selected.largo { border-color: var(--navy); background: rgba(91, 134, 199, 0.15); color: var(--navy); }
+  .tac-edit-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .tac-edit-actions { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; background: var(--bg-soft); }
+
+  @media (max-width: 700px) {
+    .tac-row, .tac-row.cedear { grid-template-columns: 1fr; gap: 8px; }
+    .tac-prices-value, .tac-prices-label, .tac-ytd-value, .tac-ytd-label { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a href="index.html" class="back-link">← Dashboard</a>
+  <div class="header">
+    <div class="header-brand">
+      <h1>Silver<strong>Cloud</strong> Advisors</h1>
+      <div class="brand-line">Carteras Modelo · CNV #474</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="exportAllJSON()">↓ Exportar</button>
+      <button class="btn" onclick="document.getElementById('import-file').click()">↑ Importar</button>
+      <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importJSON(event)">
+      <button class="btn btn-danger" onclick="resetAll()">Reset Todo</button>
+    </div>
+  </div>
+  <div class="main-tabs" id="main-tabs"></div>
+  <div id="content"></div>
+  <div class="footer-note">
+    <span class="firm-name">Silver<strong>Cloud</strong> Advisors</span> · CNV #474 · Carteras modelo orientativas — No constituyen recomendación específica
+  </div>
+</div>
+<div id="modal-container"></div>
+<script>
+const CATEGORIES = {
+  liquidez:        { label: "Liquidez (MM)",            color: "var(--c-liquidez)",   group: "directo" },
+  lecap:           { label: "LECAPs / BONCAPs",         color: "var(--c-lecap)",      group: "directo" },
+  dual:            { label: "Bonos Duales",             color: "var(--c-dual)",       group: "directo" },
+  cer:             { label: "CER",                      color: "var(--c-cer)",        group: "directo" },
+  hd:              { label: "Hard-Dollar AR",           color: "var(--c-hd)",         group: "directo", subgroups: ["Soberanos", "BCRA", "Provinciales", "Corporativos"] },
+  equityAr:        { label: "Equity AR",                color: "var(--c-equity-ar)",  group: "directo" },
+  equityUsa:       { label: "Equity USA / CEDEARs",     color: "var(--c-equity-usa)", group: "directo", subgroups: ["Tech", "Financials", "Healthcare", "Consumer", "Energy", "Industrials", "Brasil"] },
+  etfs:            { label: "ETFs / Índices",           color: "var(--c-etfs)",       group: "directo" },
+  fciMM:           { label: "FCI Money Market",         color: "var(--c-fci-mm)",     group: "fci" },
+  fciTasa:         { label: "FCI Tasa Fija Pesos",      color: "var(--c-fci-tasa)",   group: "fci" },
+  fciCer:          { label: "FCI CER",                  color: "var(--c-fci-cer)",    group: "fci" },
+  fciDlk:          { label: "FCI Dólar Linked",         color: "var(--c-fci-dlk)",    group: "fci" },
+  fciUsd:          { label: "FCI USD (Income/ED)",      color: "var(--c-fci-usd)",    group: "fci" },
+  fciAcciones:     { label: "FCI Acciones",             color: "var(--c-fci-acc)",    group: "fci" },
+  fciPymes:        { label: "FCI Pymes",                color: "var(--c-fci-pymes)",  group: "fci" },
+};
+
+const ACTIVOS = [
+  ...["S31M6","S30A6","S15F6","S28F6","S31L6","S29G6","S30S6","S31O6","T13F7","T15A7","T17O6","T30J6"].map(t => ({ id: t, name: t, category: "lecap", type: "bono" })),
+  ...["TTJ26","TTS26","TTD26","TTM26"].map(t => ({ id: t, name: t, category: "dual", type: "bono" })),
+  ...["TZX26","TX26","TZXM7","TZXA7","TZXY7","TZX27","TZXD7","TX28","DICP","PARP","TX31","TX35","TX38"].map(t => ({ id: t, name: t, category: "cer", type: "bono" })),
+  ...["AL29","AL30","AL35","AL38","AL41","GD29","GD30","GD35","GD38","GD41","GD46","AE38"].map(t => ({ id: t, name: t, category: "hd", subgroup: "Soberanos", type: "bono" })),
+  ...["BPOA7","BPOB7","BPOC7","BPOD7","BPY26","BPJ25"].map(t => ({ id: t, name: t, category: "hd", subgroup: "BCRA", type: "bono" })),
+  ...["PBA25","PBA37","PBY22","PBA34D","CO24D","CO27D","MZ24D","PMM29","PMJ24","PMJ29","CHU22D","CHU30D"].map(t => ({ id: t, name: t, category: "hd", subgroup: "Provinciales", type: "bono" })),
+  ...["YMCXO","YCAMO","YCA6O","YMCQO","MGCMO","MGC2O","RPC2O","RPC5O","PNDCO","PNDLO","IRC4O","IRCFO","IRCJO","TGS2O","TGS5O","LECVO","VSCRO","PARM","RUC2O"].map(t => ({ id: t, name: t, category: "hd", subgroup: "Corporativos", type: "bono" })),
+  ...["GGAL","YPFD","PAMP","BMA","BBAR","TGNO4","TXAR","CEPU","EDN","ALUA","TRAN","LOMA","TGSU2","MIRG","SUPV","CRES","BYMA","COME"].map(t => ({ id: t, name: t, category: "equityAr", type: "accion" })),
+  ...["AAPL","MSFT","GOOGL","AMZN","META","NVDA","ORCL","CRM","NOW","ADBE","SNOW","MSTR","GLOB","ACN","PATH","BABA","ARKK","TSLA"].map(t => ({ id: t, name: t, category: "equityUsa", subgroup: "Tech", type: "cedear" })),
+  ...["V","MA","JPM","PYPL"].map(t => ({ id: t, name: t, category: "equityUsa", subgroup: "Financials", type: "cedear" })),
+  ...["PFE","JNJ","MRK","UNH","ZTS","LLY"].map(t => ({ id: t, name: t, category: "equityUsa", subgroup: "Healthcare", type: "cedear" })),
+  ...["KO","MCD","NKE","DIS","SBUX","NFLX","SPOT","WMT","PEP","UBER","ABNB","MELI","BA"].map(t => ({ id: t, name: t, category: "equityUsa", subgroup: "Consumer", type: "cedear" })),
+  ...["XOM","CVX","GPRK"].map(t => ({ id: t, name: t, category: "equityUsa", subgroup: "Energy", type: "cedear" })),
+  ...["CAAP","SQM","TX","AGRO","BILL","WDAY","PAYC"].map(t => ({ id: t, name: t, category: "equityUsa", subgroup: "Industrials", type: "cedear" })),
+  ...["PBR","VALE","BBD","ABEV","XP","NU","JBSS"].map(t => ({ id: t, name: t, category: "equityUsa", subgroup: "Brasil", type: "cedear" })),
+  ...["SPY","QQQ","IWM","EEM","XLE","XLF","XLV","XLK","GLD","SLV","IBIT","BRKB"].map(t => ({ id: t, name: t, category: "etfs", type: "etf" })),
+  { id: "fima-premium", name: "FIMA Galicia Premium clase B", category: "fciMM", type: "fci", sociedad: "Galicia", moneda: "ARS", liquidez: "T+0", objetivo: "Money Market · Cuentas remuneradas + plazos fijos" },
+  { id: "megaqm-perf", name: "Megainver Renta Fija - MEGAQM Performance", category: "fciMM", type: "fci", sociedad: "Megainver", moneda: "ARS", liquidez: "T+0", objetivo: "Money Market · Renta fija pesos corto plazo" },
+  { id: "pionero-pesos", name: "Pionero Pesos Plus Clase B", category: "fciMM", type: "fci", sociedad: "SBS", moneda: "ARS", liquidez: "T+0", objetivo: "Money Market · Liquidez inmediata" },
+  { id: "fima-securities", name: "FIMA Galicia Securities Clase A", category: "fciMM", type: "fci", sociedad: "Galicia", moneda: "ARS", liquidez: "T+0", objetivo: "Money Market · Conservador" },
+  { id: "galileo-pesos", name: "Galileo Pesos", category: "fciMM", type: "fci", sociedad: "Galileo", moneda: "ARS", liquidez: "T+0", objetivo: "Money Market · Liquidez inmediata · Cuentas remuneradas + Pases BCRA + plazos fijos" },
+  { id: "balanz-money-market", name: "Balanz Money Market", category: "fciMM", type: "fci", sociedad: "Balanz", moneda: "ARS", liquidez: "T+0", objetivo: "Money Market · Cuentas remuneradas + plazos fijos precancelables + cauciones · Rendimiento diario estable" },
+  { id: "schroder-renta-plus", name: "Schroder Renta Plus", category: "fciTasa", type: "fci", sociedad: "Schroder", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija pesos · Depósitos bancarios + cauciones · Benchmark Badlar" },
+  { id: "megaqm-ahorro", name: "MEGAQM Ahorro", category: "fciTasa", type: "fci", sociedad: "Megainver", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija pesos corto plazo" },
+  { id: "galileo-ahorro", name: "Galileo Ahorro", category: "fciTasa", type: "fci", sociedad: "Galileo", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija pesos · Tasa fija + Badlar" },
+  { id: "galileo-ahorro-plus", name: "Galileo Ahorro Plus", category: "fciTasa", type: "fci", sociedad: "Galileo", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija pesos · Versión más agresiva con duration mayor" },
+  { id: "galileo-renta-fija", name: "Galileo Renta Fija", category: "fciTasa", type: "fci", sociedad: "Galileo", moneda: "ARS", liquidez: "T+1", objetivo: "Arbitraje renta fija pesos y dólares · Cupones fijos/variables (BADLAR/CER) · Deuda pública AR + corporativos" },
+  { id: "consultatio-renta-nacional", name: "Consultatio Renta Nacional", category: "fciTasa", type: "fci", sociedad: "Consultatio", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija pesos · Soberano + corporativo" },
+  { id: "balanz-capital-ahorro", name: "Balanz Capital Ahorro", category: "fciTasa", type: "fci", sociedad: "Balanz", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija pesos · Tasa fija + flotante" },
+  { id: "compass-ahorro", name: "Compass Ahorro", category: "fciTasa", type: "fci", sociedad: "Compass", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija pesos · Apreciación capital con bajo riesgo" },
+  { id: "consultatio-ahorro-plus", name: "Consultatio Ahorro Plus Argentina", category: "fciTasa", type: "fci", sociedad: "Consultatio", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija pesos · Versión flexible con LECAPs y bonos" },
+  { id: "consultatio-renta-local", name: "Consultatio Renta Local", category: "fciTasa", type: "fci", sociedad: "Consultatio", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija pesos · Baja volatilidad y corta duración · Preservación con tasa superior a MM" },
+  { id: "balanz-performance-2", name: "Balanz Performance II", category: "fciTasa", type: "fci", sociedad: "Balanz", moneda: "ARS", liquidez: "T+0", objetivo: "LECAPs corto plazo + liquidez · Apreciación de capital" },
+  { id: "consultatio-deuda-arg", name: "Consultatio Deuda Argentina", category: "fciCer", type: "fci", sociedad: "Consultatio", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija soberana CER · Supera evolución del CPI (inflación)" },
+  { id: "galileo-multimercado-2", name: "Galileo Multimercado II", category: "fciCer", type: "fci", sociedad: "Galileo", moneda: "ARS", liquidez: "T+1", objetivo: "100% CER · Cobertura inflación (no es multimercado real)" },
+  { id: "delta-retorno-real", name: "Delta Retorno Real (ex Gestión VIII)", category: "fciCer", type: "fci", sociedad: "Delta", moneda: "ARS", liquidez: "T+1", objetivo: "CER · Retorno real positivo vs inflación" },
+  { id: "santander-superfondo-rf", name: "Santander Superfondo Renta Fija", category: "fciCer", type: "fci", sociedad: "Santander", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija CER · Cobertura inflación" },
+  { id: "balanz-institucional", name: "Balanz Institucional", category: "fciCer", type: "fci", sociedad: "Balanz", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija CER + UVA · Institucional" },
+  { id: "megaqm-retorno-absoluto", name: "MEGAQM Retorno Absoluto", category: "fciCer", type: "fci", sociedad: "Megainver", moneda: "ARS", liquidez: "T+1", objetivo: "CER · Retorno absoluto · Cobertura inflación" },
+  { id: "schroder-renta-perf", name: "Schroder Renta Performance", category: "fciCer", type: "fci", sociedad: "Schroder", moneda: "ARS", liquidez: "T+1", objetivo: "Deuda corporativa y soberana CER-UVA · Tasa real positiva · Mediano plazo" },
+  { id: "megaqm-cobertura", name: "MEGAQM Cobertura", category: "fciDlk", type: "fci", sociedad: "Megainver", moneda: "ARS", liquidez: "T+1", objetivo: "Dólar linked · Sigue evolución del TC oficial" },
+  { id: "consultatio-renta-fija-arg", name: "Consultatio Renta Fija Argentina", category: "fciDlk", type: "fci", sociedad: "Consultatio", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija dólar linked · Cobertura devaluación oficial" },
+  { id: "galileo-premium", name: "Galileo Premium", category: "fciDlk", type: "fci", sociedad: "Galileo", moneda: "ARS", liquidez: "T+1", objetivo: "Dólar linked · Bonos atados al TC oficial" },
+  { id: "compass-renta-fija-3", name: "Compass Renta Fija III", category: "fciDlk", type: "fci", sociedad: "Compass", moneda: "ARS", liquidez: "T+1", objetivo: "Dólar linked · Cobertura devaluación" },
+  { id: "balanz-capital-rf", name: "Balanz Capital Renta Fija", category: "fciDlk", type: "fci", sociedad: "Balanz", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija dólar linked + USD-link" },
+  { id: "galileo-income", name: "Galileo Income", category: "fciUsd", type: "fci", sociedad: "Galileo", moneda: "USD", liquidez: "T+1", objetivo: "Renta fija IG corp LatAm + T-bills · Target 4-5% anual" },
+  { id: "galileo-event-driven", name: "Galileo Event Driven", category: "fciUsd", type: "fci", sociedad: "Galileo", moneda: "USD", liquidez: "T+2", objetivo: "Renta fija LatAm corporate · 20+ años trayectoria · Target 7-9% anual" },
+  { id: "compass-desarrollo-arg-2", name: "Compass Desarrollo Argentino II", category: "fciUsd", type: "fci", sociedad: "Compass", moneda: "USD", liquidez: "T+1", objetivo: "USD · Foco soberano AR + corporativos · Benchmark MEP" },
+  { id: "balanz-desarrollo", name: "Balanz Desarrollo", category: "fciUsd", type: "fci", sociedad: "Balanz", moneda: "USD", liquidez: "T+1", objetivo: "USD · Renta fija AR · Benchmark MEP" },
+  { id: "compass-renta-mixta-usd", name: "Compass Renta Mixta Dólares Clase A", category: "fciUsd", type: "fci", sociedad: "Investis Asset Management (Vinci Compass)", moneda: "USD", liquidez: "T+1", objetivo: "Renta fija USD LatAm · Mercosur · High Yield · Apreciación de capital · Perfil agresivo" },
+  { id: "galileo-multimercado-4", name: "Galileo Multimercado IV", category: "fciAcciones", type: "fci", sociedad: "Galileo", moneda: "ARS", liquidez: "T+1", objetivo: "Renta mixta · Value investing · Empresas con valor de mercado por debajo del intrínseco + bonos corp USD + acciones mundiales (hasta 25%)" },
+  { id: "sf-value", name: "SF Value", category: "fciAcciones", type: "fci", sociedad: "Galileo", moneda: "ARS", liquidez: "T+1", objetivo: "Value investing largo plazo · Empresas con valor por debajo del intrínseco + bonos corp USD + acciones mundiales (hasta 25%)" },
+  { id: "galileo-acciones", name: "Galileo Acciones", category: "fciAcciones", type: "fci", sociedad: "Galileo", moneda: "ARS", liquidez: "T+1", objetivo: "Renta variable AR · Apreciación de capital de largo plazo · Manejo dinámico con análisis fundamental" },
+  { id: "balanz-acciones", name: "Balanz Acciones", category: "fciAcciones", type: "fci", sociedad: "Balanz", moneda: "ARS", liquidez: "T+1", objetivo: "Acciones argentinas con administración activa · Busca superar al S&P Merval en el largo plazo" },
+  { id: "megaq-quinquela", name: "Megainver Quinquela Abierto Pymes (MEGAQ)", category: "fciPymes", type: "fci", sociedad: "Megainver", moneda: "ARS", liquidez: "T+1", objetivo: "Renta fija Pymes · Cheques pago diferido + ON Pymes" },
+  { id: "cmf-fundcorp", name: "CMF Fundcorp Performance", category: "fciPymes", type: "fci", sociedad: "CMF", moneda: "ARS", liquidez: "T+1", objetivo: "Pymes · Cheques + valores fiduciarios" },
+  { id: "galileo-pymes-b", name: "Galileo Abierto Pymes Clase B", category: "fciPymes", type: "fci", sociedad: "Galileo", moneda: "ARS", liquidez: "T+1", objetivo: "Pymes · Renta fija corto plazo en sector PyME" },
+];
+
+const ACTIVOS_BY_ID = Object.fromEntries(ACTIVOS.map(a => [a.id, a]));
+
+const ACTIVO_COLORS = (() => {
+  const CAT_HSL = {
+    liquidez: { h: 210, s: 15, l: 75 }, lecap: { h: 215, s: 50, l: 57 },
+    dual: { h: 215, s: 45, l: 48 }, cer: { h: 210, s: 12, l: 64 },
+    hd: { h: 215, s: 50, l: 33 }, equityAr: { h: 0, s: 50, l: 56 },
+    equityUsa: { h: 275, s: 35, l: 63 }, etfs: { h: 275, s: 30, l: 45 },
+    fciMM: { h: 270, s: 22, l: 84 }, fciTasa: { h: 210, s: 12, l: 64 },
+    fciCer: { h: 270, s: 20, l: 78 }, fciDlk: { h: 275, s: 30, l: 55 },
+    fciUsd: { h: 280, s: 33, l: 35 }, fciAcciones: { h: 275, s: 100, l: 82 },
+    fciPymes: { h: 0, s: 50, l: 56 },
+  };
+  const colors = {};
+  const byCat = {};
+  ACTIVOS.forEach(a => {
+    if (!byCat[a.category]) byCat[a.category] = [];
+    byCat[a.category].push(a.id);
+  });
+  Object.keys(byCat).forEach(cat => {
+    const base = CAT_HSL[cat] || { h: 220, s: 30, l: 50 };
+    const ids = byCat[cat];
+    const n = ids.length;
+    ids.forEach((id, i) => {
+      const hueOffset = ((i / Math.max(n - 1, 1)) - 0.5) * 50;
+      const lumOffset = ((i / Math.max(n - 1, 1)) - 0.5) * 25;
+      const h = (base.h + hueOffset + 360) % 360;
+      const l = Math.max(30, Math.min(85, base.l + lumOffset));
+      colors[id] = `hsl(${h.toFixed(0)}, ${base.s}%, ${l.toFixed(0)}%)`;
+    });
+  });
+  return colors;
+})();
+
+function getActivoColor(activoId) {
+  if (ACTIVO_COLORS[activoId]) return ACTIVO_COLORS[activoId];
+  const a = ACTIVOS_BY_ID[activoId];
+  return a ? CATEGORIES[a.category]?.color : "#888";
+}
+
+const TEMPLATES_BASE = {
+  "p-cons": { label: "Pesos · Preservación", perfil: "PRESERVACIÓN", moneda: "ARS", badges: [["badge-pesos", "ARS"], ["badge-conservador", "PRESERVACIÓN"]], title: "Cartera Pesos · Preservación de Capital", description: "Mandato en pesos para cliente con baja tolerancia al riesgo. Prioriza preservación del poder de compra contra inflación + cobertura USD parcial.", horizon: "6-12 meses", drawdown: "~5%", target: "CPI + 3/5%", blocks: {} },
+  "p-mod": { label: "Pesos · Moderada", perfil: "MODERADA", moneda: "ARS", badges: [["badge-pesos", "ARS"], ["badge-moderado", "MODERADA"]], title: "Cartera Pesos · Moderada", description: "Mandato en pesos con tolerancia media al riesgo. Busca ganarle a inflación con duration y diversificación táctica.", horizon: "12-24 meses", drawdown: "~10-12%", target: "CPI + 6/8%", blocks: {} },
+  "p-agr": { label: "Pesos · Agresiva", perfil: "AGRESIVA", moneda: "ARS", badges: [["badge-pesos", "ARS"], ["badge-agresivo", "AGRESIVA"]], title: "Cartera Pesos · Agresiva", description: "Mandato en pesos con alta tolerancia al riesgo. Busca alpha vía duration, equity AR y posicionamiento ciclo electoral 2027.", horizon: "24+ meses", drawdown: "~20-25%", target: "CPI + 12/15%", blocks: {} },
+  "u-cons": { label: "Dólar · Preservación", perfil: "PRESERVACIÓN", moneda: "USD", badges: [["badge-usd", "USD"], ["badge-conservador", "PRESERVACIÓN"]], title: "Cartera Dólar · Preservación de Capital", description: "Mandato en USD con baja tolerancia al riesgo. Preserva capital en moneda dura con yield positivo.", horizon: "12+ meses", drawdown: "~3-5%", target: "USD 4-5%", blocks: {} },
+  "u-mod": { label: "Dólar · Moderada", perfil: "MODERADA", moneda: "USD", badges: [["badge-usd", "USD"], ["badge-moderado", "MODERADA"]], title: "Cartera Dólar · Moderada", description: "Mandato en USD con tolerancia media al riesgo. Busca yield + appreciation vía exposición Argentina USD y equity USA selectivo.", horizon: "18-36 meses", drawdown: "~8-12%", target: "USD 7-9%", blocks: {} },
+  "u-agr": { label: "Dólar · Agresiva", perfil: "AGRESIVA", moneda: "USD", badges: [["badge-usd", "USD"], ["badge-agresivo", "AGRESIVA"]], title: "Cartera Dólar · Agresiva", description: "Mandato en USD con alta tolerancia al riesgo. Maximiza alpha vía equity USA, equity AR y exposición soberana AR de mayor duration.", horizon: "36+ meses", drawdown: "~20-30%", target: "USD 12-15%", blocks: {} },
+};
+
+const ORDER = ["p-cons", "p-mod", "p-agr", "u-cons", "u-mod", "u-agr"];
+
+let state = { current: "overview", templates: {}, modal: null, editingRationale: null, tacticasPicks: { ar: [], cedears: [] }, tacticasEdit: null, tacticasPrices: { data: {}, status: 'idle', lastUpdate: null } };
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem("sc-carteras-modelo");
+    if (saved) {
+      state.templates = JSON.parse(saved);
+      for (const id in TEMPLATES_BASE) {
+        if (!state.templates[id]) {
+          state.templates[id] = JSON.parse(JSON.stringify(TEMPLATES_BASE[id]));
+        } else {
+          for (const k of ["label","perfil","moneda","badges","title","description","horizon","drawdown","target"]) {
+            if (state.templates[id][k] === undefined || TEMPLATES_BASE[id][k] !== undefined) {
+              state.templates[id][k] = TEMPLATES_BASE[id][k];
+            }
+          }
+          if (!state.templates[id].blocks) state.templates[id].blocks = {};
+        }
+      }
+      saveState();
+    } else {
+      state.templates = JSON.parse(JSON.stringify(TEMPLATES_BASE));
+    }
+  } catch (e) { console.warn(e); state.templates = JSON.parse(JSON.stringify(TEMPLATES_BASE)); }
+
+  try {
+    const tac = localStorage.getItem("sc-tacticas");
+    if (tac) {
+      const parsed = JSON.parse(tac);
+      if (parsed.ar) state.tacticasPicks.ar = parsed.ar;
+      if (parsed.cedears) state.tacticasPicks.cedears = parsed.cedears;
+    }
+  } catch (e) { console.warn(e); }
+}
+
+function saveState() {
+  try { localStorage.setItem("sc-carteras-modelo", JSON.stringify(state.templates)); }
+  catch (e) { console.warn(e); }
+}
+
+function saveTacticas() {
+  try { localStorage.setItem("sc-tacticas", JSON.stringify(state.tacticasPicks)); }
+  catch (e) { console.warn(e); }
+}
+
+function isEdited(id) {
+  const blocks = state.templates[id]?.blocks || {};
+  return Object.keys(blocks).length > 0;
+}
+
+function resetPortfolio(id) {
+  if (!confirm(`¿Resetear "${TEMPLATES_BASE[id].label}"?`)) return;
+  state.templates[id] = JSON.parse(JSON.stringify(TEMPLATES_BASE[id]));
+  saveState(); render();
+}
+
+function resetAll() {
+  if (!confirm("¿Resetear las 6 carteras?")) return;
+  state.templates = JSON.parse(JSON.stringify(TEMPLATES_BASE));
+  saveState(); render();
+}
+
+function exportAllJSON() {
+  const data = { templates: state.templates, tacticasPicks: state.tacticasPicks };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `silvercloud-carteras-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!confirm("¿Reemplazar los datos actuales?")) return;
+      if (data.templates) state.templates = data.templates;
+      else state.templates = data;
+      if (data.tacticasPicks) state.tacticasPicks = data.tacticasPicks;
+      saveState(); saveTacticas(); render();
+    } catch (err) { alert("Error: " + err.message); }
+  };
+  reader.readAsText(file);
+  event.target.value = "";
+}
+function buildDonut(blocks, opts = {}) {
+  const { size = 320, showCenter = true } = opts;
+  const entries = Object.entries(blocks).filter(([k, v]) => Number(v) > 0);
+  const total = entries.reduce((s, [, v]) => s + Number(v), 0);
+  const cx = size/2, cy = size/2;
+  const rOut = size * 0.41;
+  const rIn = size * 0.25;
+  if (total === 0) {
+    return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="${cx}" cy="${cy}" r="${rOut}" fill="none" stroke="#2a3343" stroke-width="1" stroke-dasharray="4 4"/>
+      <text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="11" fill="#6b748a">SIN ACTIVOS</text>
+    </svg>`;
+  }
+  let acc = -90;
+  const paths = entries.map(([activoId, val]) => {
+    const sweep = (Number(val) / total) * 360;
+    const start = acc, end = acc + sweep;
+    acc = end;
+    const r1 = (start * Math.PI) / 180, r2 = (end * Math.PI) / 180;
+    const x1 = cx + rOut * Math.cos(r1), y1 = cy + rOut * Math.sin(r1);
+    const x2 = cx + rOut * Math.cos(r2), y2 = cy + rOut * Math.sin(r2);
+    const x3 = cx + rIn * Math.cos(r2), y3 = cy + rIn * Math.sin(r2);
+    const x4 = cx + rIn * Math.cos(r1), y4 = cy + rIn * Math.sin(r1);
+    const largeArc = sweep > 180 ? 1 : 0;
+    const color = getActivoColor(activoId);
+    if (entries.length === 1) {
+      return `<path d="M ${cx},${cy-rOut} A ${rOut},${rOut} 0 1,1 ${cx-0.01},${cy-rOut} L ${cx-0.01},${cy-rIn} A ${rIn},${rIn} 0 1,0 ${cx},${cy-rIn} Z" fill="${color}"/>`;
+    }
+    return `<path d="M ${x1.toFixed(2)},${y1.toFixed(2)} A ${rOut},${rOut} 0 ${largeArc},1 ${x2.toFixed(2)},${y2.toFixed(2)} L ${x3.toFixed(2)},${y3.toFixed(2)} A ${rIn},${rIn} 0 ${largeArc},0 ${x4.toFixed(2)},${y4.toFixed(2)} Z" fill="${color}"/>`;
+  });
+  const totalColor = Math.abs(total - 100) < 0.01 ? "#3fb950" : (total > 100 ? "#f85149" : "#d29922");
+  let center = "";
+  if (showCenter) {
+    center = `
+      <circle cx="${cx}" cy="${cy}" r="${rIn - 2}" fill="var(--bg-card)"/>
+      <text x="${cx}" y="${cy - 8}" text-anchor="middle" font-size="${size*0.034}" fill="#8b95a8" style="letter-spacing: 1px;">TOTAL</text>
+      <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="${size*0.075}" font-weight="700" fill="${totalColor}" style="font-family: 'Libre Baskerville', serif;">${total.toFixed(1)}%</text>
+    `;
+  }
+  return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">${paths.join('')}${center}</svg>`;
+}
+
+function buildLegend(blocks) {
+  const items = Object.entries(blocks)
+    .filter(([k, v]) => Number(v) > 0)
+    .sort((a, b) => Number(b[1]) - Number(a[1]))
+    .map(([activoId, val]) => {
+      const activo = ACTIVOS_BY_ID[activoId];
+      if (!activo) return "";
+      const color = getActivoColor(activoId);
+      return `<div class="legend-item">
+        <span class="legend-dot" style="background: ${color};"></span>
+        <span class="legend-name">${activo.name}</span>
+        <span class="legend-val">${Number(val)}%</span>
+      </div>`;
+    }).join("");
+  return `<div class="legend">${items}</div>`;
+}
+
+function renderOverviewCard(id) {
+  const t = state.templates[id];
+  const edited = isEdited(id);
+  const isEmpty = !edited;
+  return `<div class="overview-card" onclick="selectTab('${id}')">
+    <div class="perfil">${t.perfil}</div>
+    <div class="nombre">${t.label.split('·')[1].trim()}${edited ? ' <span style="color: var(--violet); font-size: 11px;">●</span>' : ''}</div>
+    ${buildDonut(t.blocks, { size: 200 })}
+    ${isEmpty ? '<div class="empty">Click para armar la cartera</div>' : buildLegend(t.blocks)}
+  </div>`;
+}
+
+function renderOverview() {
+  const arsCards = ORDER.filter(id => id.startsWith("p-")).map(renderOverviewCard).join("");
+  const usdCards = ORDER.filter(id => id.startsWith("u-")).map(renderOverviewCard).join("");
+  return `<div class="overview-grid">
+    <div class="overview-section">
+      <h3>Pesos <span class="moneda-pill ars">ARS</span></h3>
+      <div class="overview-column">${arsCards}</div>
+    </div>
+    <div class="overview-section">
+      <h3>Dólar <span class="moneda-pill usd">USD</span></h3>
+      <div class="overview-column">${usdCards}</div>
+    </div>
+  </div>`;
+}
+
+function buildTable(id) {
+  const t = state.templates[id];
+  const blocks = t.blocks;
+  const entries = Object.entries(blocks);
+  let rowsHtml;
+  if (entries.length === 0) {
+    rowsHtml = `<tr class="empty-row"><td colspan="2">
+      Esta cartera está vacía. Click en <strong style="color: var(--violet);">"+ Agregar activo"</strong> abajo para empezar.
+    </td></tr>`;
+  } else {
+    const catOrder = Object.keys(CATEGORIES);
+    entries.sort((a, b) => {
+      const ca = ACTIVOS_BY_ID[a[0]]?.category;
+      const cb = ACTIVOS_BY_ID[b[0]]?.category;
+      const oa = catOrder.indexOf(ca);
+      const ob = catOrder.indexOf(cb);
+      if (oa !== ob) return oa - ob;
+      return Number(b[1]) - Number(a[1]);
+    });
+    rowsHtml = "";
+    let lastCategory = null;
+    entries.forEach(([activoId, val]) => {
+      const activo = ACTIVOS_BY_ID[activoId];
+      if (!activo) {
+        rowsHtml += `<tr><td>
+          <span class="activo-dot" style="background: #888;"></span>
+          <span class="activo-name">${activoId}</span>
+          <span style="color: var(--red); font-size: 10px; margin-left: 8px;">⚠ ID desconocido</span>
+        </td>
+        <td class="right">
+          <input type="number" class="pct-input" value="${val}" min="0" max="100" step="0.5"
+                 onchange="updateActivo('${id}', '${activoId}', this.value)"
+                 onkeydown="if(event.key==='Enter')this.blur();">
+          <span class="pct-suffix">%</span>
+          <button class="btn-remove" onclick="removeActivo('${id}', '${activoId}')" title="Quitar">×</button>
+        </td></tr>`;
+        return;
+      }
+      const cat = CATEGORIES[activo.category];
+      if (activo.category !== lastCategory) {
+        rowsHtml += `<tr class="cat-subheader"><td colspan="2">
+          <span class="cat-subheader-dot" style="background: ${cat.color};"></span>
+          ${cat.label}
+        </td></tr>`;
+        lastCategory = activo.category;
+      }
+      rowsHtml += `<tr>
+        <td>
+          <span class="activo-dot" style="background: ${getActivoColor(activoId)};"></span>
+          <span class="activo-name">${activo.name}</span>
+          ${activo.subgroup ? `<div class="activo-cat">${activo.subgroup}</div>` : ''}
+        </td>
+        <td class="right">
+          <input type="number" class="pct-input" value="${val}" min="0" max="100" step="0.5"
+                 onchange="updateActivo('${id}', '${activoId}', this.value)"
+                 onkeydown="if(event.key==='Enter')this.blur();">
+          <span class="pct-suffix">%</span>
+          <button class="btn-remove" onclick="removeActivo('${id}', '${activoId}')" title="Quitar">×</button>
+        </td>
+      </tr>`;
+    });
+  }
+  const total = entries.reduce((s, [, v]) => s + (Number(v) || 0), 0);
+  const totalStatus = Math.abs(total - 100) < 0.01
+    ? { cls: "ok", msg: "✓ Cartera balanceada" }
+    : total > 100 ? { cls: "error", msg: `Excede ${(total - 100).toFixed(1)}%` }
+    : entries.length === 0 ? { cls: "warning", msg: "Cartera vacía" }
+    : { cls: "warning", msg: `Falta ${(100 - total).toFixed(1)}%` };
+  return `<table class="activos-tabla">
+    <thead><tr><th>Activo</th><th class="right">Ponderación</th></tr></thead>
+    <tbody>
+      ${rowsHtml}
+      <tr class="add-row"><td colspan="2">
+        <div class="add-cta" onclick="openAddModal('${id}')">
+          <span class="add-cta-icon">+</span>
+          <span>Agregar activo</span>
+        </div>
+      </td></tr>
+      <tr class="total-row">
+        <td>
+          <strong style="color: var(--text-bright); font-family: 'Libre Baskerville', serif; font-size: 14px; letter-spacing: 1px;">TOTAL</strong>
+          <div class="total-status ${totalStatus.cls}">${totalStatus.msg}</div>
+        </td>
+        <td class="right"><span class="total-value ${totalStatus.cls}">${total.toFixed(1)}%</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="editor-help">
+    Click en <kbd>+ Agregar activo</kbd> para sumar uno · Click en <kbd>%</kbd> para editar peso · <kbd>×</kbd> quita el activo
+  </div>`;
+}
+
+function updateActivo(portfolioId, activoId, value) {
+  const num = parseFloat(value);
+  if (isNaN(num) || num < 0) return;
+  state.templates[portfolioId].blocks[activoId] = num;
+  saveState(); render();
+}
+
+function removeActivo(portfolioId, activoId) {
+  const val = state.templates[portfolioId].blocks[activoId] || 0;
+  const activo = ACTIVOS_BY_ID[activoId];
+  const name = activo ? activo.name : activoId;
+  if (val > 0 && !confirm(`Quitar "${name}" (${val}%)?`)) return;
+  delete state.templates[portfolioId].blocks[activoId];
+  saveState(); render();
+}
+
+function openAddModal(portfolioId) {
+  state.modal = { portfolioId, view: "categories", category: null, search: "" };
+  render();
+}
+
+function openModalCategory(catKey) {
+  if (state.modal) { state.modal.view = "list"; state.modal.category = catKey; render(); }
+}
+
+function backToCategories() {
+  if (state.modal) { state.modal.view = "categories"; state.modal.category = null; state.modal.search = ""; render(); }
+}
+
+function closeAddModal() { state.modal = null; render(); }
+
+function setModalSearch(value) {
+  if (state.modal) {
+    state.modal.search = value;
+    if (value.trim().length > 0 && state.modal.view === "categories") {
+      state.modal.view = "search"; state.modal.category = null;
+    } else if (value.trim().length === 0 && state.modal.view === "search") {
+      state.modal.view = "categories";
+    }
+    renderModal();
+  }
+}
+
+function addActivo(activoId) {
+  const m = state.modal;
+  if (!m) return;
+  const blocks = state.templates[m.portfolioId].blocks;
+  if (blocks[activoId] !== undefined) return;
+  blocks[activoId] = 0;
+  saveState(); render();
+}
+
+function renderModalItem(a, blocks) {
+  const cat = CATEGORIES[a.category];
+  const isAdded = blocks[a.id] !== undefined;
+  const meta = a.type === "fci"
+    ? `${a.sociedad} · ${a.moneda} · ${a.liquidez} · ${a.objetivo}`
+    : `${cat.label}${a.subgroup ? ' · ' + a.subgroup : ''}`;
+  const onClick = isAdded ? '' : `onclick="addActivo('${a.id}')"`;
+  return `
+    <div class="activo-pick-item ${isAdded ? 'disabled' : ''}" ${onClick}>
+      <span class="activo-pick-dot" style="background: ${cat.color};"></span>
+      <div class="activo-pick-info">
+        <div class="activo-pick-name">${a.name}</div>
+        <div class="activo-pick-meta">${meta}</div>
+      </div>
+      ${isAdded ? '<span class="activo-pick-added">✓ Ya agregado</span>' : '<span class="activo-pick-cat">+</span>'}
+    </div>
+  `;
+}
+
+function renderModal() {
+  const container = document.getElementById("modal-container");
+
+  // Modal de tácticas (tiene prioridad si está activo)
+  if (state.tacticasEdit) {
+    renderTacticasEditModal();
+    return;
+  }
+
+  if (!state.modal) { container.innerHTML = ""; return; }
+  const { portfolioId, view, category, search } = state.modal;
+  const portfolio = state.templates[portfolioId];
+  const blocks = portfolio.blocks;
+  const portfolioName = portfolio.title;
+  const searchLower = search.toLowerCase().trim();
+
+  let body = "";
+  let backHtml = "";
+
+  if (view === "categories") {
+    body = `
+      <div class="cat-section-title">Activos Directos</div>
+      <div class="cat-grid">
+        ${Object.keys(CATEGORIES).filter(k => CATEGORIES[k].group === "directo").map(catKey => {
+          const cat = CATEGORIES[catKey];
+          const count = ACTIVOS.filter(a => a.category === catKey).length;
+          const usedCount = ACTIVOS.filter(a => a.category === catKey && blocks[a.id] !== undefined).length;
+          return `
+            <div class="cat-card" onclick="openModalCategory('${catKey}')">
+              <div class="cat-card-dot" style="background: ${cat.color};"></div>
+              <div class="cat-card-info">
+                <div class="cat-card-name">${cat.label}</div>
+                <div class="cat-card-meta">${count} activo${count === 1 ? '' : 's'}${usedCount > 0 ? ` · <span style="color: var(--violet);">${usedCount} en cartera</span>` : ''}</div>
+              </div>
+              <div class="cat-card-arrow">→</div>
+            </div>`;
+        }).join("")}
+      </div>
+      <div class="cat-section-title">Fondos Comunes (FCI)</div>
+      <div class="cat-grid">
+        ${Object.keys(CATEGORIES).filter(k => CATEGORIES[k].group === "fci").map(catKey => {
+          const cat = CATEGORIES[catKey];
+          const count = ACTIVOS.filter(a => a.category === catKey).length;
+          const usedCount = ACTIVOS.filter(a => a.category === catKey && blocks[a.id] !== undefined).length;
+          return `
+            <div class="cat-card ${count === 0 ? 'cat-card-empty' : ''}" ${count > 0 ? `onclick="openModalCategory('${catKey}')"` : ''}>
+              <div class="cat-card-dot" style="background: ${cat.color};"></div>
+              <div class="cat-card-info">
+                <div class="cat-card-name">${cat.label}</div>
+                <div class="cat-card-meta">${count === 0 ? 'Sin fondos cargados aún' : `${count} fondo${count === 1 ? '' : 's'}${usedCount > 0 ? ` · <span style="color: var(--violet);">${usedCount} en cartera</span>` : ''}`}</div>
+              </div>
+              ${count > 0 ? '<div class="cat-card-arrow">→</div>' : ''}
+            </div>`;
+        }).join("")}
+      </div>`;
+  } else if (view === "search") {
+    const filtered = ACTIVOS.filter(a =>
+      a.name.toLowerCase().includes(searchLower) ||
+      a.id.toLowerCase().includes(searchLower) ||
+      (a.sociedad && a.sociedad.toLowerCase().includes(searchLower)) ||
+      (a.objetivo && a.objetivo.toLowerCase().includes(searchLower)) ||
+      CATEGORIES[a.category].label.toLowerCase().includes(searchLower)
+    );
+    if (filtered.length === 0) {
+      body = `<div style="padding: 40px 24px; text-align: center; color: var(--text-dim); font-style: italic;">No hay activos que coincidan con "${search}".</div>`;
+    } else {
+      const grouped = {};
+      filtered.forEach(a => {
+        if (!grouped[a.category]) grouped[a.category] = [];
+        grouped[a.category].push(a);
+      });
+      Object.keys(CATEGORIES).forEach(catKey => {
+        const arr = grouped[catKey];
+        if (!arr) return;
+        const cat = CATEGORIES[catKey];
+        body += `<div class="modal-subgroup-header">${cat.label} <span style="color: var(--text-light); font-weight: 400; margin-left: 6px;">· ${arr.length}</span></div>`;
+        body += arr.map(a => renderModalItem(a, blocks)).join("");
+      });
+    }
+  } else if (view === "list") {
+    const cat = CATEGORIES[category];
+    const catActivos = ACTIVOS.filter(a => a.category === category);
+    backHtml = `<button class="modal-back" onclick="backToCategories()">← Categorías</button>`;
+    if (cat.subgroups) {
+      cat.subgroups.forEach(sg => {
+        const sgActivos = catActivos.filter(a => a.subgroup === sg);
+        if (sgActivos.length === 0) return;
+        body += `<div class="modal-subgroup-header">${sg} <span style="color: var(--text-light); font-weight: 400; margin-left: 6px;">· ${sgActivos.length}</span></div>`;
+        body += sgActivos.map(a => renderModalItem(a, blocks)).join("");
+      });
+      const sinSg = catActivos.filter(a => !a.subgroup);
+      if (sinSg.length > 0) body += sinSg.map(a => renderModalItem(a, blocks)).join("");
+    } else {
+      body += catActivos.map(a => renderModalItem(a, blocks)).join("");
+    }
+  }
+
+  let titleText, subtitleText;
+  if (view === "categories") { titleText = "Agregar activo"; subtitleText = `a ${portfolioName}`; }
+  else if (view === "search") { titleText = `Búsqueda: "${search}"`; subtitleText = `a ${portfolioName}`; }
+  else if (view === "list") { titleText = CATEGORIES[category].label; subtitleText = `a ${portfolioName}`; }
+
+  container.innerHTML = `
+    <div class="modal-backdrop" onclick="if(event.target===this) closeAddModal()">
+      <div class="modal">
+        <div class="modal-header">
+          <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
+            ${backHtml}
+            <div style="min-width: 0;">
+              <div class="modal-title">${titleText}</div>
+              <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${subtitleText}</div>
+            </div>
+          </div>
+          <button class="modal-close" onclick="closeAddModal()">×</button>
+        </div>
+        <div class="modal-search">
+          <input type="text" placeholder="Buscar por ticker, nombre, sociedad..." value="${search}" oninput="setModalSearch(this.value)" autofocus>
+        </div>
+        <div class="modal-body">${body}</div>
+      </div>
+    </div>`;
+}
+function generateAutoSummary(portfolioId) {
+  const t = state.templates[portfolioId];
+  const blocks = t.blocks;
+  const entries = Object.entries(blocks).filter(([, v]) => Number(v) > 0);
+  if (entries.length === 0) return "Cartera vacía — agregá activos para generar el resumen.";
+  const total = entries.reduce((s, [, v]) => s + Number(v), 0);
+  const byCat = {};
+  entries.forEach(([id, val]) => {
+    const a = ACTIVOS_BY_ID[id];
+    if (!a) return;
+    if (!byCat[a.category]) byCat[a.category] = 0;
+    byCat[a.category] += Number(val);
+  });
+  const sortedCats = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
+  const pct = (val) => ((val / total) * 100).toFixed(0);
+  const moneda = t.moneda;
+  const perfil = (t.perfil || "").toLowerCase();
+  const rfCats = ["liquidez","lecap","dual","cer","hd","fciMM","fciTasa","fciCer","fciDlk","fciUsd","fciPymes"];
+  const equityCats = ["equityAr","equityUsa","etfs","fciAcciones"];
+  const rfTotal = sortedCats.filter(([k]) => rfCats.includes(k)).reduce((s, [, v]) => s + v, 0);
+  const equityTotal = sortedCats.filter(([k]) => equityCats.includes(k)).reduce((s, [, v]) => s + v, 0);
+  const rfPct = pct(rfTotal);
+  const equityPct = pct(equityTotal);
+  const fciCats = Object.keys(CATEGORIES).filter(k => CATEGORIES[k].group === "fci");
+  const fciTotal = sortedCats.filter(([k]) => fciCats.includes(k)).reduce((s, [, v]) => s + v, 0);
+  const fciPct = pct(fciTotal);
+  const activosByCategory = {};
+  entries.forEach(([id, val]) => {
+    const a = ACTIVOS_BY_ID[id];
+    if (!a) return;
+    if (!activosByCategory[a.category]) activosByCategory[a.category] = [];
+    activosByCategory[a.category].push({ id, name: a.name, val: Number(val), subgroup: a.subgroup });
+  });
+
+  let p1;
+  if (moneda === "USD") {
+    if (perfil.includes("preservación") || perfil.includes("conservador")) p1 = `Esta cartera Dólar conservadora persigue la preservación del capital en moneda dura combinada con yield positivo, minimizando volatilidad y manteniendo liquidez adecuada para horizontes de mediano plazo.`;
+    else if (perfil.includes("moderada")) p1 = `Esta cartera Dólar moderada busca rendimiento ajustado por riesgo en moneda dura mediante una combinación equilibrada de renta fija USD y exposición selectiva a equity, apuntando a yield superior a Treasuries con tolerancia a drawdowns acotados.`;
+    else if (perfil.includes("agresiva")) p1 = `Esta cartera Dólar agresiva persigue apreciación de capital en moneda dura mediante una combinación de renta fija USD activamente gestionada y exposición a equity internacional, asumiendo mayor volatilidad a cambio de retornos esperados superiores.`;
+    else p1 = `Esta cartera Dólar busca generar retorno en moneda dura combinando renta fija (${rfPct}%) y exposición equity (${equityPct}%).`;
+  } else {
+    if (perfil.includes("preservación") || perfil.includes("conservador")) p1 = `Esta cartera Pesos conservadora prioriza la preservación del poder adquisitivo frente a la inflación argentina, combinando instrumentos de tasa fija de corta duración con cobertura CER y participación parcial en USD para mitigar riesgo de devaluación.`;
+    else if (perfil.includes("moderada")) p1 = `Esta cartera Pesos moderada apunta a ganarle a la inflación con un perfil de riesgo controlado, diversificando entre tasa fija pesos, cobertura inflacionaria CER, dolarización táctica y exposición selectiva a equity para captar upside de mediano plazo.`;
+    else if (perfil.includes("agresiva")) p1 = `Esta cartera Pesos agresiva busca generar alpha sustancial sobre la inflación mediante duration en CER, exposición soberana USD, equity argentino y posicionamiento estratégico ante el ciclo electoral 2027, asumiendo volatilidad elevada.`;
+    else p1 = `Esta cartera Pesos busca rendimiento real positivo combinando renta fija (${rfPct}%) y exposición equity (${equityPct}%).`;
+  }
+
+  const top1 = sortedCats[0];
+  const top1Cat = CATEGORIES[top1[0]];
+  const top1Pct = pct(top1[1]);
+  let p2 = `El núcleo de la cartera (${top1Pct}%) se construye con `;
+  const top1Activos = activosByCategory[top1[0]] || [];
+  if (top1[0] === "hd") {
+    p2 += `bonos Hard-Dollar argentinos. `;
+    const sobs = top1Activos.filter(a => a.subgroup === "Soberanos").map(a => a.name);
+    const bcra = top1Activos.filter(a => a.subgroup === "BCRA").map(a => a.name);
+    const prov = top1Activos.filter(a => a.subgroup === "Provinciales").map(a => a.name);
+    const corp = top1Activos.filter(a => a.subgroup === "Corporativos").map(a => a.name);
+    const detalles = [];
+    if (sobs.length) detalles.push(`soberanos (${sobs.join(", ")})`);
+    if (bcra.length) detalles.push(`BOPREAL del BCRA (${bcra.join(", ")})`);
+    if (prov.length) detalles.push(`provinciales (${prov.slice(0,3).join(", ")}${prov.length > 3 ? "..." : ""})`);
+    if (corp.length) detalles.push(`corporativos en USD (${corp.slice(0,3).join(", ")}${corp.length > 3 ? "..." : ""})`);
+    if (detalles.length) p2 += `Incluye ${detalles.join(", ")}, ofreciendo yield USD diferencial respecto a Treasuries con exposición al riesgo soberano argentino.`;
+    else p2 += `Ofrece yield USD diferencial respecto a Treasuries.`;
+  } else if (top1[0] === "fciUsd") {
+    p2 += `FCIs en USD que delegan la selección de bonos corporativos LatAm e instrumentos de yield a equipos profesionales. `;
+    const names = top1Activos.map(a => a.name).slice(0, 3);
+    if (names.length) p2 += `Posiciones principales: ${names.join(", ")}. `;
+    p2 += `Esta gestión activa permite capturar oportunidades en mercados High Yield sin la operatoria directa de bonos individuales.`;
+  } else if (top1[0] === "cer") {
+    p2 += `bonos CER argentinos. Estos instrumentos ajustan capital por inflación oficial (CPI), brindando cobertura directa contra la pérdida de poder adquisitivo del peso. `;
+    const names = top1Activos.map(a => a.name).slice(0, 4);
+    if (names.length) p2 += `Posiciones: ${names.join(", ")}.`;
+  } else if (top1[0] === "lecap") {
+    p2 += `LECAPs y BONCAPs, letras del Tesoro a tasa fija. Ofrecen visibilidad de rendimiento en pesos con duration corta, mitigando riesgo de tasa. `;
+    const names = top1Activos.map(a => a.name).slice(0, 4);
+    if (names.length) p2 += `Posiciones: ${names.join(", ")}.`;
+  } else if (top1[0] === "fciCer") {
+    p2 += `FCIs CER que delegan la gestión de la cobertura inflacionaria a sociedades gerentes especializadas. `;
+    const names = top1Activos.map(a => a.name).slice(0, 3);
+    if (names.length) p2 += `Selección: ${names.join(", ")}. `;
+    p2 += `Buscan superar el CPI con gestión activa de duration y curva.`;
+  } else if (top1[0] === "fciTasa") {
+    p2 += `FCIs de tasa fija en pesos, vehículos de bajo riesgo con benchmark Badlar. `;
+    const names = top1Activos.map(a => a.name).slice(0, 3);
+    if (names.length) p2 += `Selección: ${names.join(", ")}. `;
+    p2 += `Aportan rendimiento devengado con liquidez T+1.`;
+  } else if (top1[0] === "fciMM") {
+    p2 += `FCIs Money Market, instrumentos de liquidez inmediata T+0 que ofrecen rendimiento devengado diario con riesgo mínimo. `;
+    const names = top1Activos.map(a => a.name).slice(0, 3);
+    if (names.length) p2 += `Selección: ${names.join(", ")}.`;
+  } else if (top1[0] === "equityUsa") {
+    p2 += `acciones USA / CEDEARs locales. Permiten captar el dinamismo del mercado norteamericano operando localmente en pesos. `;
+    const names = top1Activos.map(a => a.name).slice(0, 5);
+    if (names.length) p2 += `Posiciones: ${names.join(", ")}.`;
+  } else if (top1[0] === "etfs") {
+    p2 += `ETFs e índices que aportan diversificación amplia y de bajo costo a sectores y mercados específicos. `;
+    const names = top1Activos.map(a => a.name).slice(0, 5);
+    if (names.length) p2 += `Posiciones: ${names.join(", ")}.`;
+  } else if (top1[0] === "equityAr") {
+    p2 += `acciones del Merval argentino. Posicionamiento direccional al equity local, beneficiándose del ciclo macro y reformas estructurales. `;
+    const names = top1Activos.map(a => a.name).slice(0, 5);
+    if (names.length) p2 += `Posiciones: ${names.join(", ")}.`;
+  } else if (top1[0] === "fciAcciones") {
+    p2 += `FCIs de renta variable con gestión activa value. `;
+    const names = top1Activos.map(a => a.name).slice(0, 3);
+    if (names.length) p2 += `Selección: ${names.join(", ")}.`;
+  } else if (top1[0] === "fciDlk") {
+    p2 += `FCIs Dólar Linked, vehículos que siguen la evolución del TC oficial. `;
+    const names = top1Activos.map(a => a.name).slice(0, 3);
+    if (names.length) p2 += `Selección: ${names.join(", ")}. `;
+    p2 += `Cobertura ante devaluación del peso oficial.`;
+  } else if (top1[0] === "dual") {
+    p2 += `bonos duales (TT), que combinan tasa fija con opción CER, ofreciendo upside ante aceleración inflacionaria. `;
+    const names = top1Activos.map(a => a.name).slice(0, 4);
+    if (names.length) p2 += `Posiciones: ${names.join(", ")}.`;
+  } else if (top1[0] === "fciPymes") {
+    p2 += `FCIs Pymes que invierten en cheques de pago diferido y ON Pymes, instrumentos de mayor yield con liquidez controlada. `;
+    const names = top1Activos.map(a => a.name).slice(0, 3);
+    if (names.length) p2 += `Selección: ${names.join(", ")}.`;
+  } else {
+    p2 += `${top1Cat.label}.`;
+  }
+
+  let p3 = "";
+  const otros = sortedCats.slice(1, 4);
+  if (otros.length > 0) {
+    const partes = otros.map(([catKey, val]) => {
+      const cat = CATEGORIES[catKey];
+      const catPct = pct(val);
+      const activos = activosByCategory[catKey] || [];
+      const names = activos.map(a => a.name).slice(0, 3).join(", ");
+      let desc = "";
+      switch(catKey) {
+        case "liquidez": desc = `liquidez para necesidades operativas`; break;
+        case "lecap": desc = `tasa fija pesos vía LECAPs/BONCAPs (${names})`; break;
+        case "dual": desc = `bonos duales (${names}) con opción inflacionaria`; break;
+        case "cer": desc = `cobertura CER (${names}) contra inflación`; break;
+        case "hd": desc = `bonos Hard-Dollar argentinos (${names})`; break;
+        case "equityAr": desc = `equity argentino (${names})`; break;
+        case "equityUsa": desc = `CEDEARs USA / LatAm (${names}) para alpha selectivo`; break;
+        case "etfs": desc = `ETFs (${names}) para diversificación pasiva de bajo costo`; break;
+        case "fciMM": desc = `FCIs Money Market para liquidez`; break;
+        case "fciTasa": desc = `FCIs tasa fija pesos`; break;
+        case "fciCer": desc = `FCIs CER para cobertura inflacionaria delegada`; break;
+        case "fciDlk": desc = `FCIs Dólar Linked para cobertura devaluación`; break;
+        case "fciUsd": desc = `FCIs USD para yield delegado en moneda dura`; break;
+        case "fciAcciones": desc = `FCIs de acciones con gestión value`; break;
+        case "fciPymes": desc = `FCIs Pymes para yield diferencial`; break;
+        default: desc = cat.label;
+      }
+      return `${catPct}% en ${desc}`;
+    });
+    if (partes.length === 1) p3 = `Complementariamente, se incluye ${partes[0]}, aportando diversificación al núcleo principal.`;
+    else { const last = partes.pop(); p3 = `Complementariamente, la cartera incluye ${partes.join("; ")} y ${last}, aportando diversificación táctica al núcleo principal.`; }
+  }
+
+  const horizonte = t.horizon || "el horizonte definido";
+  const dd = t.drawdown || "el drawdown esperado";
+  const target = t.target || "el target definido";
+  let gestionDesc = "";
+  if (fciTotal > 70) gestionDesc = `con gestión predominantemente delegada (${fciPct}% vía FCIs)`;
+  else if (fciTotal > 40) gestionDesc = `con balance entre selección directa de activos y gestión delegada (FCIs ${fciPct}%)`;
+  else if (fciTotal > 0) gestionDesc = `con gestión predominantemente activa en activos directos, complementada con FCIs (${fciPct}%)`;
+  else gestionDesc = `con gestión 100% activa en activos directos`;
+  const p4 = `Perfil recomendado: inversor con mandato ${moneda}, horizonte ${horizonte}, tolerancia a drawdowns de ${dd} y objetivo de rendimiento ${target}, ${gestionDesc}.`;
+
+  return [p1, p2, p3, p4].filter(x => x).join("\n\n");
+}
+
+function getActivoAporte(activoId) {
+  const a = ACTIVOS_BY_ID[activoId];
+  if (!a) return null;
+  if (a.aporte) return a.aporte;
+  if (APORTES[activoId]) return APORTES[activoId];
+  if (a.type === "fci" && a.objetivo) return a.objetivo;
+  return null;
+}
+
+const APORTES = {
+  AAPL: "Líder global en hardware de consumo, servicios y ecosistema integrado. Exposición premium a usuarios de alto poder adquisitivo. Posición core en cualquier cartera de equity USA.",
+  MSFT: "Líder en cloud (Azure), productividad empresarial y AI. Crecimiento secular en infraestructura corporativa. Calidad defensiva con upside en transformación digital.",
+  GOOGL: "Dominancia en búsqueda online y publicidad digital. Plataforma de IA generativa (Gemini) y crecimiento en Google Cloud. Generador de caja consistente.",
+  AMZN: "Líder global en e-commerce y cloud computing (AWS). Doble exposición: consumo masivo + infraestructura tecnológica corporativa. Aporta crecimiento secular.",
+  META: "Operador de las principales plataformas sociales del mundo. Recuperación post-inversiones AI y monetización mejorada en publicidad digital. Alto free cash flow.",
+  NVDA: "Liderazgo absoluto en chips AI/GPUs. Beneficiario directo del capex en infraestructura de IA. Volatilidad alta pero exposición clave al ciclo tecnológico actual.",
+  ORCL: "Transición exitosa a cloud (OCI) con foco en clientes corporativos enterprise. Dividend yield estable y exposición a contratos AI de largo plazo.",
+  CRM: "Líder SaaS de CRM con creciente integración AI (Agentforce). Modelo recurring revenue de alto margen. Posición consolidada en pymes y enterprise.",
+  NOW: "Plataforma SaaS de workflow automation enterprise. Crecimiento sólido con expansión a casos AI. Múltiplos premium pero ejecución consistente.",
+  ADBE: "Estándar creativo y de marketing digital. Suite Creative Cloud + Adobe Experience. Riesgo: competencia AI en creatividad.",
+  SNOW: "Plataforma cloud data warehouse de alto crecimiento. Beneficiaria del boom de IA y consolidación de datos empresariales. Volatilidad alta.",
+  MSTR: "Vehículo de exposición indirecta a Bitcoin con balance corporativo apalancado. Apto para mandatos agresivos con tesis cripto.",
+  GLOB: "Tecnológica argentina líder en transformación digital con presencia global. Cotiza en NYSE y referente del sector tech latam.",
+  ACN: "Consultora global de tecnología con foco en transformación digital, AI y cloud. Diversificación geográfica y sectorial. Calidad defensiva.",
+  PATH: "Líder en RPA (automatización de procesos robóticos). Beneficiaria de adopción de AI en automatización empresarial. Crecimiento con perfil emergente.",
+  BABA: "Líder e-commerce y cloud chino. Valuación atractiva tras correcciones regulatorias. Exposición a consumo chino y diversificación geográfica.",
+  ARKK: "ETF de innovación disruptiva gestionado por ARK Invest. Exposición a genomics, robótica, fintech y crypto. Perfil agresivo, alta volatilidad.",
+  TSLA: "Líder en autos eléctricos con exposición a robótica, AI y energía. Volatilidad elevada y narrativa-driven. Apto para carteras agresivas.",
+  V: "Líder global en pagos electrónicos. Modelo asset-light con márgenes elevados y crecimiento secular del comercio digital. Posición de calidad defensiva.",
+  MA: "Segunda red de pagos digitales del mundo. Misma tesis que Visa: beneficiaria del shift cash-to-digital. Calidad y márgenes consistentes.",
+  JPM: "Mayor banco USA por activos. Diversificación entre banca de inversión, retail y wealth management. Yield de dividendo y exposición a tasas.",
+  PYPL: "Plataforma de pagos digitales y P2P. Valuación atractiva tras correcciones. Reestructuración hacia rentabilidad. Crecimiento moderado.",
+  PFE: "Farmacéutica con pipeline diversificado post-COVID. Dividend yield atractivo y portfolio de oncología en crecimiento. Defensivo con dividend.",
+  JNJ: "Farmacéutica diversificada con consumer health, medical devices y farma. Calidad histórica con dividend de 60+ años de crecimiento.",
+  MRK: "Líder en oncología con Keytruda como blockbuster. Pipeline robusto en cardiometabólico y vacunas. Dividend y crecimiento.",
+  UNH: "Mayor aseguradora de salud USA con integración vertical (Optum). Crecimiento estructural por envejecimiento poblacional. Defensivo con yield.",
+  ZTS: "Líder global en salud animal (mascotas + ganadería). Mercado defensivo con crecimiento secular. Márgenes elevados y posición consolidada.",
+  LLY: "Líder farmacéutico con Mounjaro/Zepbound (GLP-1) como blockbuster. Pipeline neurociencia y oncología robusto. Múltiplos premium justificados.",
+  KO: "Líder global en bebidas con marca icónica. Defensivo clásico con dividend 60+ años de crecimiento. Posición conservadora premium.",
+  MCD: "Cadena de fast-food líder con modelo de franquicia escalable. Dividend aristocrat. Defensivo con exposición a consumo discrecional.",
+  NKE: "Líder global en deportivo con marca premium. Recuperación post-China y reposicionamiento DTC. Crecimiento moderado con marca defensiva.",
+  DIS: "Conglomerado de entretenimiento con parques temáticos, Disney+ y propiedad intelectual única. Recuperación de streaming a rentabilidad.",
+  SBUX: "Cadena global de cafeterías con 35K locales. Marca icónica y modelo de fidelidad. Defensivo con exposición a consumo premium.",
+  NFLX: "Líder en streaming con 260M+ suscriptores globales. Monetización mejorada vía publicidad y crackdown sharing. Crecimiento secular.",
+  SPOT: "Líder en streaming de audio (música + podcasts). Mejora de márgenes y monetización vía publicidad. Crecimiento secular en consumo de audio.",
+  WMT: "Mayor retailer USA con expansión exitosa en e-commerce y publicidad digital. Defensivo con marca y escala incomparables.",
+  PEP: "Bebidas + snacks (Frito-Lay). Diversificación mayor que KO. Dividend aristocrat con exposición a consumo masivo defensivo.",
+  UBER: "Líder global en ride-sharing y delivery. Recientemente rentable y generador de caja libre. Crecimiento en mobility services.",
+  ABNB: "Plataforma de alquileres turísticos. Exposición al turismo experiencial y marca diferenciada. Crecimiento con asset-light model.",
+  MELI: "Líder e-commerce y fintech LatAm (Argentina + Brasil + México). Crecimiento sostenido 30%+ por trimestre. Exposición regional sólida.",
+  BA: "Boeing — fabricante aeroespacial. Recuperación post-737 MAX y exposición al ciclo de aviación comercial. Volatilidad alta, oportunidad cíclica.",
+  XOM: "Mayor petrolera USA. Dividend aristocrat con exposición al ciclo energético. Defensiva ante inflación y tensiones geopolíticas.",
+  CVX: "Segunda petrolera USA. Tesis similar a XOM: dividend, exposición commodity. Disciplina de capital y cobertura ante shocks energéticos.",
+  GPRK: "GeoPark - petrolera junior LatAm. Producción en Colombia y otros países regionales. Yield alto pero perfil de riesgo elevado.",
+  CAAP: "Operador aeroportuario global de Corporación América. Recuperación del turismo y exposición a tráfico aéreo regional. Sensible al ciclo.",
+  SQM: "Sociedad Química y Minera de Chile - líder en litio. Exposición a transición energética y baterías. Volatilidad alta por precio del litio.",
+  TX: "Ternium - acerera latam de Techint. Exposición al ciclo de construcción e infraestructura. Sensible a precio del acero.",
+  AGRO: "Adecoagro - agro-industria sudamericana (granos, lácteos, etanol). Exposición a commodities agropecuarios con activos reales en Argentina/Brasil.",
+  BILL: "BILL Holdings - software de pagos B2B para pymes. Crecimiento de adopción de fintech en small business. Perfil growth.",
+  WDAY: "Workday - SaaS de HR y finanzas para enterprise. Modelo recurring revenue de calidad. Crecimiento moderado defensivo.",
+  PAYC: "Paycom - software de payroll y HR. Modelo SaaS escalable con foco en mid-market. Crecimiento sostenido.",
+  PBR: "Petrobras - petrolera estatal brasileña. Yield dividendos elevado. Sensible a política energética y precio del petróleo.",
+  VALE: "Vale - mayor productora global de mineral de hierro. Exposición a demanda china de acero y commodities industriales.",
+  BBD: "Bradesco - segundo banco privado brasileño. Exposición al ciclo de crédito brasileño y consumo. Yield atractivo.",
+  ABEV: "Ambev - cervecera líder de LatAm (Brahma, Quilmes). Defensivo de consumo masivo con yield. Subsidiaria de AB InBev.",
+  XP: "XP Inc - principal plataforma de inversión retail brasileña. Beneficiaria de migración bancos a brokers. Crecimiento estructural.",
+  NU: "Nubank - fintech líder LatAm con 100M+ clientes. Crecimiento agresivo en banca digital regional. Calidad de activos sólida.",
+  JBSS: "JBS - mayor procesador cárnico mundial. Exposición a proteína animal con operaciones globales. Cíclico con dividend.",
+  SPY: "ETF del S&P 500 - núcleo de equity USA con 500 empresas líderes. Posición core recomendada para cualquier exposición a renta variable americana. Bajo costo y máxima liquidez.",
+  QQQ: "ETF del Nasdaq-100. Concentración en tech USA (AAPL, MSFT, NVDA, AMZN). Crecimiento secular con mayor volatilidad que SPY.",
+  IWM: "ETF del Russell 2000 - small caps USA. Exposición a empresas domésticas americanas, beta más alta. Sensible al ciclo económico.",
+  EEM: "ETF de mercados emergentes (China, India, Brasil, Taiwan, Corea). Diversificación geográfica y exposición a crecimiento estructural emergente.",
+  XLE: "ETF sector energético S&P 500 (XOM, CVX, COP). Cobertura ante inflación y tensiones geopolíticas. Defensivo ante shocks de oferta.",
+  XLF: "ETF sector financiero S&P 500 (JPM, BAC, BRK.B). Exposición al ciclo de tasas y crédito. Beneficiario de curva positiva.",
+  XLV: "ETF sector salud S&P 500 (UNH, JNJ, LLY, PFE). Defensivo clásico con crecimiento secular por demografía e innovación farmacológica.",
+  XLK: "ETF sector tecnología S&P 500 (AAPL, MSFT, NVDA). Concentración en gigantes tech con beneficios escalables y exposición AI.",
+  GLD: "ETF respaldado por oro físico. Cobertura ante inflación, debilidad del dólar y riesgo geopolítico. Diversificador clásico de cartera.",
+  SLV: "ETF respaldado por plata física. Doble exposición: metal precioso + uso industrial (electrónica, solar). Mayor volatilidad que el oro.",
+  IBIT: "ETF Bitcoin spot de BlackRock. Exposición regulada al precio de Bitcoin sin custodia propia. Apto para mandatos agresivos con tesis cripto.",
+  BRKB: "Berkshire Hathaway Clase B - vehículo de Warren Buffett. Conglomerado diversificado (Apple, Coca-Cola, BNSF, GEICO). Calidad defensiva con cash pile.",
+  GGAL: "Grupo Galicia - principal banco privado argentino. Exposición al ciclo de crédito local y normalización macro. Liquidez alta en BCBA y NYSE.",
+  YPFD: "YPF - petrolera estatal argentina. Exposición a Vaca Muerta y desarrollo energético doméstico. Cíclica con potencial de upside estructural.",
+  PAMP: "Pampa Energía - holding integrado de generación eléctrica, petróleo y gas. Diversificación en sector energético argentino.",
+  BMA: "Banco Macro - banco privado argentino con foco en provincias del interior. Yield dividend y exposición al ciclo de crédito local.",
+  BBAR: "Banco BBVA Argentina - filial local del grupo español. Banca retail y empresarial. Solidez patrimonial y exposición al ciclo argentino.",
+  TGNO4: "Transportadora de Gas del Norte. Operador regulado de gasoductos. Defensivo con tarifas dolarizadas y exposición a gas natural.",
+  TXAR: "Ternium Argentina (ex Siderar) - acerera argentina del grupo Techint. Cíclica ligada a construcción y manufactura.",
+  CEPU: "Central Puerto - generadora eléctrica argentina. Exposición a tarifas reguladas y normalización del sector energético.",
+  EDN: "Edenor - distribuidora eléctrica del área metropolitana de Buenos Aires. Exposición a regulación tarifaria y consumo eléctrico.",
+  ALUA: "Aluar - única productora de aluminio en Argentina. Exposición a commodity y consumo industrial.",
+  TRAN: "Transener - principal transmisora eléctrica de alta tensión. Negocio regulado con flujos defensivos.",
+  LOMA: "Loma Negra - mayor cementera argentina. Cíclica ligada a construcción y obra pública. Exposición a recuperación de infraestructura.",
+  TGSU2: "Transportadora de Gas del Sur - operador regulado de gasoductos. Tarifas dolarizadas y exposición a Vaca Muerta.",
+  MIRG: "Mirgor - electrónica y componentes automotriz. Beneficiaria de armaduría local y exposición a consumo.",
+  SUPV: "Grupo Supervielle - banco privado argentino mediano. Exposición al ciclo de crédito con perfil más agresivo que blue chips.",
+  CRES: "Cresud - agropecuaria argentina con activos en tierras y commodities. Exposición a sector agro regional.",
+  BYMA: "Bolsas y Mercados Argentinos - operador del mercado de valores. Beneficiaria de normalización financiera y volumen operativo.",
+  COME: "Sociedad Comercial del Plata - holding diversificado argentino. Exposición a infraestructura y servicios.",
+  AL29: "Bonar 2029 USD - soberano ley argentina. Yield USD diferencial respecto a Treasuries. Riesgo crédito argentino.",
+  AL30: "Bonar 2030 USD - benchmark soberano AR ley local. Posición core en exposición HD argentino. Liquidez alta.",
+  AL35: "Bonar 2035 USD - duration intermedia. Sensible al spread soberano con mayor potencial direccional.",
+  AL38: "Bonar 2038 USD - duration larga. Mayor sensibilidad a spread y curva.",
+  AL41: "Bonar 2041 USD - bono soberano largo. Apto para visión optimista de spread compression a mediano plazo.",
+  GD29: "Global 2029 USD - soberano ley NY. Mayor cobertura jurídica que Bonar AL29. Yield diferencial similar.",
+  GD30: "Global 2030 USD - benchmark soberano AR ley NY. Liquidez máxima, posición core de HD AR con cobertura jurisdiccional.",
+  GD35: "Global 2035 USD - intermedio ley NY. Combinación de yield, cobertura jurídica y duration moderada.",
+  GD38: "Global 2038 USD - duration larga ley NY. Sensibilidad alta a spread soberano. Liquidez sólida.",
+  GD41: "Global 2041 USD - largo plazo ley NY. Apto para mandatos USD con visión de normalización argentina.",
+  GD46: "Global 2046 USD - máxima duration soberana. Mayor sensibilidad a spread y curva soberana.",
+  AE38: "Bonar 2038 USD - alternativa ley argentina al GD38. Yield superior por riesgo jurisdiccional.",
+};
+
+function buildAnalysis(portfolioId) {
+  const t = state.templates[portfolioId];
+  const blocks = t.blocks;
+  const entries = Object.entries(blocks).filter(([, v]) => Number(v) > 0);
+  if (entries.length === 0) {
+    return `<div class="analysis-section">
+      <div class="analysis-title"><span class="analysis-title-icon">📊</span> Análisis de cartera</div>
+      <div style="color: var(--text-dim); font-style: italic; padding: 20px; text-align: center;">
+        Agregá activos a la cartera para ver el análisis.
+      </div>
+    </div>`;
+  }
+  const total = entries.reduce((s, [, v]) => s + Number(v), 0);
+  const userRationale = t.rationale;
+  const autoSummary = generateAutoSummary(portfolioId);
+  const isEditing = state.editingRationale === portfolioId;
+  const summaryText = userRationale || autoSummary;
+  let summaryHtml;
+  if (isEditing) {
+    summaryHtml = `<div class="analysis-summary editing">
+      <textarea id="rationale-edit-${portfolioId}" placeholder="Escribí el racional de la cartera...">${userRationale || autoSummary}</textarea>
+      <div class="analysis-edit-actions">
+        <button class="analysis-edit-btn reset" onclick="resetRationale('${portfolioId}')">Auto-generar</button>
+        <button class="analysis-edit-btn" onclick="cancelEditRationale()">Cancelar</button>
+        <button class="analysis-edit-btn" onclick="saveRationale('${portfolioId}')">💾 Guardar</button>
+      </div>
+    </div>`;
+  } else {
+    const editBtn = `<button class="analysis-edit-btn" onclick="startEditRationale('${portfolioId}')">✎ ${userRationale ? 'Editar' : 'Editar racional'}</button>`;
+    const sourceTag = userRationale
+      ? '<span style="color: var(--violet); font-size: 9px;">EDITADO MANUALMENTE</span>'
+      : '<span style="color: var(--text-light); font-size: 9px;">AUTO-GENERADO</span>';
+    summaryHtml = `
+      <div class="analysis-block-header">
+        <span>Resumen ejecutivo</span>
+        <span style="display:flex;align-items:center;gap:10px;">${sourceTag}${editBtn}</span>
+      </div>
+      <div class="analysis-summary">${summaryText}</div>`;
+  }
+  const byCat = {};
+  entries.forEach(([id, val]) => {
+    const a = ACTIVOS_BY_ID[id];
+    if (!a) return;
+    if (!byCat[a.category]) byCat[a.category] = 0;
+    byCat[a.category] += Number(val);
+  });
+  const sortedCats = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
+  const barsHtml = sortedCats.map(([catKey, val]) => {
+    const cat = CATEGORIES[catKey];
+    if (!cat) return "";
+    const pct = (val / total) * 100;
+    return `<div class="bar-row">
+      <span class="bar-label">${cat.label}</span>
+      <div class="bar-container"><div class="bar-fill" style="width: ${pct.toFixed(1)}%; background: ${cat.color};"></div></div>
+      <span class="bar-val">${val.toFixed(1)}%</span>
+    </div>`;
+  }).join("");
+  const catOrder = Object.keys(CATEGORIES);
+  const sortedEntries = [...entries].sort((a, b) => {
+    const ca = ACTIVOS_BY_ID[a[0]]?.category;
+    const cb = ACTIVOS_BY_ID[b[0]]?.category;
+    const oa = catOrder.indexOf(ca);
+    const ob = catOrder.indexOf(cb);
+    if (oa !== ob) return oa - ob;
+    return Number(b[1]) - Number(a[1]);
+  });
+  const aporteHtml = sortedEntries.map(([id, val]) => {
+    const a = ACTIVOS_BY_ID[id];
+    if (!a) {
+      return `<div class="aporte-item">
+        <span class="aporte-dot" style="background:#888;"></span>
+        <div class="aporte-content">
+          <div class="aporte-head">${id}</div>
+          <div class="aporte-empty">⚠ Activo no encontrado en catálogo</div>
+        </div>
+        <span class="aporte-pct">${val}%</span>
+      </div>`;
+    }
+    const cat = CATEGORIES[a.category];
+    const aporte = getActivoAporte(id);
+    const catLabel = `${cat.label}${a.subgroup ? ' · ' + a.subgroup : ''}`;
+    return `<div class="aporte-item">
+      <span class="aporte-dot" style="background: ${getActivoColor(id)};"></span>
+      <div class="aporte-content">
+        <div class="aporte-head">${a.name}</div>
+        <div class="aporte-cat">${catLabel}</div>
+        ${aporte ? `<div class="aporte-text">${aporte}</div>` : `<div class="aporte-empty">Sin descripción cargada</div>`}
+      </div>
+      <span class="aporte-pct">${val}%</span>
+    </div>`;
+  }).join("");
+  const equityCats = ["equityAr","equityUsa","etfs","fciAcciones"];
+  const equityTotal = sortedCats.filter(([k]) => equityCats.includes(k)).reduce((s, [, v]) => s + v, 0);
+  const equityPct = ((equityTotal / total) * 100).toFixed(0);
+  const rfPct = (100 - Number(equityPct)).toFixed(0);
+  const splitHtml = `
+    <div class="split-bar">
+      <div class="split-side rf" style="flex: ${rfPct};">
+        <div class="split-pct">${rfPct}%</div>
+        <div class="split-label">Renta Fija</div>
+      </div>
+      <div class="split-side eq" style="flex: ${equityPct};">
+        <div class="split-pct">${equityPct}%</div>
+        <div class="split-label">Equity</div>
+      </div>
+    </div>`;
+  return `<div class="analysis-section">
+    <div class="analysis-title"><span class="analysis-title-icon">📊</span> Análisis de cartera</div>
+    ${splitHtml}
+    <div class="analysis-block">${summaryHtml}</div>
+    <div class="analysis-block">
+      <div class="analysis-block-header"><span>Composición por categoría</span></div>
+      <div class="bar-chart">${barsHtml}</div>
+    </div>
+    <div class="analysis-block">
+      <div class="analysis-block-header"><span>Aporte por activo</span></div>
+      <div class="aporte-list">${aporteHtml}</div>
+    </div>
+  </div>`;
+}
+
+function startEditRationale(portfolioId) {
+  state.editingRationale = portfolioId;
+  render();
+  setTimeout(() => {
+    const el = document.getElementById(`rationale-edit-${portfolioId}`);
+    if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+  }, 50);
+}
+
+function cancelEditRationale() { state.editingRationale = null; render(); }
+
+function saveRationale(portfolioId) {
+  const el = document.getElementById(`rationale-edit-${portfolioId}`);
+  if (!el) return;
+  const text = el.value.trim();
+  if (text) state.templates[portfolioId].rationale = text;
+  else delete state.templates[portfolioId].rationale;
+  state.editingRationale = null;
+  saveState(); render();
+}
+
+function resetRationale(portfolioId) {
+  if (!confirm("¿Volver al resumen auto-generado? Se perderá tu texto editado.")) return;
+  delete state.templates[portfolioId].rationale;
+  saveState();
+  render();
+}
+
+function renderPortfolio(id) {
+  const t = state.templates[id];
+  const edited = isEdited(id);
+  const editedBadge = edited ? `<span class="badge badge-edited">✎ EN USO</span>` : "";
+  return `<div class="card">
+    <div class="portfolio-header">
+      <div class="portfolio-title">
+        <div>
+          ${t.badges.map(([cls, txt]) => `<span class="badge ${cls}">${txt}</span>`).join("")}
+          ${editedBadge}
+        </div>
+        <h2>${t.title}</h2>
+        <div class="description">${t.description}</div>
+      </div>
+      <div class="portfolio-actions">
+        <button class="btn" onclick="selectTab('overview')">← Overview</button>
+        ${edited ? `<button class="btn btn-warn" onclick="resetPortfolio('${id}')">↺ Reset</button>` : ""}
+      </div>
+    </div>
+    <div class="main-grid">
+      <div class="donut-wrapper">
+        ${buildDonut(t.blocks)}
+        <div class="meta-line">
+          <strong>Horizonte:</strong> ${t.horizon} ·
+          <strong>DD:</strong> ${t.drawdown} ·
+          <strong>Target:</strong> ${t.target}
+        </div>
+      </div>
+      <div>${buildTable(id)}</div>
+    </div>
+    ${buildAnalysis(id)}
+  </div>`;
+}
+// ============================================
+// TÁCTICAS — Stock picks AR + CEDEARs
+// ============================================
+
+// Sectores hardcodeados por ticker (lo que usa la API de IOL)
+const SECTORES = {
+  // Equity AR
+  GGAL: "Financials", BMA: "Financials", BBAR: "Financials", SUPV: "Financials", VALO: "Financials", BYMA: "Financials",
+  YPFD: "Energía", YPF: "Energía", PAMP: "Energía", TGSU2: "Energía", TGNO4: "Energía", METR: "Energía", TRAN: "Energía", CEPU: "Energía", EDN: "Energía",
+  TXAR: "Materials", ALUA: "Materials", LOMA: "Materials",
+  TECO2: "Comunicaciones",
+  CRES: "Agro", AGRO: "Agro",
+  MIRG: "Industria", COME: "Industria",
+  // CEDEARs
+  AAPL: "Tech", MSFT: "Tech", GOOGL: "Tech", NVDA: "Tech", AMZN: "Tech", META: "Tech", TSLA: "Tech",
+  ORCL: "Tech", SNOW: "Tech", NOW: "Tech", CRM: "Tech", ADBE: "Tech", PLTR: "Tech", BABA: "Tech",
+  GLOB: "Tech", DESP: "Tech", AMD: "Tech", INTC: "Tech", TSM: "Tech", QCOM: "Tech", AVGO: "Tech",
+  IBM: "Tech", BIDU: "Tech", SHOP: "Tech", SNAP: "Tech",
+  V: "Financials", MA: "Financials", JPM: "Financials", PYPL: "Financials", GS: "Financials",
+  BAC: "Financials", C: "Financials", NU: "Financials", STNE: "Financials", PAGS: "Financials",
+  COIN: "Financials", SQ: "Financials", BBD: "Financials",
+  PFE: "Healthcare", JNJ: "Healthcare", MRK: "Healthcare", UNH: "Healthcare", LLY: "Healthcare", ZTS: "Healthcare",
+  KO: "Consumer", MCD: "Consumer", NKE: "Consumer", DIS: "Consumer", SBUX: "Consumer", PEP: "Consumer",
+  WMT: "Consumer", NFLX: "Consumer", SPOT: "Consumer", UBER: "Consumer", ABNB: "Consumer", MELI: "Consumer",
+  JD: "Consumer", PDD: "Consumer",
+  XOM: "Energía", CVX: "Energía", GPRK: "Energía", SLB: "Energía", PBR: "Energía",
+  BA: "Industria", CAAP: "Industria",
+  VALE: "Materials", SQM: "Materials", TX: "Materials", GOLD: "Materials", JBSS: "Materials", ABEV: "Consumer",
+  XP: "Financials",
+  SPY: "ETF", QQQ: "ETF", EWZ: "ETF", IWM: "ETF", EEM: "ETF", XLE: "ETF", XLF: "ETF", XLV: "ETF",
+  XLK: "ETF", GLD: "ETF", SLV: "ETF", IBIT: "ETF", BRKB: "Holdings", ARKK: "ETF",
+};
+
+// Ratios CEDEAR (para convertir precio ARS → USD subyacente)
+const CEDEAR_RATIOS = {
+  MELI:6, AAPL:10, MSFT:10, GOOGL:9, AMZN:12, TSLA:15, NVDA:5, META:6, BABA:9, NU:5,
+  GLOB:3, DESP:4, AMD:5, INTC:5, BA:3, KO:5, DIS:5, PBR:5, VALE:5, JPM:3, WMT:5, V:5,
+  MA:3, NFLX:4, PYPL:5, UBER:5, COIN:4, MCD:3, NKE:5, GOLD:5, SQ:4, SHOP:5, SNAP:10,
+  ABNB:4, BIDU:5, JD:8, PDD:5, TSM:5, QCOM:5, AVGO:3, CRM:3, ORCL:5, IBM:3, GS:2, BAC:5,
+  C:5, XOM:5, CVX:3, SLB:5, ADBE:3, ZTS:5, LLY:10, JNJ:5, MRK:5, PFE:5, UNH:10,
+  PEP:5, SBUX:5, SPOT:5, ABEV:3, BBD:3, XP:3, JBSS:3, VALE:5, GPRK:5, SQM:5, NOW:5,
+  SNOW:5, ACN:3, CAAP:1, TX:3, AGRO:1, BILL:5, WDAY:5, PAYC:5, EEM:1, SPY:20, QQQ:20,
+  IWM:5, XLE:5, XLF:5, XLV:5, XLK:5, GLD:10, SLV:5, IBIT:1, BRKB:50, ARKK:5,
+  EWZ:5, MSTR:30, PATH:1, PLTR:1, PYPL:5, STNE:1, PAGS:1,
+};
+
+function getSector(ticker) {
+  return SECTORES[ticker] || "—";
+}
+
+// === IOL fetch ===
+const IOL_PROXY = 'https://silvercloud-api.vercel.app/api/iol';
+
+async function fetchTacticasPrices() {
+  // Recolectar todos los tickers de los picks AR y CEDEAR
+  const allPicks = [...state.tacticasPicks.ar, ...state.tacticasPicks.cedears];
+  if (allPicks.length === 0) {
+    state.tacticasPrices.status = 'idle';
+    if (state.current === 'tacticas') render();
+    return;
+  }
+  state.tacticasPrices.status = 'loading';
+  if (state.current === 'tacticas') render();
+  try {
+    const [accionesRes, cedearsRes] = await Promise.all([
+      fetch(IOL_PROXY + '/v2/Cotizaciones/acciones/argentina/Todos').then(r => r.json()).catch(() => ({titulos:[]})),
+      fetch(IOL_PROXY + '/v2/Cotizaciones/cedears/argentina/Todos').then(r => r.json()).catch(() => ({titulos:[]})),
+    ]);
+    const prices = {};
+    (accionesRes.titulos || []).forEach(t => {
+      if (t.simbolo) prices[t.simbolo] = { precio: t.ultimoPrecio, variacion: t.variacionPorcentual };
+    });
+    (cedearsRes.titulos || []).forEach(t => {
+      if (t.simbolo) prices[t.simbolo] = { precio: t.ultimoPrecio, variacion: t.variacionPorcentual };
+    });
+    state.tacticasPrices.data = prices;
+    state.tacticasPrices.status = 'ok';
+    state.tacticasPrices.lastUpdate = new Date();
+  } catch (e) {
+    console.error('IOL fetch error:', e);
+    state.tacticasPrices.status = 'error';
+  }
+  if (state.current === 'tacticas') render();
+}
+
+function calcYTD(pick, isCedear) {
+  // Para AR: YTD = (precio_actual - precio_31_12) / precio_31_12 * 100
+  // Para CEDEAR: convertir ambos a USD subyacente usando el ratio, después calcular
+  const price = state.tacticasPrices.data[pick.ticker];
+  if (!price || !price.precio) return null;
+  const precio31 = parseFloat(pick.precio31);
+  if (isNaN(precio31) || precio31 <= 0) return null;
+  if (isCedear) {
+    const ratio = CEDEAR_RATIOS[pick.ticker];
+    if (!ratio) return null;
+    // precio_USD = precio_ARS * ratio / TC. Pero como tanto el de hoy como el 31/12 cotizan en ARS,
+    // y el ratio es estable, podemos hacer YTD = (precio_hoy_ARS * ratio / TC_hoy) / (precio_31_ARS * ratio / TC_31) - 1
+    // Simplificando, si el usuario carga precio_31 ya en USD del subyacente:
+    // y el precio actual del CEDEAR en ARS lo convertimos a USD subyacente usando el ratio + cotización CCL,
+    // necesitaríamos el CCL. Para simplificar, asumo que el usuario carga precio_31 en USD del subyacente.
+    // Y aproximamos precio actual subyacente = precio_CEDEAR_ARS * ratio / CCL_aproximado.
+    // Como no tenemos CCL fácil, devolvemos el YTD en ARS por ahora (TODO: agregar CCL).
+    // Mejor: el usuario carga precio_31 en ARS del CEDEAR (más simple) y calculamos en ARS:
+    return ((price.precio - precio31) / precio31 * 100);
+  }
+  return ((price.precio - precio31) / precio31 * 100);
+}
+
+function formatYTD(ytd) {
+  if (ytd === null || isNaN(ytd)) return { txt: '—', cls: 'neutral' };
+  const sign = ytd >= 0 ? '+' : '';
+  const cls = ytd >= 0 ? 'positive' : 'negative';
+  return { txt: `${sign}${ytd.toFixed(1)}%`, cls };
+}
+
+function renderTacticas() {
+  const status = state.tacticasPrices.status;
+  let statusDotCls = 'status-dot';
+  let statusTxt = 'Sin datos';
+  if (status === 'loading') { statusDotCls += ' loading'; statusTxt = 'Cargando precios...'; }
+  else if (status === 'ok') { statusTxt = 'Precios IOL en vivo'; }
+  else if (status === 'error') { statusDotCls += ' error'; statusTxt = 'Error IOL'; }
+  const lastUpdateTxt = state.tacticasPrices.lastUpdate
+    ? state.tacticasPrices.lastUpdate.toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'})
+    : '--:--';
+
+  function renderPickRow(pick, isCedear) {
+    const sector = getSector(pick.ticker);
+    const price = state.tacticasPrices.data[pick.ticker];
+    const precio31 = parseFloat(pick.precio31);
+    const precioActual = price ? price.precio : null;
+    const ytd = calcYTD(pick, isCedear);
+    const ytdF = formatYTD(ytd);
+    const fmtNum = (n) => n == null ? '—' : n.toLocaleString('es-AR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    const convCls = pick.conviccion === 'especulativo' ? 'especulativo' : pick.conviccion === 'tecnico' ? 'tecnico' : 'largo';
+    const convLbl = pick.conviccion === 'especulativo' ? 'ESPECULATIVO' : pick.conviccion === 'tecnico' ? 'REBOTE TÉCNICO' : 'LARGO PLAZO';
+    const moneda = isCedear ? '' : 'ARS';
+    return `<div class="tac-row ${isCedear ? 'cedear' : ''}" onclick="openTacticaEdit('${isCedear ? 'cedears' : 'ar'}','${pick.id}')" style="cursor:pointer">
+      <div>
+        <div class="tac-ticker">${pick.ticker}</div>
+        <div class="tac-name">${pick.nombre || ''}</div>
+      </div>
+      <div>
+        <div class="tac-sector-label">Sector</div>
+        <div class="tac-sector-value">${sector}</div>
+      </div>
+      <div>
+        <div class="tac-conv ${convCls}">${convLbl}</div>
+        <div class="tac-tesis">${pick.tesis || '<span style="color: var(--text-light); font-style: italic;">Sin tesis cargada</span>'}</div>
+      </div>
+      <div>
+        <div class="tac-prices-label">${isCedear ? 'ARS' : 'ARS'} 31/12 → Hoy</div>
+        <div class="tac-prices-value">${precio31 ? '$' + fmtNum(precio31) : '—'} → ${precioActual ? '$' + fmtNum(precioActual) : '—'}</div>
+      </div>
+      <div>
+        <div class="tac-ytd-label">YTD</div>
+        <div class="tac-ytd-value ${ytdF.cls}">${ytdF.txt}</div>
+      </div>
+      <button class="tac-remove" onclick="event.stopPropagation(); removeTactica('${isCedear ? 'cedears' : 'ar'}','${pick.id}')" title="Quitar">×</button>
+    </div>`;
+  }
+
+  const arPicks = state.tacticasPicks.ar;
+  const cedearsPicks = state.tacticasPicks.cedears;
+
+  const arHtml = arPicks.length === 0
+    ? `<div class="tac-empty">Sin picks AR cargados. Click en "+ Agregar pick AR" para empezar.</div>`
+    : arPicks.map(p => renderPickRow(p, false)).join('');
+  const cedearsHtml = cedearsPicks.length === 0
+    ? `<div class="tac-empty">Sin picks CEDEAR cargados. Click en "+ Agregar pick CEDEAR" para empezar.</div>`
+    : cedearsPicks.map(p => renderPickRow(p, true)).join('');
+
+  return `<div class="card">
+    <div class="tacticas-header">
+      <div>
+        <div class="tacticas-title">Tácticas</div>
+        <div class="tacticas-subtitle">Stock picks · Visión del equipo</div>
+      </div>
+      <div class="tacticas-meta">
+        <span class="${statusDotCls}"></span>
+        <span>${statusTxt}</span>
+        <span>·</span>
+        <span>Actualizado ${lastUpdateTxt}</span>
+        <button class="btn" onclick="fetchTacticasPrices()" style="margin-left:8px;">↻ Refrescar</button>
+      </div>
+    </div>
+
+    <div class="tacticas-section">
+      <div class="tacticas-section-header">
+        <div class="tacticas-section-title">Stock Picks Argentina</div>
+        <span class="tacticas-section-badge ar">EQUITY AR</span>
+      </div>
+      <div class="tac-list">${arHtml}</div>
+      <div class="tac-add-cta" onclick="openTacticaEdit('ar', null)">+ Agregar pick AR</div>
+    </div>
+
+    <div class="tacticas-section">
+      <div class="tacticas-section-header">
+        <div class="tacticas-section-title">Stock Picks Exterior</div>
+        <span class="tacticas-section-badge cedears">CEDEARS</span>
+      </div>
+      <div class="tac-list">${cedearsHtml}</div>
+      <div class="tac-add-cta" onclick="openTacticaEdit('cedears', null)">+ Agregar pick CEDEAR</div>
+    </div>
+  </div>`;
+}
+
+function openTacticaEdit(grupo, id) {
+  const existing = id ? state.tacticasPicks[grupo].find(p => p.id === id) : null;
+  state.tacticasEdit = {
+    grupo,
+    id: id || ('p_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4)),
+    ticker: existing?.ticker || '',
+    nombre: existing?.nombre || '',
+    conviccion: existing?.conviccion || 'largo',
+    precio31: existing?.precio31 || '',
+    tesis: existing?.tesis || '',
+    isNew: !existing,
+  };
+  render();
+}
+
+function closeTacticaEdit() {
+  state.tacticasEdit = null;
+  render();
+}
+
+function setTacticaField(field, value) {
+  if (!state.tacticasEdit) return;
+  state.tacticasEdit[field] = value;
+  // Re-render solo el modal para ver el cambio en el chip de convicción
+  if (field === 'conviccion') renderModal();
+}
+
+function saveTactica() {
+  const e = state.tacticasEdit;
+  if (!e) return;
+  if (!e.ticker.trim()) { alert('El ticker es obligatorio'); return; }
+  const pick = {
+    id: e.id,
+    ticker: e.ticker.trim().toUpperCase(),
+    nombre: e.nombre.trim(),
+    conviccion: e.conviccion,
+    precio31: e.precio31,
+    tesis: e.tesis.trim(),
+  };
+  const list = state.tacticasPicks[e.grupo];
+  const idx = list.findIndex(p => p.id === e.id);
+  if (idx >= 0) list[idx] = pick;
+  else list.push(pick);
+  saveTacticas();
+  state.tacticasEdit = null;
+  // Si el ticker no estaba en precios, refrescar
+  if (!state.tacticasPrices.data[pick.ticker]) fetchTacticasPrices();
+  render();
+}
+
+function removeTactica(grupo, id) {
+  const pick = state.tacticasPicks[grupo].find(p => p.id === id);
+  if (!pick) return;
+  if (!confirm(`¿Quitar ${pick.ticker} del listado de Tácticas?`)) return;
+  state.tacticasPicks[grupo] = state.tacticasPicks[grupo].filter(p => p.id !== id);
+  saveTacticas();
+  render();
+}
+
+function renderTacticasEditModal() {
+  const container = document.getElementById('modal-container');
+  const e = state.tacticasEdit;
+  if (!e) { container.innerHTML = ''; return; }
+  const grupoLbl = e.grupo === 'ar' ? 'Stock Pick Argentina' : 'Stock Pick CEDEAR';
+  // Sugerencias de tickers según grupo
+  const tickerSugeridos = e.grupo === 'ar'
+    ? Object.keys(SECTORES).filter(t => ['Financials','Energía','Materials','Comunicaciones','Agro','Industria'].includes(SECTORES[t]) && !['V','MA','JPM','PYPL','GS','BAC','C','NU','STNE','PAGS','COIN','SQ','BBD','XP','PBR','XOM','CVX','GPRK','SLB','VALE','SQM','TX','GOLD','JBSS','BA','CAAP','AGRO'].includes(t))
+    : Object.keys(CEDEAR_RATIOS);
+  container.innerHTML = `
+    <div class="modal-backdrop" onclick="if(event.target===this) closeTacticaEdit()">
+      <div class="modal" style="max-width: 540px;">
+        <div class="modal-header">
+          <div>
+            <div class="modal-title">${e.isNew ? 'Nuevo' : 'Editar'} pick</div>
+            <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">${grupoLbl}</div>
+          </div>
+          <button class="modal-close" onclick="closeTacticaEdit()">×</button>
+        </div>
+        <div class="tac-edit-grid">
+          <div>
+            <div class="tac-edit-label">Ticker</div>
+            <input class="tac-edit-input" type="text" list="ticker-suggest-${e.grupo}" value="${e.ticker}" placeholder="Ej: YPF, MELI, UBER" oninput="state.tacticasEdit.ticker=this.value.toUpperCase()" style="text-transform: uppercase; font-weight:700;">
+            <datalist id="ticker-suggest-${e.grupo}">
+              ${tickerSugeridos.map(t => `<option value="${t}">${t} - ${getSector(t)}</option>`).join('')}
+            </datalist>
+          </div>
+          <div>
+            <div class="tac-edit-label">Nombre (opcional)</div>
+            <input class="tac-edit-input" type="text" value="${e.nombre}" placeholder="Ej: YPF S.A." oninput="state.tacticasEdit.nombre=this.value">
+          </div>
+          <div>
+            <div class="tac-edit-label">Convicción</div>
+            <div class="tac-conv-options">
+              <div class="tac-conv-option especulativo ${e.conviccion === 'especulativo' ? 'selected' : ''}" onclick="setTacticaField('conviccion','especulativo')">Especulativo</div>
+              <div class="tac-conv-option tecnico ${e.conviccion === 'tecnico' ? 'selected' : ''}" onclick="setTacticaField('conviccion','tecnico')">Rebote técnico</div>
+              <div class="tac-conv-option largo ${e.conviccion === 'largo' ? 'selected' : ''}" onclick="setTacticaField('conviccion','largo')">Largo plazo</div>
+            </div>
+          </div>
+          <div>
+            <div class="tac-edit-label">Precio al 31/12 (ARS)</div>
+            <input class="tac-edit-input" type="number" step="0.01" value="${e.precio31}" placeholder="Ej: 4250.50" oninput="state.tacticasEdit.precio31=this.value">
+            <div style="font-size:10px; color:var(--text-light); margin-top:4px;">El precio actual lo trae IOL automáticamente. YTD se calcula como (Hoy - 31/12) / 31/12.</div>
+          </div>
+          <div>
+            <div class="tac-edit-label">Tesis / Catalizador</div>
+            <textarea class="tac-edit-input tac-edit-textarea" placeholder="Ej: Vaca Muerta + nueva concesión..." oninput="state.tacticasEdit.tesis=this.value">${e.tesis}</textarea>
+          </div>
+        </div>
+        <div class="tac-edit-actions">
+          <button class="btn" onclick="closeTacticaEdit()">Cancelar</button>
+          <button class="btn" style="background: var(--navy); color: white; border-color: var(--navy);" onclick="saveTactica()">${e.isNew ? '+ Agregar' : '💾 Guardar'}</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderTabs() {
+  const tabsHtml = [
+    `<button class="main-tab ${state.current === 'overview' ? 'active' : ''}" onclick="selectTab('overview')">⊞ Overview</button>`,
+    ...ORDER.map(id => {
+      const t = state.templates[id];
+      const edited = isEdited(id);
+      return `<button class="main-tab ${state.current === id ? 'active' : ''}" onclick="selectTab('${id}')">
+        ${t.moneda} · ${t.perfil}${edited ? ' <span class="edit-dot">●</span>' : ''}
+      </button>`;
+    }),
+    `<button class="main-tab ${state.current === 'tacticas' ? 'active' : ''}" onclick="selectTab('tacticas')">⚡ Tácticas</button>`
+  ].join("");
+  document.getElementById("main-tabs").innerHTML = tabsHtml;
+}
+
+function selectTab(tab) {
+  state.current = tab;
+  state.modal = null;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (tab === 'tacticas' && state.tacticasPrices.status === 'idle') {
+    fetchTacticasPrices();
+  }
+}
+
+function render() {
+  renderTabs();
+  const content = document.getElementById("content");
+  if (state.current === "overview") content.innerHTML = renderOverview();
+  else if (state.current === "tacticas") content.innerHTML = renderTacticas();
+  else content.innerHTML = renderPortfolio(state.current);
+  renderModal();
+}
+
+loadState();
+render();
+// Auto-refresh precios cada 60s si estamos en tácticas
+setInterval(() => {
+  if (state.current === 'tacticas' && (state.tacticasPicks.ar.length + state.tacticasPicks.cedears.length) > 0) {
+    fetchTacticasPrices();
+  }
+}, 60000);
+</script>
+
+</body>
+</html>
