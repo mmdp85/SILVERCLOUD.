@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SilverCloud | Curva Tasa Fija ARS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg-primary: #0a0e17;
+    --bg-secondary: #111827;
+    --bg-card: #1a2235;
+    --bg-card-hover: #1f2a40;
+    --bg-input: #0d1220;
+    --border: #2a3550;
+    --border-light: #354060;
+    --text-primary: #e8ecf4;
+    --text-secondary: #8892a8;
+    --text-muted: #5a6580;
+    --accent-blue: #4a9eff;
+    --accent-cyan: #22d3ee;
+    --green: #34d399;
+    --green-soft: #a3e635;
+    --red: #f87171;
+    --orange: #fb923c;
+    --gold: #fbbf24;
+    --purple: #a78bfa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .logo-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #4a9eff 0%, #a8b8d0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--bg-primary);
+  }
+
+  .logo-text h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-text span {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .header-info {
+    text-align: right;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .header-info .date {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+  }
+
+  .live-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .status-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .status-dot.error { background: var(--red); animation: none; }
+  .status-dot.loading { background: var(--gold); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .last-update {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+
+  .refresh-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .refresh-btn:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+    border-color: var(--accent-blue);
+  }
+
+  /* Error box */
+  .error-box {
+    background: rgba(248, 113, 113, 0.1);
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    border-radius: 10px;
+    padding: 0.8rem 1.2rem;
+    color: var(--red);
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+    display: none;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .error-box.visible { display: block; }
+
+  /* Chart area */
+  .chart-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .chart-title {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+  }
+
+  canvas {
+    width: 100% !important;
+    height: 320px !important;
+  }
+
+  .chart-legend {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.8rem;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* Table */
+  .table-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  .table-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .table-header-bar h2 {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .filter-buttons {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .filter-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--accent-blue);
+    color: var(--text-secondary);
+  }
+
+  .filter-btn.active {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+    color: var(--bg-primary);
+    font-weight: 700;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  thead th {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    padding: 0.8rem 1rem;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    background: var(--bg-card);
+  }
+
+  thead th:first-child,
+  thead th:nth-child(2) {
+    text-align: left;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(42, 53, 80, 0.4);
+    transition: background 0.15s;
+  }
+
+  tbody tr:hover {
+    background: var(--bg-card-hover);
+  }
+
+  tbody td {
+    padding: 0.7rem 1rem;
+    text-align: right;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  tbody td:first-child {
+    text-align: left;
+    font-weight: 700;
+    color: var(--accent-blue);
+    font-size: 0.85rem;
+  }
+
+  tbody td:nth-child(2) {
+    text-align: left;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+  }
+
+  /* Price cell layout */
+  .price-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    justify-content: flex-end;
+  }
+
+  /* Editable price input */
+  .price-input {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--gold);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.35rem 0.5rem;
+    width: 85px;
+    text-align: right;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .price-input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.15);
+  }
+
+  .price-input:hover {
+    border-color: var(--border-light);
+  }
+
+  /* Manual override styling */
+  .price-input.manual {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 1px rgba(251, 146, 60, 0.2);
+  }
+
+  /* IOL-sourced indicator */
+  .iol-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .iol-dot.live { opacity: 1; }
+  .iol-dot.manual { background: var(--orange); opacity: 1; }
+  .iol-dot.missing { background: var(--text-muted); opacity: 0.5; }
+
+  .reset-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0.2rem 0.3rem;
+    border-radius: 4px;
+    transition: all 0.15s;
+    display: none;
+    line-height: 1;
+  }
+
+  .reset-btn.visible { display: inline-block; }
+
+  .reset-btn:hover {
+    color: var(--accent-blue);
+    background: rgba(74, 158, 255, 0.1);
+  }
+
+  .val-final {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .tna-cell {
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  .tem-cell {
+    color: var(--accent-cyan);
+    font-weight: 600;
+  }
+
+  .tea-cell {
+    color: var(--purple);
+    font-weight: 600;
+  }
+
+  .days-cell {
+    color: var(--text-muted);
+  }
+
+  /* Type badges */
+  .type-badge {
+    font-size: 0.6rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .type-lecap {
+    background: rgba(74, 158, 255, 0.15);
+    color: var(--accent-blue);
+  }
+
+  .type-boncap {
+    background: rgba(167, 139, 250, 0.15);
+    color: var(--purple);
+  }
+
+  .type-leput {
+    background: rgba(251, 191, 36, 0.15);
+    color: var(--gold);
+  }
+
+  .type-bono {
+    background: rgba(52, 211, 153, 0.15);
+    color: var(--green);
+  }
+
+  /* Tooltip */
+  .edit-hint {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    padding: 0.6rem 1.5rem;
+    border-top: 1px solid rgba(42, 53, 80, 0.4);
+    font-family: 'Space Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .edit-hint .legend-mini {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .edit-hint .mini-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  /* Suggestions panel */
+  .suggestions-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1.5rem;
+    display: none;
+  }
+
+  .suggestions-panel.visible { display: block; }
+
+  .suggestions-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .suggestions-title {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .suggestions-title strong {
+    color: var(--gold);
+  }
+
+  .suggestions-toggle {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 0.25rem 0.6rem;
+    border-radius: 5px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .suggestions-toggle:hover {
+    color: var(--text-primary);
+    border-color: var(--accent-blue);
+  }
+
+  .suggestions-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .suggestion-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 0.35rem 0.7rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+  }
+
+  .suggestion-chip .sc-ticker {
+    color: var(--accent-blue);
+    font-weight: 700;
+  }
+
+  .suggestion-chip .sc-price {
+    color: var(--gold);
+  }
+
+  .suggestion-chip .sc-vol {
+    color: var(--text-muted);
+    font-size: 0.6rem;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 1.5rem 0 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container { padding: 1rem; }
+    .header { flex-direction: column; align-items: flex-start; }
+    .header-right { width: 100%; justify-content: space-between; }
+    .header-info { text-align: left; }
+    canvas { height: 240px !important; }
+    .price-input { width: 75px; }
+  }
+
+  /* Row highlight on change */
+  @keyframes rowFlash {
+    0% { background: rgba(74, 158, 255, 0.12); }
+    100% { background: transparent; }
+  }
+  .row-flash {
+    animation: rowFlash 0.8s ease-out;
+  }
+
+  @keyframes rowFlashLive {
+    0% { background: rgba(52, 211, 153, 0.12); }
+    100% { background: transparent; }
+  }
+  .row-flash-live {
+    animation: rowFlashLive 0.8s ease-out;
+  }
+
+  .topnav{background:var(--bg-secondary);border-bottom:1px solid var(--border);padding:0.5rem 1.5rem;display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;position:relative;z-index:1}
+  .topnav a{font-family:'Space Mono',monospace;font-size:0.7rem;padding:0.35rem 0.8rem;border-radius:6px;text-decoration:none;color:var(--text-muted);transition:all 0.15s;border:1px solid transparent}
+  .topnav a:hover{color:var(--text-primary);background:var(--bg-card)}
+  .topnav a.active{color:var(--accent-blue);border-color:var(--accent-blue);background:rgba(74,158,255,0.08)}
+  .topnav .home-link{color:var(--text-secondary);font-weight:700;margin-right:0.5rem}
+  .topnav .home-link:hover{color:var(--accent-blue)}
+
+  .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#0a0e17;border-top:1px solid #2a3550;z-index:50;padding:0.4rem 0.5rem 0.6rem;justify-content:space-around;align-items:center}
+  .bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:0.15rem;text-decoration:none;color:#5a6580;font-size:0.55rem;font-family:'Space Mono',monospace;padding:0.3rem 0.4rem;border-radius:8px;transition:all 0.15s;min-width:50px}
+  .bottom-nav a:hover,.bottom-nav a.active{color:#4a9eff}
+  .bottom-nav a .bn-icon{font-size:1.2rem;line-height:1}
+  @media(max-width:768px){.bottom-nav{display:flex}body{padding-bottom:70px}}
+
+</style>
+</head>
+<body>
+<div class="topnav">
+  <a href="index.html" class="home-link">← SC</a>
+  <a href="crypto.html">Crypto</a>
+  <a href="curva-pesos.html" class="active">Curva Tasa Fija</a>
+  <a href="precios-iol.html">Precios IOL</a>
+  <a href="cartera.html">Mi Cartera</a>
+  <a href="galileo.html">Galileo Fondos</a>
+</div>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-area">
+      <div class="logo-icon">SC</div>
+      <div class="logo-text">
+        <h1>SilverCloud</h1>
+        <span>Curva Tasa Fija &mdash; Pesos</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-info">
+        <div class="date" id="currentDate"></div>
+        <div>FX Utilizado: <strong id="fxDisplay">1.423,98</strong></div>
+      </div>
+      <div class="live-status">
+        <div class="status-badge">
+          <div class="status-dot loading" id="statusDot"></div>
+          <span id="statusText">Cargando IOL...</span>
+        </div>
+        <span class="last-update" id="lastUpdate">--:--:--</span>
+        <button class="refresh-btn" onclick="loadIOLPrices()">↻ Actualizar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <!-- Chart -->
+  <div class="chart-section">
+    <div class="chart-title">Curva de Rendimientos TNA por Vencimiento</div>
+    <canvas id="curveChart"></canvas>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> LECAPs</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div> BONCAPs</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#fbbf24"></div> PUT</div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-section">
+    <div class="table-header-bar">
+      <h2>Detalle de Instrumentos</h2>
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all" onclick="filterTable('all', this)">Todos</button>
+        <button class="filter-btn" data-filter="LECAP" onclick="filterTable('LECAP', this)">LECAPs</button>
+        <button class="filter-btn" data-filter="BONCAP" onclick="filterTable('BONCAP', this)">BONCAPs</button>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left">Ticker</th>
+            <th style="text-align:left">Tipo</th>
+            <th>Vto</th>
+            <th>Días</th>
+            <th>Precio Actual</th>
+            <th>Valor Final</th>
+            <th>Rend. Directo</th>
+            <th>TNA</th>
+            <th>TEM</th>
+            <th>TEA</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+      </table>
+    </div>
+    <div class="edit-hint">
+      <span>Precios:</span>
+      <span class="legend-mini"><span class="mini-dot" style="background:var(--green)"></span> IOL (auto, cada 60s)</span>
+      <span class="legend-mini"><span class="mini-dot" style="background:var(--orange)"></span> Editado manual</span>
+      <span class="legend-mini"><span class="mini-dot" style="background:var(--text-muted)"></span> Sin dato IOL</span>
+      <span style="margin-left:auto">✎ Click en el precio para editar · 🔄 vuelve al precio IOL</span>
+    </div>
+  </div>
+
+  <!-- IOL suggestions panel -->
+  <div class="suggestions-panel" id="suggestionsPanel">
+    <div class="suggestions-header">
+      <div class="suggestions-title">
+        💡 IOL devuelve también <strong id="suggCount">0</strong> instrumentos vigentes que no tenés cargados
+      </div>
+      <button class="suggestions-toggle" id="suggToggle" onclick="toggleSuggestions()">Ocultar</button>
+    </div>
+    <div class="suggestions-list" id="suggestionsList"></div>
+  </div>
+
+  <div class="footer">
+    SilverCloud &copy; 2026 &mdash; Precios en vivo vía IOL API &mdash; Cálculos propios
+  </div>
+</div>
+
+<!-- Chart.js from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const IOL_PROXY = 'https://silvercloud-api.vercel.app/api/iol';
+const REFRESH_MS = 60000; // 60 segundos
+
+// MODO SEGURO: si está en true, NO trae precios de IOL automáticamente.
+// Los precios fallback (de Balanz) se mantienen y vos calculás bien la TNA.
+// Cambiar a false cuando confirmemos que la escala /10 está correcta.
+const SAFE_MODE = false;
+
+// ============================================================
+// DATA - Instrumentos de la curva
+// `precio` arranca con un valor de referencia y se sobrescribe
+// con el precio en vivo de IOL al cargar
+// ============================================================
+const instruments = [
+  { ticker: 'S29Y6', type: 'LECAP',  vto: '2026-05-29', valorFinal: 132.04, precio: 130.97 },
+  { ticker: 'S12J6', type: 'LECAP',  vto: '2026-06-12', valorFinal: 102.95, precio: 101.28 },
+  { ticker: 'T30J6', type: 'LECAP',  vto: '2026-06-30', valorFinal: 144.88, precio: 141.08 },
+  { ticker: 'S17L6', type: 'LECAP',  vto: '2026-07-17', valorFinal: 107.92, precio: 104.01 },
+  { ticker: 'S31L6', type: 'LECAP',  vto: '2026-07-31', valorFinal: 117.68, precio: 112.60 },
+  { ticker: 'S14G6', type: 'LECAP',  vto: '2026-08-14', valorFinal: 108.03, precio: 102.30 },
+  { ticker: 'S31G6', type: 'LECAP',  vto: '2026-08-31', valorFinal: 127.06, precio: 119.10 },
+  { ticker: 'S30S6', type: 'LECAP',  vto: '2026-09-30', valorFinal: 117.54, precio: 107.55 },
+  { ticker: 'S30O6', type: 'BONCAP', vto: '2026-10-30', valorFinal: 135.28, precio: 121.90 },
+  { ticker: 'S30N6', type: 'BONCAP', vto: '2026-11-30', valorFinal: 129.89, precio: 115.10 },
+  { ticker: 'T15E7', type: 'BONCAP', vto: '2027-01-15', valorFinal: 161.10, precio: 137.70 },
+  { ticker: 'T30A7', type: 'BONCAP', vto: '2027-04-30', valorFinal: 157.34, precio: 124.87 },
+  { ticker: 'TY30P', type: 'PUT',    vto: '2027-05-27', valorFinal: 144.25, precio: 121.70, label: 'TY30P PUT' },
+  { ticker: 'T31Y7', type: 'BONCAP', vto: '2027-05-31', valorFinal: 151.56, precio: 117.77 },
+  { ticker: 'T30J7', type: 'BONCAP', vto: '2027-06-30', valorFinal: 156.04, precio: 120.67 },
+  { ticker: 'TY30P30', type: 'PUT',  vto: '2030-05-30', valorFinal: 232.75, precio: 121.70, label: 'TY30P 2030' },
+];
+
+// Estado por instrumento:
+//   source: 'iol' | 'manual' | 'fallback'
+//   iolPrice: último precio recibido de IOL (para botón reset)
+instruments.forEach(i => { i.source = 'fallback'; i.iolPrice = null; });
+
+// Sugerencias: LECAPs/BONCAPs de IOL que no están en `instruments`
+let iolSuggestions = [];
+
+const TODAY = new Date();
+
+// ============================================================
+// IOL FETCH
+// ============================================================
+async function fetchJSON(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+
+function setStatus(type, msg) {
+  const dot = document.getElementById('statusDot');
+  dot.className = 'status-dot' + (type === 'error' ? ' error' : type === 'loading' ? ' loading' : '');
+  document.getElementById('statusText').textContent = msg;
+}
+
+function showError(msg) {
+  const e = document.getElementById('errorBox');
+  e.textContent = msg;
+  e.classList.add('visible');
+}
+
+function hideError() {
+  document.getElementById('errorBox').classList.remove('visible');
+}
+
+async function loadIOLPrices() {
+  setStatus('loading', 'Cargando IOL...');
+  try {
+    // LECAPs viven en /letras, BONCAPs en /titulosPublicos
+    const [letras, tp] = await Promise.all([
+      fetchJSON(IOL_PROXY + '/v2/Cotizaciones/letras/argentina/Todos'),
+      fetchJSON(IOL_PROXY + '/v2/Cotizaciones/titulosPublicos/argentina/Todos'),
+    ]);
+
+    const todos = [...(letras.titulos || []), ...(tp.titulos || [])];
+
+    // Mapa ticker -> precio
+    // IOL devuelve el precio en la misma escala que usa Balanz
+    // (ej: S29Y6 = 130,97), así que se toma tal cual.
+    const priceMap = {};
+    const fullMap = {};
+    todos.forEach(t => {
+      if (t.simbolo && t.ultimoPrecio > 0) {
+        priceMap[t.simbolo] = t.ultimoPrecio;
+        fullMap[t.simbolo] = t;
+      }
+    });
+
+    // Detectar LECAPs/BONCAPs vigentes en IOL que NO tenemos cargadas.
+    // Filtro: simbolo empieza con S (LECAP), T (BONCAP) seguido de patrón
+    // de fecha tipo NNXN (ej: S29Y6, T30A7).
+    const knownTickers = new Set(instruments.map(i => i.ticker));
+    const tickerPattern = /^[ST]\d{1,2}[A-Z]\d$/; // S29Y6, T30A7, etc.
+    iolSuggestions = todos
+      .filter(t => t.simbolo
+        && tickerPattern.test(t.simbolo)
+        && !knownTickers.has(t.simbolo)
+        && t.ultimoPrecio > 0
+        && t.moneda === '1') // solo pesos
+      .map(t => ({
+        ticker: t.simbolo,
+        precio: t.ultimoPrecio,
+        volumen: t.volumen || 0,
+        descripcion: t.descripcion || ''
+      }))
+      .sort((a, b) => b.volumen - a.volumen);
+
+    // Actualizar cada instrumento si no está en modo manual
+    let updated = 0;
+    instruments.forEach(inst => {
+      if (priceMap[inst.ticker]) {
+        inst.iolPrice = priceMap[inst.ticker];
+        if (inst.source !== 'manual') {
+          inst.precio = priceMap[inst.ticker];
+          inst.source = 'iol';
+          updated++;
+        }
+      } else if (inst.source !== 'manual') {
+        inst.source = 'fallback';
+      }
+    });
+
+    setStatus('ok', 'En vivo · ' + updated + ' actualizados');
+    document.getElementById('lastUpdate').textContent =
+      new Date().toLocaleTimeString('es-AR');
+    hideError();
+
+    renderTable(true); // true = flash live rows
+    updateChart();
+    renderSuggestions();
+  } catch (e) {
+    console.error(e);
+    setStatus('error', 'Error IOL');
+    showError('No se pudieron cargar precios de IOL: ' + e.message + ' (se usan valores de referencia)');
+  }
+}
+
+// ============================================================
+// CALCULATION FUNCTIONS
+// ============================================================
+function isExpired(dateStr) {
+  const vto = new Date(dateStr + 'T00:00:00');
+  return vto <= TODAY;
+}
+
+function daysBetween(dateStr) {
+  const vto = new Date(dateStr + 'T00:00:00');
+  const diff = (vto - TODAY) / (1000 * 60 * 60 * 24);
+  return Math.max(Math.round(diff), 1);
+}
+
+function calcMetrics(precio, valorFinal, dias) {
+  const rendDirecto = (valorFinal / precio - 1);
+  const tna = rendDirecto * (365 / dias);
+  const tem = Math.pow(1 + rendDirecto, 30 / dias) - 1;
+  const tea = Math.pow(1 + rendDirecto, 365 / dias) - 1;
+  return { rendDirecto, tna, tem, tea };
+}
+
+function fmtPct(n) {
+  return (n * 100).toFixed(2) + '%';
+}
+
+function fmtDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+function fmtPrice(n) {
+  return n.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// ============================================================
+// RENDER TABLE
+// ============================================================
+let currentFilter = 'all';
+
+function renderTable(flashLive = false) {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  instruments.forEach((inst, idx) => {
+    if (currentFilter !== 'all' && inst.type !== currentFilter) return;
+    if (isExpired(inst.vto)) return; // ocultar vencidos
+
+    const dias = daysBetween(inst.vto);
+    const m = calcMetrics(inst.precio, inst.valorFinal, dias);
+
+    const typeClass = inst.type === 'LECAP' ? 'type-lecap' :
+                      inst.type === 'BONCAP' ? 'type-boncap' :
+                      inst.type === 'PUT' ? 'type-leput' : 'type-bono';
+
+    const dotClass = inst.source === 'iol' ? 'iol-dot live' :
+                     inst.source === 'manual' ? 'iol-dot manual' :
+                     'iol-dot missing';
+
+    const inputClass = inst.source === 'manual' ? 'price-input manual' : 'price-input';
+
+    const showReset = inst.source === 'manual' && inst.iolPrice !== null;
+
+    const tr = document.createElement('tr');
+    tr.dataset.idx = idx;
+    if (flashLive && inst.source === 'iol') tr.classList.add('row-flash-live');
+
+    tr.innerHTML = `
+      <td>${inst.label || inst.ticker}</td>
+      <td><span class="type-badge ${typeClass}">${inst.type}</span></td>
+      <td>${fmtDate(inst.vto)}</td>
+      <td class="days-cell">${dias}</td>
+      <td>
+        <span class="price-cell">
+          <span class="${dotClass}" title="${inst.source === 'iol' ? 'Precio IOL en vivo' : inst.source === 'manual' ? 'Editado manualmente' : 'Sin dato IOL'}"></span>
+          <input type="text" class="${inputClass}"
+                 value="${fmtPrice(inst.precio)}"
+                 data-idx="${idx}"
+                 onfocus="this.select()"
+                 onchange="updatePrice(this)"
+                 onkeydown="if(event.key==='Enter'){this.blur()}"
+          >
+          <button class="reset-btn ${showReset ? 'visible' : ''}"
+                  onclick="resetToIOL(${idx})"
+                  title="Volver al precio IOL">🔄</button>
+        </span>
+      </td>
+      <td class="val-final">${fmtPrice(inst.valorFinal)}</td>
+      <td>${fmtPct(m.rendDirecto)}</td>
+      <td class="tna-cell">${fmtPct(m.tna)}</td>
+      <td class="tem-cell">${fmtPct(m.tem)}</td>
+      <td class="tea-cell">${fmtPct(m.tea)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function updatePrice(input) {
+  const idx = parseInt(input.dataset.idx);
+  let raw = input.value.replace(/\./g, '').replace(',', '.');
+  let val = parseFloat(raw);
+  if (isNaN(val) || val <= 0) {
+    input.value = fmtPrice(instruments[idx].precio);
+    return;
+  }
+  instruments[idx].precio = val;
+  instruments[idx].source = 'manual';
+  input.value = fmtPrice(val);
+
+  // Re-render para actualizar el dot y mostrar botón reset
+  renderTable();
+  updateChart();
+}
+
+function resetToIOL(idx) {
+  if (instruments[idx].iolPrice !== null) {
+    instruments[idx].precio = instruments[idx].iolPrice;
+    instruments[idx].source = 'iol';
+    renderTable();
+    updateChart();
+  }
+}
+
+function filterTable(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+// ============================================================
+// IOL SUGGESTIONS PANEL
+// ============================================================
+let suggestionsCollapsed = false;
+
+function renderSuggestions() {
+  const panel = document.getElementById('suggestionsPanel');
+  const list = document.getElementById('suggestionsList');
+  const countEl = document.getElementById('suggCount');
+
+  if (iolSuggestions.length === 0) {
+    panel.classList.remove('visible');
+    return;
+  }
+
+  panel.classList.add('visible');
+  countEl.textContent = iolSuggestions.length;
+
+  if (suggestionsCollapsed) {
+    list.innerHTML = '';
+    return;
+  }
+
+  list.innerHTML = iolSuggestions.map(s => `
+    <div class="suggestion-chip" title="${s.descripcion}">
+      <span class="sc-ticker">${s.ticker}</span>
+      <span class="sc-price">${fmtPrice(s.precio)}</span>
+      ${s.volumen > 0 ? `<span class="sc-vol">vol ${fmtVol(s.volumen)}</span>` : ''}
+    </div>
+  `).join('');
+}
+
+function toggleSuggestions() {
+  suggestionsCollapsed = !suggestionsCollapsed;
+  document.getElementById('suggToggle').textContent = suggestionsCollapsed ? 'Mostrar' : 'Ocultar';
+  renderSuggestions();
+}
+
+function fmtVol(n) {
+  if (!n) return '--';
+  if (n >= 1e9) return (n / 1e9).toFixed(1) + 'B';
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+  return n.toLocaleString('es-AR');
+}
+
+// ============================================================
+// CHART
+// ============================================================
+let chartInstance = null;
+
+function updateChart() {
+  const dataPoints = instruments
+    .filter(inst => !isExpired(inst.vto))
+    .filter(inst => inst.type !== 'PUT' || inst.ticker === 'TY30P')
+    .map(inst => {
+      const dias = daysBetween(inst.vto);
+      const m = calcMetrics(inst.precio, inst.valorFinal, dias);
+      return {
+        x: parseFloat((dias / 30).toFixed(1)),
+        y: parseFloat((m.tna * 100).toFixed(2)),
+        type: inst.type,
+        ticker: inst.label || inst.ticker,
+        dias
+      };
+    })
+    .filter(d => d.dias < 600)
+    .sort((a, b) => a.x - b.x);
+
+  const lecaps = dataPoints.filter(d => d.type === 'LECAP');
+  const boncaps = dataPoints.filter(d => d.type === 'BONCAP');
+  const puts = dataPoints.filter(d => d.type === 'PUT');
+
+  if (chartInstance) {
+    chartInstance.data.datasets[0].data = lecaps.map(d => ({ x: d.x, y: d.y }));
+    chartInstance.data.datasets[1].data = boncaps.map(d => ({ x: d.x, y: d.y }));
+    chartInstance.data.datasets[2].data = puts.map(d => ({ x: d.x, y: d.y }));
+    chartInstance.data.datasets[0]._labels = lecaps.map(d => d.ticker);
+    chartInstance.data.datasets[1]._labels = boncaps.map(d => d.ticker);
+    chartInstance.data.datasets[2]._labels = puts.map(d => d.ticker);
+    chartInstance.update('none');
+    return;
+  }
+
+  const ctx = document.getElementById('curveChart').getContext('2d');
+
+  chartInstance = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: 'LECAPs',
+          data: lecaps.map(d => ({ x: d.x, y: d.y })),
+          _labels: lecaps.map(d => d.ticker),
+          borderColor: '#4a9eff',
+          backgroundColor: 'rgba(74, 158, 255, 0.8)',
+          pointRadius: 7,
+          pointHoverRadius: 10,
+          pointBorderWidth: 2,
+          pointBorderColor: '#4a9eff',
+          showLine: true,
+          borderWidth: 2,
+          tension: 0.3,
+          fill: false,
+        },
+        {
+          label: 'BONCAPs',
+          data: boncaps.map(d => ({ x: d.x, y: d.y })),
+          _labels: boncaps.map(d => d.ticker),
+          borderColor: '#a78bfa',
+          backgroundColor: 'rgba(167, 139, 250, 0.8)',
+          pointRadius: 7,
+          pointHoverRadius: 10,
+          pointBorderWidth: 2,
+          pointBorderColor: '#a78bfa',
+          showLine: true,
+          borderWidth: 2,
+          tension: 0.3,
+          fill: false,
+        },
+        {
+          label: 'PUT',
+          data: puts.map(d => ({ x: d.x, y: d.y })),
+          _labels: puts.map(d => d.ticker),
+          borderColor: '#fbbf24',
+          backgroundColor: 'rgba(251, 191, 36, 0.8)',
+          pointRadius: 8,
+          pointHoverRadius: 11,
+          pointBorderWidth: 2,
+          pointBorderColor: '#fbbf24',
+          pointStyle: 'triangle',
+          showLine: false,
+          fill: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: { padding: { top: 10, right: 20, bottom: 5, left: 10 } },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Meses al Vencimiento',
+            color: '#5a6580',
+            font: { family: 'Space Mono', size: 11 }
+          },
+          grid: { color: 'rgba(42, 53, 80, 0.5)', drawBorder: false },
+          ticks: {
+            color: '#5a6580',
+            font: { family: 'Space Mono', size: 10 },
+            callback: v => v.toFixed(0) + 'm'
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'TNA (%)',
+            color: '#5a6580',
+            font: { family: 'Space Mono', size: 11 }
+          },
+          grid: { color: 'rgba(42, 53, 80, 0.5)', drawBorder: false },
+          ticks: {
+            color: '#5a6580',
+            font: { family: 'Space Mono', size: 10 },
+            callback: v => v.toFixed(1) + '%'
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a2235',
+          borderColor: '#2a3550',
+          borderWidth: 1,
+          titleFont: { family: 'Space Mono', size: 12, weight: 'bold' },
+          bodyFont: { family: 'Space Mono', size: 11 },
+          titleColor: '#e8ecf4',
+          bodyColor: '#8892a8',
+          cornerRadius: 8,
+          padding: 12,
+          callbacks: {
+            title: function(items) {
+              const item = items[0];
+              const ds = item.dataset;
+              const label = ds._labels?.[item.dataIndex] || '';
+              return label;
+            },
+            label: function(item) {
+              return [
+                `TNA: ${item.parsed.y.toFixed(2)}%`,
+                `Meses: ${item.parsed.x.toFixed(1)}`
+              ];
+            }
+          }
+        }
+      },
+      interaction: {
+        mode: 'nearest',
+        intersect: true
+      }
+    }
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+let refreshTimer = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('currentDate').textContent =
+    TODAY.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+  // Render inicial con valores fallback (mientras carga IOL)
+  renderTable();
+  updateChart();
+
+  if (SAFE_MODE) {
+    setStatus('ok', 'Modo seguro (precios Balanz)');
+    document.getElementById('lastUpdate').textContent = 'auto-update OFF';
+    console.log('[SAFE_MODE] IOL desactivado. Cambiar SAFE_MODE = false para activar auto-update.');
+  } else {
+    // Cargar precios IOL al instante + cada 60s
+    loadIOLPrices();
+    refreshTimer = setInterval(loadIOLPrices, REFRESH_MS);
+  }
+});
+</script>
+
+<div class="bottom-nav">
+  <a href="index.html"><span class="bn-icon">🏠</span>Home</a>
+  <a href="precios-iol.html"><span class="bn-icon">🏦</span>Precios</a>
+  <a href="crypto.html"><span class="bn-icon">₿</span>Crypto</a>
+  <a href="cartera.html"><span class="bn-icon">💼</span>Cartera</a>
+  <a href="galileo.html"><span class="bn-icon">📊</span>Fondos</a>
+</div>
+</body>
+</html>
