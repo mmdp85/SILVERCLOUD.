@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>SilverCloud | Anexo de Recomendaciones</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap');
+  :root{
+    --navy:#1e2d3d; --navy-dark:#16222e;
+    --cream:#f5f0e8; --cream-mid:#f9f6f0; --paper:#fdfbf7;
+    --gold:#c9a84c; --green:#4a6741;
+    --text-dark:#1a1a1a; --text-mid:#6b6b6b; --text-light:#9a9a9a;
+    --border:#ddd8ce;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-dark);padding:20px;}
+
+  .toolbar{max-width:860px;margin:0 auto 14px;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+  .btn{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 14px;border:1.5px solid var(--navy);background:var(--navy);color:#fff;cursor:pointer;border-radius:2px}
+  .btn:hover{background:var(--navy-dark)}
+  .btn.sec{background:transparent;color:var(--navy)}
+  .btn.sec:hover{background:var(--navy);color:#fff}
+
+  .add-cat-bar{max-width:860px;margin:0 auto 14px;background:var(--paper);border:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .add-cat-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-light);margin-right:4px}
+  .cat-chip{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.5px;padding:5px 11px;border:1px solid var(--border);background:var(--cream);color:var(--text-mid);cursor:pointer;border-radius:2px;font-weight:500}
+  .cat-chip:hover{border-color:var(--navy);color:var(--navy)}
+
+  .doc{max-width:860px;margin:0 auto;background:var(--paper);box-shadow:0 2px 20px rgba(0,0,0,0.1);}
+  .doc-header{background:var(--navy);padding:30px 40px 22px;color:#fff;}
+  .doc-header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+  .doc-logo-name{font-family:Georgia,serif;font-size:22px;letter-spacing:4px;text-transform:uppercase;line-height:1}
+  .doc-logo-name span{font-weight:bold}
+  .doc-logo-sub{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-top:5px}
+  .doc-date{font-family:'Space Mono',monospace;font-size:11px;color:rgba(255,255,255,0.6);outline:none}
+  .doc-date[contenteditable="true"]:focus{background:rgba(255,255,255,0.1);padding:2px 4px}
+  .doc-section-tag{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px}
+  .doc-header-bottom{display:flex;gap:12px;flex-wrap:wrap}
+  .doc-header-pill{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);padding:7px 16px;min-width:170px}
+  .doc-header-pill .tag{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:3px}
+  .doc-header-pill .val{font-size:15px;font-weight:500;color:#fff;outline:none}
+  .doc-header-pill .val[contenteditable="true"]:focus{background:rgba(255,255,255,0.1)}
+
+  .doc-body{padding:28px 40px}
+  .doc-intro{font-size:13px;line-height:1.7;color:var(--text-mid);margin-bottom:20px;outline:none}
+  .doc-intro[contenteditable="true"]:focus{background:#fff;padding:8px;border-radius:4px}
+
+  .cat-block{margin-bottom:28px;border:1px solid var(--border);background:#fff;border-radius:2px}
+  .cat-block-head{background:var(--cream-mid);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--border)}
+  .cat-block-title{font-family:Georgia,serif;font-size:16px;font-style:italic;color:var(--navy);outline:none;flex:1}
+  .cat-block-title[contenteditable="true"]:focus{background:#fff;padding:2px 4px}
+  .cat-currency-tag{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;color:#fff}
+  .cat-currency-tag.usd{background:var(--navy)}
+  .cat-currency-tag.ars{background:var(--green)}
+  .cat-del{background:none;border:none;color:var(--text-light);cursor:pointer;font-size:16px;padding:0 4px}
+  .cat-del:hover{color:#c0392b}
+
+  .cat-block-body{padding:12px 16px}
+
+  .reco{border-left:3px solid var(--navy);padding:10px 0 10px 14px;margin-bottom:10px;border-bottom:1px solid var(--border);position:relative}
+  .reco.ars-side{border-left-color:var(--green)}
+  .reco:last-child{border-bottom:none;margin-bottom:0}
+  .reco-row1{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+  .reco-ticker{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--navy);outline:none;background:var(--cream);padding:3px 8px;border:1px solid var(--border);border-radius:2px;min-width:70px;text-transform:uppercase}
+  .reco-ticker:focus{background:#fff;border-color:var(--navy)}
+  .reco-search-btn{background:var(--cream);border:1px solid var(--border);color:var(--navy);font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.5px;padding:3px 7px;cursor:pointer;border-radius:2px}
+  .reco-search-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .reco-name{font-size:13px;font-weight:500;color:var(--text-dark);outline:none;flex:1;min-width:120px}
+  .reco-name[contenteditable="true"]:focus{background:var(--cream);padding:1px 4px}
+  .reco-pond{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--navy);background:var(--cream);padding:3px 8px;outline:none;width:55px;text-align:center;border:1px solid var(--border);border-radius:2px}
+  .reco-pond:focus{background:#fff;border-color:var(--navy)}
+  .reco-pond:empty::before{content:'%';color:var(--text-light);font-weight:400}
+
+  .reco-metrics{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .reco-metric{display:flex;align-items:center;gap:5px}
+  .reco-metric .lbl{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--text-light)}
+  .reco-metric .val{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--navy);background:var(--cream);padding:2px 7px;outline:none;min-width:40px;display:inline-block;text-align:center;border:1px solid var(--border);border-radius:2px}
+  .reco-metric .val:focus{background:#fff;border-color:var(--navy)}
+  .reco-metric .val:empty::before{content:'—';color:var(--text-light);font-weight:400}
+
+  .reco-tesis{font-size:12px;color:var(--text-mid);line-height:1.5;outline:none;font-style:italic;margin-top:4px}
+  .reco-tesis[contenteditable="true"]:focus{background:var(--cream);padding:4px 6px;font-style:normal}
+  .reco-tesis:empty::before{content:'Tesis o comentario corto...';color:var(--text-light)}
+
+  .reco-del{position:absolute;top:8px;right:0;background:none;border:none;color:var(--text-light);cursor:pointer;font-size:13px;padding:2px 6px}
+  .reco-del:hover{color:#c0392b}
+
+  .add-reco{margin-top:8px;padding:8px;border:1.5px dashed var(--border);background:transparent;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--text-light);cursor:pointer;width:100%;text-transform:uppercase}
+  .add-reco:hover{border-color:var(--navy);color:var(--navy)}
+
+  .doc-notes{background:var(--cream-mid);border-left:3px solid var(--gold);padding:14px 18px;font-size:13px;line-height:1.6;color:var(--text-dark);margin-top:18px;outline:none}
+  .doc-notes[contenteditable="true"]:focus{background:#fff}
+  .doc-notes-title{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-light);margin-bottom:6px}
+
+  .doc-footer{border-top:1px solid var(--border);padding:14px 40px;display:flex;justify-content:space-between;align-items:center;background:var(--cream-mid)}
+  .doc-footer-left{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text-light)}
+  .doc-footer-right{font-family:Georgia,serif;font-size:13px;font-style:italic;color:var(--text-mid)}
+  .doc-disclaimer{font-size:10px;color:var(--text-light);line-height:1.4;text-align:center;padding:8px 40px 14px;background:var(--cream-mid)}
+
+  .empty-state{text-align:center;padding:40px 20px;color:var(--text-light);font-style:italic;font-size:13px}
+
+  /* PICKER MODAL */
+  .picker-bg{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:100;display:none;align-items:center;justify-content:center;padding:1rem}
+  .picker-bg.on{display:flex}
+  .picker{background:var(--paper);border:1px solid var(--border);width:100%;max-width:560px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.3);border-radius:4px}
+  .picker-head{padding:14px 18px;background:var(--navy);color:#fff;display:flex;justify-content:space-between;align-items:center}
+  .picker-head .ttl{font-family:Georgia,serif;font-size:15px;letter-spacing:1px}
+  .picker-close{background:none;border:none;color:rgba(255,255,255,0.7);font-size:18px;cursor:pointer}
+  .picker-filters{padding:10px 18px;background:var(--cream-mid);border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:6px}
+  .picker-filter-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text-light);width:100%;margin-bottom:2px}
+  .picker-chip{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.5px;padding:4px 9px;border:1px solid var(--border);background:#fff;color:var(--text-mid);cursor:pointer;border-radius:2px;font-weight:600;text-transform:uppercase}
+  .picker-chip:hover{border-color:var(--navy);color:var(--navy)}
+  .picker-chip.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .picker-search{padding:10px 18px;border-bottom:1px solid var(--border);background:#fff}
+  .picker-search input{width:100%;background:var(--cream);border:1px solid var(--border);padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;border-radius:2px}
+  .picker-search input:focus{border-color:var(--navy);background:#fff}
+  .picker-body{flex:1;overflow-y:auto;background:var(--paper)}
+  .picker-grp{padding:6px 18px 4px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text-light);background:var(--cream-mid);border-bottom:1px solid var(--border);font-weight:700;position:sticky;top:0}
+  .picker-item{padding:9px 18px;border-bottom:1px solid var(--border);cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+  .picker-item:hover{background:var(--cream)}
+  .picker-item-cur{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;padding:2px 6px;color:#fff;flex-shrink:0;margin-top:2px;border-radius:2px}
+  .picker-item-cur.usd{background:var(--navy)}
+  .picker-item-cur.ars{background:var(--green)}
+  .picker-item-name{font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:2px}
+  .picker-item-meta{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-light)}
+  .picker-empty{padding:30px 18px;text-align:center;color:var(--text-light);font-style:italic;font-size:13px}
+
+  @media print {
+    body{background:#fff;padding:0}
+    .toolbar,.add-cat-bar,.picker-bg{display:none !important}
+    .doc{box-shadow:none;max-width:100%}
+    .add-reco,.reco-del,.cat-del,.reco-search-btn{display:none}
+    [contenteditable="true"]{outline:none}
+    .doc-body{padding:24px 32px}
+    .cat-block{break-inside:avoid;page-break-inside:avoid}
+    .reco{break-inside:avoid;page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button class="btn" onclick="window.print()">📄 Imprimir / PDF</button>
+</div>
+
+<div class="add-cat-bar">
+  <span class="add-cat-label">Agregar bloque:</span>
+  <button class="cat-chip" onclick="addCategory('acciones','USD')">+ Acciones AR</button>
+  <button class="cat-chip" onclick="addCategory('cedears','ARS')">+ CEDEARs</button>
+  <button class="cat-chip" onclick="addCategory('ons','USD')">+ ONs Corporativas</button>
+  <button class="cat-chip" onclick="addCategory('bonos','USD')">+ Bonos Soberanos</button>
+  <button class="cat-chip" onclick="addCategory('boncaps','ARS')">+ BONCAPs / LECAPs</button>
+  <button class="cat-chip" onclick="addCategory('fondos','USD')">+ Fondos</button>
+  <button class="cat-chip" onclick="addCategory('custom','USD')">+ Personalizado</button>
+</div>
+
+<div class="doc" id="doc">
+  <div class="doc-header">
+    <div class="doc-header-top">
+      <div>
+        <div class="doc-logo-name">SILVER<span>CLOUD</span></div>
+        <div class="doc-logo-sub">Advisors · Agente Asesor Global de Inversión #474 CNV</div>
+      </div>
+      <div class="doc-date" contenteditable="true" id="docDate"></div>
+    </div>
+    <div class="doc-section-tag">Anexo de Recomendaciones</div>
+    <div class="doc-header-bottom">
+      <div class="doc-header-pill"><div class="tag">Cliente</div><div class="val" contenteditable="true">Nombre del cliente</div></div>
+      <div class="doc-header-pill"><div class="tag">Perfil</div><div class="val" contenteditable="true">Moderado</div></div>
+    </div>
+  </div>
+
+  <div class="doc-body">
+    <div class="doc-intro" contenteditable="true">Recomendaciones puntuales de activos por categoría. Este anexo no constituye una cartera completa con asignación porcentual final, sino un listado de ideas de inversión con su correspondiente tesis para considerar dentro del marco de tu perfil.</div>
+
+    <div id="categories">
+      <div class="empty-state">Agregá categorías desde la barra superior</div>
+    </div>
+
+    <div class="doc-notes" contenteditable="true">
+      <div class="doc-notes-title">Consideraciones</div>
+      Espacio para notas, contexto de mercado, supuestos, ventana de inversión o cualquier comentario adicional para el cliente.
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <div class="doc-footer-left">SilverCloud Advisors · CNV #474</div>
+    <div class="doc-footer-right">Gestión patrimonial de excelencia</div>
+  </div>
+  <div class="doc-disclaimer">Este anexo no constituye asesoramiento financiero personalizado. Los rendimientos pasados no garantizan resultados futuros. Los valores y rendimientos indicados son estimaciones y pueden variar.</div>
+</div>
+
+<!-- PICKER MODAL -->
+<div class="picker-bg" id="pickerBg" onclick="if(event.target===this)closePicker()">
+  <div class="picker">
+    <div class="picker-head">
+      <span class="ttl">Catálogo de activos</span>
+      <button class="picker-close" onclick="closePicker()">✕</button>
+    </div>
+    <div class="picker-filters">
+      <span class="picker-filter-label">Tipo</span>
+      <div id="pickerTypes" style="display:flex;gap:6px;flex-wrap:wrap;width:100%"></div>
+    </div>
+    <div class="picker-search">
+      <input type="text" id="pickerSearch" placeholder="Buscar por ticker, nombre o sector..." oninput="renderPicker()">
+    </div>
+    <div class="picker-body" id="pickerBody"></div>
+  </div>
+</div>
+
+<script>
+// CATÁLOGO COMPLETO (propuesta.html + ONs energía sumadas)
+const CATALOG = [
+  // ACCIONES ARGENTINAS
+  {ticker:'GGAL', name:'Grupo Financiero Galicia', sector:'Banca', type:'Acción', currency:'USD'},
+  {ticker:'BMA', name:'Banco Macro', sector:'Banca', type:'Acción', currency:'USD'},
+  {ticker:'BBAR', name:'BBVA Argentina', sector:'Banca', type:'Acción', currency:'USD'},
+  {ticker:'SUPV', name:'Supervielle', sector:'Banca', type:'Acción', currency:'USD'},
+  {ticker:'PAMP', name:'Pampa Energía', sector:'Energía integrada', type:'Acción', currency:'USD'},
+  {ticker:'YPF', name:'YPF S.A.', sector:'Energía / Vaca Muerta', type:'Acción', currency:'USD'},
+  {ticker:'YPFD', name:'YPF (ARS)', sector:'Energía / Vaca Muerta', type:'Acción', currency:'USD'},
+  {ticker:'ALUA', name:'Aluar Aluminio', sector:'Materiales', type:'Acción', currency:'USD'},
+  {ticker:'BYMA', name:'Bolsas y Mercados Argentinos', sector:'Servicios financieros', type:'Acción', currency:'USD'},
+  {ticker:'CEPU', name:'Central Puerto', sector:'Energía / Utilities', type:'Acción', currency:'USD'},
+  {ticker:'COME', name:'Sociedad Comercial del Plata', sector:'Holding diversificado', type:'Acción', currency:'USD'},
+  {ticker:'CRES', name:'Cresud', sector:'Agro / Real Estate', type:'Acción', currency:'USD'},
+  {ticker:'EDN', name:'Edenor', sector:'Utilities eléctricas', type:'Acción', currency:'USD'},
+  {ticker:'LOMA', name:'Loma Negra', sector:'Cemento / Construcción', type:'Acción', currency:'USD'},
+  {ticker:'METR', name:'MetroGAS', sector:'Distribución gas', type:'Acción', currency:'USD'},
+  {ticker:'TECO2', name:'Telecom Argentina', sector:'Telecomunicaciones', type:'Acción', currency:'USD'},
+  {ticker:'TGNO4', name:'Transportadora de Gas del Norte', sector:'Midstream gas', type:'Acción', currency:'USD'},
+  {ticker:'TGSU2', name:'Transportadora de Gas del Sur', sector:'Midstream gas', type:'Acción', currency:'USD'},
+  {ticker:'TRAN', name:'Transener', sector:'Transmisión eléctrica', type:'Acción', currency:'USD'},
+  {ticker:'TXAR', name:'Ternium Argentina', sector:'Acero / Industria', type:'Acción', currency:'USD'},
+  {ticker:'VALO', name:'Grupo Financiero Valores', sector:'Servicios financieros', type:'Acción', currency:'USD'},
+  {ticker:'VIST', name:'Vista Energy', sector:'E&P Vaca Muerta', type:'Acción', currency:'USD'},
+
+  // CEDEARs
+  {ticker:'AAPL', name:'Apple', sector:'Tech / Hardware', type:'CEDEAR', currency:'ARS'},
+  {ticker:'MSFT', name:'Microsoft', sector:'Tech / Software & Cloud', type:'CEDEAR', currency:'ARS'},
+  {ticker:'GOOGL', name:'Alphabet (Google)', sector:'Tech / Internet', type:'CEDEAR', currency:'ARS'},
+  {ticker:'NVDA', name:'NVIDIA', sector:'Tech / Semiconductores AI', type:'CEDEAR', currency:'ARS'},
+  {ticker:'AMZN', name:'Amazon', sector:'E-commerce / Cloud', type:'CEDEAR', currency:'ARS'},
+  {ticker:'TSLA', name:'Tesla', sector:'EV / Energía', type:'CEDEAR', currency:'ARS'},
+  {ticker:'META', name:'Meta Platforms', sector:'Tech / Social Media', type:'CEDEAR', currency:'ARS'},
+  {ticker:'MELI', name:'MercadoLibre', sector:'E-commerce LatAm', type:'CEDEAR', currency:'ARS'},
+  {ticker:'SPY', name:'S&P 500 ETF', sector:'Equity global USA', type:'CEDEAR', currency:'ARS'},
+  {ticker:'QQQ', name:'Nasdaq-100 ETF', sector:'Tech global', type:'CEDEAR', currency:'ARS'},
+  {ticker:'UBER', name:'Uber Technologies', sector:'Movilidad / Plataformas', type:'CEDEAR', currency:'ARS'},
+  {ticker:'NU', name:'Nu Holdings', sector:'Fintech LatAm', type:'CEDEAR', currency:'ARS'},
+  {ticker:'V', name:'Visa', sector:'Pagos digitales', type:'CEDEAR', currency:'ARS'},
+  {ticker:'MA', name:'Mastercard', sector:'Pagos digitales', type:'CEDEAR', currency:'ARS'},
+  {ticker:'BABA', name:'Alibaba', sector:'E-commerce China', type:'CEDEAR', currency:'ARS'},
+  {ticker:'NFLX', name:'Netflix', sector:'Streaming / Media', type:'CEDEAR', currency:'ARS'},
+  {ticker:'KO', name:'Coca-Cola', sector:'Consumer Staples', type:'CEDEAR', currency:'ARS'},
+
+  // ONs CORPORATIVAS (energía/oil & gas - sumadas)
+  {ticker:'YMCHO', name:'ON YPF Clase XXXIX', sector:'Oil & Gas', type:'ON', currency:'USD'},
+  {ticker:'YMCIO', name:'ON YPF Clase XL', sector:'Oil & Gas', type:'ON', currency:'USD'},
+  {ticker:'YMCQO', name:'ON YPF Clase XXXIV', sector:'Oil & Gas', type:'ON', currency:'USD'},
+  {ticker:'PNDCO', name:'ON Pampa Energía', sector:'Energía integrada', type:'ON', currency:'USD'},
+  {ticker:'PNXCO', name:'ON Pampa Energía (largo)', sector:'Energía integrada', type:'ON', currency:'USD'},
+  {ticker:'TLC1O', name:'ON TGS Clase 1', sector:'Midstream gas', type:'ON', currency:'USD'},
+  {ticker:'TLC4O', name:'ON TGS Clase 4', sector:'Midstream gas', type:'ON', currency:'USD'},
+  {ticker:'VSCOO', name:'ON Vista Energy', sector:'E&P Vaca Muerta', type:'ON', currency:'USD'},
+  {ticker:'VSC2O', name:'ON Vista Energy Clase II', sector:'E&P Vaca Muerta', type:'ON', currency:'USD'},
+  {ticker:'PTSTO', name:'ON Pan American Energy', sector:'Oil & Gas', type:'ON', currency:'USD'},
+  {ticker:'CSDOO', name:'ON Capex', sector:'Energía / Power', type:'ON', currency:'USD'},
+  {ticker:'TLCMO', name:'ON Telecom Argentina', sector:'Telecomunicaciones', type:'ON', currency:'USD'},
+  {ticker:'IRC9O', name:'ON IRSA', sector:'Real Estate', type:'ON', currency:'USD'},
+
+  // BONOS SOBERANOS
+  {ticker:'AL30', name:'Bonar 2030 (ARS)', sector:'Soberano AR', type:'Bono', currency:'ARS'},
+  {ticker:'AL30D', name:'Bonar 2030 (USD MEP)', sector:'Soberano AR ley local', type:'Bono', currency:'USD'},
+  {ticker:'AO27D', name:'Bonar 2027 USD', sector:'Soberano AR ley local', type:'Bono', currency:'USD'},
+  {ticker:'AO28D', name:'Bonar 2028 USD', sector:'Soberano AR ley local', type:'Bono', currency:'USD'},
+  {ticker:'AL29', name:'Bonar 2029', sector:'Soberano AR ley local', type:'Bono', currency:'USD'},
+  {ticker:'AL35', name:'Bonar 2035', sector:'Soberano AR ley local', type:'Bono', currency:'USD'},
+  {ticker:'AL41', name:'Bonar 2041', sector:'Soberano AR ley local', type:'Bono', currency:'USD'},
+  {ticker:'AE38', name:'Bonar 2038', sector:'Soberano AR ley local', type:'Bono', currency:'USD'},
+  {ticker:'GD29', name:'Global 2029', sector:'Soberano AR ley NY', type:'Bono', currency:'USD'},
+  {ticker:'GD30', name:'Global 2030', sector:'Soberano AR ley NY', type:'Bono', currency:'USD'},
+  {ticker:'GD35', name:'Global 2035', sector:'Soberano AR ley NY', type:'Bono', currency:'USD'},
+  {ticker:'GD38', name:'Global 2038', sector:'Soberano AR ley NY', type:'Bono', currency:'USD'},
+  {ticker:'GD41', name:'Global 2041', sector:'Soberano AR ley NY', type:'Bono', currency:'USD'},
+  {ticker:'GD46', name:'Global 2046', sector:'Soberano AR ley NY', type:'Bono', currency:'USD'},
+  {ticker:'BPOA7', name:'BOPREAL Serie 1 Strip A', sector:'BCRA / BOPREAL', type:'Bono', currency:'USD'},
+  {ticker:'BPOB7', name:'BOPREAL Serie 1 Strip B', sector:'BCRA / BOPREAL', type:'Bono', currency:'USD'},
+  {ticker:'BPOC7', name:'BOPREAL Serie 1 Strip C', sector:'BCRA / BOPREAL', type:'Bono', currency:'USD'},
+  {ticker:'BPOD7', name:'BOPREAL Serie 1 Strip D', sector:'BCRA / BOPREAL', type:'Bono', currency:'USD'},
+
+  // FONDOS
+  {ticker:'GED', name:'Galileo Event Driven', sector:'Renta fija LatAm', type:'Fondo', currency:'USD'},
+  {ticker:'GFI', name:'Galileo Income', sector:'Renta fija IG corto plazo', type:'Fondo', currency:'USD'},
+  {ticker:'GMM4', name:'Galileo Multimercado IV', sector:'Renta mixta / Value', type:'Fondo', currency:'ARS'},
+  {ticker:'BPER', name:'Balanz Performance II', sector:'LECAPs / Money Market', type:'Fondo', currency:'ARS'},
+];
+
+const CAT_DEFS = {
+  acciones:  { title:'Acciones Argentinas',  metrics:['Sector','YTD %'],                              currency:'USD' },
+  cedears:   { title:'CEDEARs',               metrics:['Sector','YTD %'],                              currency:'ARS' },
+  ons:       { title:'ONs Corporativas',      metrics:['Sector','YTM %','Duration'],                   currency:'USD' },
+  bonos:     { title:'Bonos Soberanos USD',   metrics:['Sector','YTM %','Duration'],                   currency:'USD' },
+  boncaps:   { title:'BONCAPs / LECAPs',      metrics:['Vencimiento','TNA %','TEM %','Tasa Directa %'], currency:'ARS' },
+  fondos:    { title:'Fondos Comunes',        metrics:['Sector','YTM %','Duration'],                   currency:'USD' },
+  custom:    { title:'Categoría Personalizada', metrics:['Campo 1','Campo 2','Campo 3'],              currency:'USD' },
+};
+
+document.getElementById('docDate').textContent = new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'});
+
+function addCategory(type, currency){
+  const def = CAT_DEFS[type];
+  if(!def) return;
+  const container = document.getElementById('categories');
+  const empty = container.querySelector('.empty-state');
+  if(empty) empty.remove();
+
+  const cur = currency || def.currency;
+  const block = document.createElement('div');
+  block.className = 'cat-block';
+  block.dataset.type = type;
+  block.dataset.metrics = JSON.stringify(def.metrics);
+  block.dataset.currency = cur;
+
+  block.innerHTML = `
+    <div class="cat-block-head">
+      <span class="cat-currency-tag ${cur.toLowerCase()}">${cur}</span>
+      <span class="cat-block-title" contenteditable="true">${def.title}</span>
+      <button class="cat-del" onclick="this.closest('.cat-block').remove();checkEmpty()" title="Eliminar bloque">✕</button>
+    </div>
+    <div class="cat-block-body">
+      <div class="reco-list"></div>
+      <button class="add-reco" onclick="addReco(this.closest('.cat-block'))">+ Agregar recomendación</button>
+    </div>
+  `;
+  container.appendChild(block);
+  addReco(block);
+}
+
+function addReco(catBlock){
+  const metrics = JSON.parse(catBlock.dataset.metrics);
+  const cur = catBlock.dataset.currency;
+  const isArs = cur === 'ARS';
+  const list = catBlock.querySelector('.reco-list');
+  const recoId = 'r' + Date.now() + Math.random().toString(36).substr(2,5);
+
+  const reco = document.createElement('div');
+  reco.className = 'reco' + (isArs ? ' ars-side' : '');
+  reco.id = recoId;
+  reco.innerHTML = `
+    <button class="reco-del" onclick="this.closest('.reco').remove()">✕</button>
+    <div class="reco-row1">
+      <input class="reco-ticker" placeholder="TICKER" oninput="autocompleteTicker(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();autocompleteTicker(this);this.blur();}">
+      <button class="reco-search-btn" onclick="openPicker('${recoId}')" title="Buscar en catálogo">🔍</button>
+      <span class="reco-name" contenteditable="true"></span>
+      <span class="reco-pond" contenteditable="true"></span>
+    </div>
+    <div class="reco-metrics">
+      ${metrics.map(m => `
+        <div class="reco-metric">
+          <span class="lbl">${m}</span>
+          <span class="val" contenteditable="true" data-metric="${m}"></span>
+        </div>
+      `).join('')}
+    </div>
+    <div class="reco-tesis" contenteditable="true"></div>
+  `;
+  list.appendChild(reco);
+}
+
+function autocompleteTicker(input){
+  const t = input.value.trim().toUpperCase();
+  if(!t) return;
+  const match = CATALOG.find(c => c.ticker.toUpperCase() === t);
+  if(!match) return;
+  const reco = input.closest('.reco');
+  fillRecoFromCatalog(reco, match);
+}
+
+function fillRecoFromCatalog(reco, item){
+  reco.querySelector('.reco-ticker').value = item.ticker;
+  reco.querySelector('.reco-name').textContent = item.name;
+  const sectorVal = reco.querySelector('.val[data-metric="Sector"]');
+  if(sectorVal) sectorVal.textContent = item.sector;
+}
+
+function checkEmpty(){
+  const container = document.getElementById('categories');
+  if(container.children.length === 0){
+    container.innerHTML = '<div class="empty-state">Agregá categorías desde la barra superior</div>';
+  }
+}
+
+// PICKER MODAL
+let pickerState = { recoId:null, type:'ALL', search:'' };
+
+function openPicker(recoId){
+  pickerState.recoId = recoId;
+  pickerState.type = 'ALL';
+  pickerState.search = '';
+  document.getElementById('pickerSearch').value = '';
+  document.getElementById('pickerBg').classList.add('on');
+  renderPickerTypes();
+  renderPicker();
+  setTimeout(()=>document.getElementById('pickerSearch').focus(),50);
+}
+function closePicker(){
+  document.getElementById('pickerBg').classList.remove('on');
+}
+function setPickerType(t){
+  pickerState.type = t;
+  renderPickerTypes();
+  renderPicker();
+}
+function renderPickerTypes(){
+  const types = [
+    {k:'ALL', lbl:'Todos'},
+    {k:'Acción', lbl:'Acciones'},
+    {k:'CEDEAR', lbl:'CEDEARs'},
+    {k:'ON', lbl:'ONs'},
+    {k:'Bono', lbl:'Bonos'},
+    {k:'Fondo', lbl:'Fondos'},
+  ];
+  document.getElementById('pickerTypes').innerHTML = types.map(t=>{
+    const count = CATALOG.filter(c=> t.k==='ALL' || c.type===t.k).length;
+    if(count===0 && t.k!=='ALL') return '';
+    const active = t.k===pickerState.type;
+    return `<button class="picker-chip ${active?'active':''}" onclick="setPickerType('${t.k}')">${t.lbl} <span style="opacity:0.6">${count}</span></button>`;
+  }).filter(Boolean).join('');
+}
+function renderPicker(){
+  pickerState.search = document.getElementById('pickerSearch').value.toLowerCase().trim();
+  const q = pickerState.search;
+  const filtered = CATALOG.filter(c => {
+    if(pickerState.type!=='ALL' && c.type!==pickerState.type) return false;
+    if(q){
+      const hay = (c.ticker + ' ' + c.name + ' ' + c.sector).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  if(!filtered.length){
+    document.getElementById('pickerBody').innerHTML = '<div class="picker-empty">No hay activos que coincidan</div>';
+    return;
+  }
+  const groups = {};
+  filtered.forEach(c=>{
+    const k = c.type;
+    if(!groups[k]) groups[k] = [];
+    groups[k].push(c);
+  });
+  const order = ['Acción','CEDEAR','ON','Bono','Fondo'];
+  const keys = [...order.filter(k=>groups[k]), ...Object.keys(groups).filter(k=>!order.includes(k))];
+
+  document.getElementById('pickerBody').innerHTML = keys.map(k=>{
+    return `<div class="picker-grp">${k}s · ${groups[k].length}</div>` +
+      groups[k].map(c=>`
+        <div class="picker-item" onclick="pickerSelect('${c.ticker}')">
+          <span class="picker-item-cur ${c.currency.toLowerCase()}">${c.currency}</span>
+          <div style="flex:1">
+            <div class="picker-item-name">${c.ticker} – ${c.name}</div>
+            <div class="picker-item-meta">${c.sector}</div>
+          </div>
+        </div>
+      `).join('');
+  }).join('');
+}
+function pickerSelect(ticker){
+  const item = CATALOG.find(c=>c.ticker===ticker);
+  if(!item){ closePicker(); return; }
+  const reco = document.getElementById(pickerState.recoId);
+  if(reco) fillRecoFromCatalog(reco, item);
+  closePicker();
+}
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape' && document.getElementById('pickerBg').classList.contains('on')){
+    closePicker();
+  }
+});
+</script>
+
+</body>
+</html>
