@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es" data-darkreader-mode="ignore">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark only">
+<meta name="darkreader-lock">
+<title>SilverCloud Advisors — ROA Cartera Modelo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: dark; }
+  html { color-scheme: dark only; background: #0d1117; }
+  body { color-scheme: dark only; }
+  :root {
+    --bg: #0d1117;
+    --bg-soft: #161b22;
+    --bg-card: #1a2030;
+    --bg-card-2: #1c2330;
+    --border: #2a3343;
+    --border-soft: #1e2533;
+    --text: #d8dee9;
+    --text-bright: #f0f6fc;
+    --text-dim: #8b95a8;
+    --text-light: #6b748a;
+    --navy: #5b86c7;
+    --navy-4: #2d4c7c;
+    --navy-5: #243656;
+    --violet: #a37bc7;
+    --violet-5: #3f2854;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --red: #f85149;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Open Sans', sans-serif; font-weight: 300; font-size: 14px; line-height: 1.6; padding: 24px; }
+  .container { max-width: 1200px; margin: 0 auto; }
+  .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); text-decoration: none; margin-bottom: 16px; transition: color 0.15s; font-weight: 400; }
+  .back-link:hover { color: var(--navy); }
+  .header { border-bottom: 2px solid var(--navy); padding-bottom: 20px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; }
+  .header-brand h1 { margin: 0; font-family: 'Libre Baskerville', serif; font-style: italic; font-weight: 400; font-size: 26px; color: var(--text-bright); }
+  .header-brand h1 strong { color: var(--navy); font-weight: 700; }
+  .header-brand .brand-line { font-weight: 300; color: var(--text-dim); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+  .fb-status { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); padding: 4px 10px; border-radius: 2px; background: var(--bg-card); border: 1px solid var(--border); }
+  .fb-status .fb-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .fb-status.online .fb-dot { background: var(--green); animation: fb-pulse 2s ease-in-out infinite; }
+  .fb-status.offline .fb-dot { background: var(--yellow); }
+  .fb-status.error .fb-dot { background: var(--red); }
+  .fb-status.syncing .fb-dot { background: var(--navy); animation: fb-pulse 0.6s ease-in-out infinite; }
+  @keyframes fb-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .config-bar { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 20px 24px; margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: end; }
+  @media (max-width: 800px) { .config-bar { grid-template-columns: 1fr; } }
+  .config-field { display: flex; flex-direction: column; gap: 6px; }
+  .config-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); font-weight: 600; }
+  .config-select, .config-input { background: var(--bg); border: 1px solid var(--border); color: var(--text-bright); padding: 9px 12px; font-family: inherit; font-size: 14px; border-radius: 3px; outline: none; }
+  .config-select:focus, .config-input:focus { border-color: var(--navy); }
+  .config-input { font-family: 'Libre Baskerville', serif; font-weight: 700; font-size: 16px; }
+  .moneda-toggle { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+  .moneda-btn { flex: 1; padding: 9px 0; background: var(--bg); color: var(--text-dim); border: none; cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; transition: all 0.15s; }
+  .moneda-btn.active { background: var(--navy); color: white; }
+  .moneda-btn:hover:not(.active) { background: var(--bg-card-2); color: var(--text); }
+
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 24px; margin-bottom: 16px; }
+  .card-title { font-family: 'Libre Baskerville', serif; font-style: italic; color: var(--text-bright); font-size: 18px; font-weight: 400; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+
+  table.activos-tabla { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.activos-tabla thead th { text-align: left; color: var(--text-dim); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; padding: 10px 8px; border-bottom: 1px solid var(--border); }
+  table.activos-tabla thead th.right { text-align: right; }
+  table.activos-tabla td { padding: 10px 8px; border-bottom: 1px solid var(--border-soft); vertical-align: middle; }
+  table.activos-tabla td.right { text-align: right; font-variant-numeric: tabular-nums; }
+  .activo-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 10px; vertical-align: middle; }
+  .activo-name { color: var(--text-bright); font-weight: 600; font-size: 13px; }
+  .activo-sub { color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; padding-left: 20px; }
+  .clase-select { background: var(--bg); border: 1px solid var(--border); color: var(--text-bright); padding: 5px 8px; font-family: inherit; font-size: 12px; border-radius: 3px; outline: none; max-width: 200px; }
+  .clase-select:focus { border-color: var(--navy); }
+  .fee-fixed { color: var(--text-dim); font-size: 12px; font-style: italic; }
+  .fee-value { font-weight: 600; color: var(--text-bright); font-variant-numeric: tabular-nums; font-family: 'Libre Baskerville', serif; }
+  .roa-amount { font-weight: 700; color: var(--green); font-variant-numeric: tabular-nums; font-family: 'Libre Baskerville', serif; }
+  .roa-amount.warning { color: var(--yellow); }
+  .pf-badge { display: inline-block; font-size: 9px; padding: 2px 7px; background: rgba(163, 123, 199, 0.15); color: var(--violet); border-radius: 2px; font-weight: 700; letter-spacing: 0.8px; margin-left: 6px; text-transform: uppercase; vertical-align: middle; }
+  tr.cat-subheader td { padding: 14px 8px 6px; border-bottom: 1px solid var(--border); background: var(--bg-soft); color: var(--text-dim); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
+  .cat-subheader-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+
+  .pf-section { background: var(--bg-card); border: 1px solid var(--violet-5); border-left: 3px solid var(--violet); border-radius: 4px; padding: 20px 24px; margin-bottom: 16px; }
+  .pf-title { font-family: 'Libre Baskerville', serif; font-style: italic; color: var(--violet); font-size: 16px; font-weight: 400; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .pf-row { display: grid; grid-template-columns: 1fr 130px 130px 140px; gap: 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-soft); }
+  .pf-row:last-of-type { border-bottom: none; }
+  .pf-row-name { color: var(--text-bright); font-weight: 600; font-size: 13px; }
+  .pf-row-sub { color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 3px; }
+  .pf-input-wrap { display: flex; align-items: center; gap: 4px; }
+  .pf-input { background: var(--bg); border: 1px solid var(--border); color: var(--text-bright); padding: 7px 10px; font-family: inherit; font-size: 14px; font-weight: 600; text-align: right; width: 80px; border-radius: 2px; font-variant-numeric: tabular-nums; }
+  .pf-input:focus { outline: none; border-color: var(--navy); }
+  .pf-label-mini { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 600; }
+  .pf-cell-right { text-align: right; }
+  .pf-row-header { display: grid; grid-template-columns: 1fr 130px 130px 140px; gap: 16px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  @media (max-width: 700px) {
+    .pf-row, .pf-row-header { grid-template-columns: 1fr; gap: 8px; }
+    .pf-cell-right { text-align: left; }
+  }
+
+  .summary-card { background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-2) 100%); border: 1px solid var(--navy); border-radius: 6px; padding: 28px 32px; margin-top: 8px; }
+  .summary-title { font-family: 'Libre Baskerville', serif; font-style: italic; color: var(--navy); font-size: 20px; font-weight: 400; margin-bottom: 22px; display: flex; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .summary-row { display: grid; grid-template-columns: 1fr auto; gap: 16px; padding: 10px 0; align-items: baseline; }
+  .summary-row.section { border-top: 1px solid var(--border-soft); margin-top: 8px; padding-top: 16px; }
+  .summary-row .lbl { color: var(--text); font-size: 13px; }
+  .summary-row .lbl.sub { color: var(--text-dim); font-size: 11px; padding-left: 14px; }
+  .summary-row .val { color: var(--text-bright); font-variant-numeric: tabular-nums; font-family: 'Libre Baskerville', serif; font-weight: 600; font-size: 16px; text-align: right; }
+  .summary-row .val.muted { color: var(--text-dim); font-weight: 400; font-size: 13px; }
+  .summary-total { background: var(--bg-soft); margin: 16px -32px -28px; padding: 22px 32px; border-top: 2px solid var(--navy); border-radius: 0 0 6px 6px; }
+  .summary-total .summary-row .lbl { font-size: 14px; font-weight: 600; color: var(--text-bright); }
+  .summary-total .summary-row .val { font-size: 22px; color: var(--green); }
+  .summary-total .summary-row.mensual .val { font-size: 16px; color: var(--green); opacity: 0.8; }
+
+  .empty-state { padding: 60px 20px; text-align: center; color: var(--text-dim); font-style: italic; font-size: 14px; }
+  .empty-state-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.4; }
+
+  .footer-note { color: var(--text-light); font-size: 10px; text-align: center; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .footer-note .firm-name { font-family: 'Libre Baskerville', serif; font-style: italic; color: var(--navy); font-size: 11px; }
+</style>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyBuFlhGKaw_AIWkeIjosoNMDZIuLRYttA4",
+    authDomain: "silvercloud-71501.firebaseapp.com",
+    projectId: "silvercloud-71501",
+    storageBucket: "silvercloud-71501.firebasestorage.app",
+    messagingSenderId: "282888674360",
+    appId: "1:282888674360:web:7decaae1570648b59a5acd"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  try { await enableIndexedDbPersistence(db); } catch(e) { console.warn('Persistencia offline no disponible:', e.code); }
+  window.SC_FB = { db, doc, getDoc, setDoc, onSnapshot };
+  window.dispatchEvent(new Event('sc-firebase-ready'));
+</script>
+</head>
+<body>
+
+<div class="container">
+  <a href="index.html" class="back-link">← Dashboard</a>
+  <div class="header">
+    <div class="header-brand">
+      <h1>Silver<strong>Cloud</strong> Advisors</h1>
+      <div class="brand-line">ROA · Carteras Modelo</div>
+    </div>
+    <div>
+      <span class="fb-status" id="fb-status"><span class="fb-dot"></span><span>Conectando…</span></span>
+    </div>
+  </div>
+
+  <div class="config-bar">
+    <div class="config-field">
+      <label class="config-label">Cartera Modelo</label>
+      <select class="config-select" id="cartera-select" onchange="onCarteraChange(this.value)">
+        <option value="">— Seleccionar —</option>
+      </select>
+    </div>
+    <div class="config-field">
+      <label class="config-label">MF del cliente</label>
+      <input type="number" class="config-input" id="mf-input" placeholder="0" min="0" step="100000" oninput="onMfChange(this.value)">
+    </div>
+    <div class="config-field">
+      <label class="config-label">Moneda de cálculo</label>
+      <div class="moneda-toggle">
+        <button class="moneda-btn active" id="moneda-ars" onclick="setMoneda('ARS')">ARS</button>
+        <button class="moneda-btn" id="moneda-usd" onclick="setMoneda('USD')">USD</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="content"></div>
+
+  <div class="footer-note">
+    <span class="firm-name">Silver<strong>Cloud</strong> Advisors</span> · CNV #474 · ROA estimado — Valores orientativos
+  </div>
+</div>
+
+<script>
+// ==========================================================
+// CONSTANTES DE FEES
+// ==========================================================
+const FEE_ACTIVO_DIRECTO = 0.5;   // % anual para bonos, equity AR/USA, CEDEARs, ETFs, liquidez
+const FEE_FCI_NO_LISTADO = 1.0;   // % anual para FCIs no encontrados en planilla CAFCI
+
+// Performance fees por fondo (sobre nuevo máximo)
+const PERF_FEES = {
+  "galileo-multimercado-4": 5,    // 5%
+  "galileo-event-driven":  10,    // 10%
+};
+
+// Catálogo de clases por FCI con su management fee (extraído de planilla CAFCI 19/05/2026)
+// Se excluyen clases con 0% según indicación
+const FCI_CLASES = {
+  "fima-premium":              { notFound: true, defaultFee: 1.0 },
+  "megaqm-perf":               { clases: [{n:"Clase A",f:2.5},{n:"Clase B",f:2.28},{n:"Clase C",f:1.5}] },
+  "pionero-pesos":             { notFound: true, defaultFee: 1.0 },
+  "fima-securities":           { notFound: true, defaultFee: 1.0 },
+  "galileo-pesos":             { clases: [{n:"Clase A",f:3.35},{n:"Clase B",f:1.5}] },
+  "balanz-money-market":       { notFound: true, defaultFee: 1.0 },
+  "schroder-renta-plus":       { clases: [{n:"Clase A",f:3.0},{n:"Clase B",f:2.25},{n:"Clase C",f:2.0},{n:"Clase D",f:0.5},{n:"Clase E (Ley 27.743)",f:3.0}] },
+  "megaqm-ahorro":             { clases: [{n:"Clase A",f:2.7},{n:"Clase B",f:2.18}] },
+  "galileo-ahorro":            { clases: [{n:"Clase A",f:2.5},{n:"Clase B",f:2.0},{n:"Clase C",f:1.75},{n:"Clase D",f:1.25}] },
+  "galileo-ahorro-plus":       { clases: [{n:"Clase A",f:2.5},{n:"Clase B",f:2.0},{n:"Clase C",f:1.75},{n:"Clase D",f:1.25}] },
+  "galileo-renta-fija":        { clases: [{n:"Clase A",f:1.25},{n:"Clase B",f:1.0},{n:"Clase C",f:1.25},{n:"Clase D",f:1.0}] },
+  "consultatio-renta-nacional":{ clases: [{n:"Clase A",f:2.75},{n:"Clase B",f:2.0},{n:"Clase C",f:1.55},{n:"Clase Z (Ley 27.743)",f:2.0}] },
+  "balanz-capital-ahorro":     { clases: [{n:"Clase A",f:2.55},{n:"Clase B",f:2.15},{n:"Clase C",f:1.7},{n:"Clase D",f:1.65},{n:"Clase E",f:2.19},{n:"Clase F",f:1.74},{n:"Clase G",f:2.19},{n:"Clase L (Ley 27.743)",f:2.55}] },
+  "compass-ahorro":            { clases: [{n:"Clase A",f:3.0},{n:"Clase B",f:1.25},{n:"Clase C",f:1.0},{n:"Clase E",f:1.25},{n:"Clase F",f:1.0},{n:"Clase H (Ley 27.743)",f:3.0},{n:"Clase I (Ley 27.743)",f:1.25}] },
+  "consultatio-ahorro-plus":   { clases: [{n:"Clase A",f:2.75},{n:"Clase B",f:2.0},{n:"Clase C",f:1.25}] },
+  "consultatio-renta-local":   { clases: [{n:"Clase A",f:2.75},{n:"Clase B",f:2.0},{n:"Clase C",f:1.25}] },
+  "balanz-performance-2":      { clases: [{n:"Clase A",f:2.25},{n:"Clase B",f:2.15},{n:"Clase C",f:2.05},{n:"Clase D",f:2.0},{n:"Clase E",f:2.15},{n:"Clase L (Ley 27.743)",f:2.25}] },
+  "consultatio-deuda-arg":     { clases: [{n:"Clase A",f:3.0},{n:"Clase B",f:2.25},{n:"Clase C",f:2.0},{n:"Clase Z (Ley 27.743)",f:2.25}] },
+  "galileo-multimercado-2":    { clases: [{n:"Clase A",f:2.5},{n:"Clase B",f:2.0}] },
+  "delta-retorno-real":        { clases: [{n:"Clase A",f:2.8},{n:"Clase B",f:2.3},{n:"Clase E",f:0.85}] },
+  "santander-superfondo-rf":   { notFound: true, defaultFee: 1.0 },
+  "balanz-institucional":      { clases: [{n:"Clase A",f:2.6},{n:"Clase B",f:2.2},{n:"Clase C",f:1.8},{n:"Clase D",f:1.75},{n:"Clase E",f:1.88},{n:"Clase F",f:1.23},{n:"Clase G",f:1.88},{n:"Clase L (Ley 27.743)",f:2.6}] },
+  "megaqm-retorno-absoluto":   { clases: [{n:"Clase A",f:3.2},{n:"Clase B",f:2.43}] },
+  "schroder-renta-perf":       { clases: [{n:"Clase A",f:2.5},{n:"Clase B",f:1.85},{n:"Clase F (Ley 27.743)",f:2.5}] },
+  "megaqm-cobertura":          { clases: [{n:"Clase A",f:3.2},{n:"Clase B",f:2.44}] },
+  "consultatio-renta-fija-arg":{ clases: [{n:"Clase A",f:3.0},{n:"Clase B",f:2.25}] },
+  "galileo-premium":           { clases: [{n:"Clase A",f:1.5},{n:"Clase B",f:1.25},{n:"Clase C",f:1.5},{n:"Clase D",f:1.25}] },
+  "compass-renta-fija-3":      { notFound: true, defaultFee: 1.0 },
+  "balanz-capital-rf":         { clases: [{n:"Clase A",f:2.78},{n:"Clase B",f:2.25},{n:"Clase C",f:2.0},{n:"Clase D",f:1.9},{n:"Clase E",f:2.78},{n:"Clase F",f:2.03},{n:"Clase G",f:2.78},{n:"Clase L (Ley 27.743)",f:2.78}] },
+  "galileo-income":            { clases: [{n:"Clase A",f:1.0},{n:"Clase B",f:0.75},{n:"Clase C (Ley 27.743)",f:1.0},{n:"Clase D (Ley 27.743)",f:0.75}] },
+  "galileo-event-driven":      { clases: [{n:"Clase A",f:2.0},{n:"Clase B",f:1.25},{n:"Clase C (Ley 27.743)",f:2.0},{n:"Clase D (Ley 27.743)",f:1.25},{n:"Clase Y",f:2.0},{n:"Clase Z",f:1.25}] },
+  "compass-desarrollo-arg-2":  { notFound: true, defaultFee: 1.0 },
+  "balanz-desarrollo":         { clases: [{n:"Clase A",f:2.6},{n:"Clase B",f:2.1},{n:"Clase C",f:2.0},{n:"Clase L (Ley 27.743)",f:2.6}] },
+  "compass-renta-mixta-usd":   { clases: [{n:"Clase A (III)",f:2.0},{n:"Clase B (III)",f:1.5},{n:"Clase C (III)",f:1.5},{n:"Clase H (III) (Ley 27.743)",f:2.0},{n:"Clase A (II)",f:1.5},{n:"Clase B (II)",f:1.5},{n:"Clase C (II)",f:1.5}] },
+  "galileo-multimercado-4":    { clases: [{n:"Clase A",f:1.5}] },
+  "sf-value":                  { clases: [{n:"Clase A",f:2.0}] },
+  "galileo-acciones":          { clases: [{n:"Clase A",f:3.0},{n:"Clase B",f:1.5},{n:"Clase C",f:2.5},{n:"Clase D",f:1.5}] },
+  "balanz-acciones":           { clases: [{n:"Clase A",f:2.5},{n:"Clase B",f:1.9},{n:"Clase C",f:1.85},{n:"Clase D",f:1.85},{n:"Clase E",f:1.85},{n:"Clase F",f:1.85},{n:"Clase G",f:3.03},{n:"Clase L (Ley 27.743)",f:3.18}] },
+  "megaq-quinquela":           { notFound: true, defaultFee: 1.0 },
+  "cmf-fundcorp":              { notFound: true, defaultFee: 1.0 },
+  "galileo-pymes-b":           { clases: [{n:"Clase B",f:2.0}] },
+};
+
+// ==========================================================
+// CATÁLOGO DE ACTIVOS (mismo que carteras-modelo.html)
+// ==========================================================
+const CATEGORIES = {
+  liquidez:    { label: "Liquidez (MM)",        color: "#B5C1CC", direct: true,  fee: FEE_ACTIVO_DIRECTO },
+  lecap:       { label: "LECAPs / BONCAPs",     color: "#5b86c7", direct: true,  fee: FEE_ACTIVO_DIRECTO },
+  dual:        { label: "Bonos Duales",         color: "#4b73b0", direct: true,  fee: FEE_ACTIVO_DIRECTO },
+  cer:         { label: "CER",                  color: "#95a3b0", direct: true,  fee: FEE_ACTIVO_DIRECTO },
+  hd:          { label: "Hard-Dollar AR",       color: "#2d4c7c", direct: true,  fee: FEE_ACTIVO_DIRECTO },
+  equityAr:    { label: "Equity AR",            color: "#c95757", direct: true,  fee: FEE_ACTIVO_DIRECTO },
+  equityUsa:   { label: "Equity USA / CEDEARs", color: "#a37bc7", direct: true,  fee: FEE_ACTIVO_DIRECTO },
+  etfs:        { label: "ETFs / Índices",       color: "#785095", direct: true,  fee: FEE_ACTIVO_DIRECTO },
+  fciMM:       { label: "FCI Money Market",     color: "#d4cee0", direct: false },
+  fciTasa:     { label: "FCI Tasa Fija Pesos",  color: "#95a3b0", direct: false },
+  fciCer:      { label: "FCI CER",              color: "#c0bbd0", direct: false },
+  fciDlk:      { label: "FCI Dólar Linked",     color: "#8e65b4", direct: false },
+  fciUsd:      { label: "FCI USD (Income/ED)",  color: "#5e3c79", direct: false },
+  fciAcciones: { label: "FCI Acciones",         color: "#d2a8ff", direct: false },
+  fciPymes:    { label: "FCI Pymes",            color: "#c95757", direct: false },
+};
+
+// Catálogo abreviado de activos directos (solo nombres y categorías para mostrar bien)
+const ACTIVOS_DIRECTOS = [
+  ...["S31M6","S30A6","S15F6","S28F6","S31L6","S29G6","S30S6","S31O6","T13F7","T15A7","T17O6","T30J6"].map(t => ({ id: t, name: t, category: "lecap" })),
+  ...["TTJ26","TTS26","TTD26","TTM26"].map(t => ({ id: t, name: t, category: "dual" })),
+  ...["TZX26","TX26","TZXM7","TZXA7","TZXY7","TZX27","TZXD7","TX28","DICP","PARP","TX31","TX35","TX38"].map(t => ({ id: t, name: t, category: "cer" })),
+  ...["AL29","AL30","AL35","AL38","AL41","GD29","GD30","GD35","GD38","GD41","GD46","AE38"].map(t => ({ id: t, name: t, category: "hd", subgroup: "Soberanos" })),
+  ...["BPOA7","BPOB7","BPOC7","BPOD7","BPY26","BPJ25"].map(t => ({ id: t, name: t, category: "hd", subgroup: "BCRA" })),
+  ...["PBA25","PBA37","PBY22","PBA34D","CO24D","CO27D","MZ24D","PMM29","PMJ24","PMJ29","CHU22D","CHU30D"].map(t => ({ id: t, name: t, category: "hd", subgroup: "Provinciales" })),
+  ...["YMCXO","YCAMO","YCA6O","YMCQO","MGCMO","MGC2O","RPC2O","RPC5O","PNDCO","PNDLO","IRC4O","IRCFO","IRCJO","TGS2O","TGS5O","LECVO","VSCRO","PARM","RUC2O"].map(t => ({ id: t, name: t, category: "hd", subgroup: "Corporativos" })),
+  ...["GGAL","YPFD","PAMP","BMA","BBAR","TGNO4","TXAR","CEPU","EDN","ALUA","TRAN","LOMA","TGSU2","MIRG","SUPV","CRES","BYMA","COME"].map(t => ({ id: t, name: t, category: "equityAr" })),
+  ...["AAPL","MSFT","GOOGL","AMZN","META","NVDA","ORCL","CRM","NOW","ADBE","SNOW","MSTR","GLOB","ACN","PATH","BABA","ARKK","TSLA","V","MA","JPM","PYPL","PFE","JNJ","MRK","UNH","ZTS","LLY","KO","MCD","NKE","DIS","SBUX","NFLX","SPOT","WMT","PEP","UBER","ABNB","MELI","BA","XOM","CVX","GPRK","CAAP","SQM","TX","AGRO","BILL","WDAY","PAYC","PBR","VALE","BBD","ABEV","XP","NU","JBSS"].map(t => ({ id: t, name: t, category: "equityUsa" })),
+  ...["SPY","QQQ","IWM","EEM","XLE","XLF","XLV","XLK","GLD","SLV","IBIT","BRKB"].map(t => ({ id: t, name: t, category: "etfs" })),
+];
+
+// FCIs (id + nombre humano + categoría)
+const FCIS_INFO = {
+  "fima-premium":              { name: "FIMA Galicia Premium clase B", category: "fciMM" },
+  "megaqm-perf":               { name: "MEGAQM Performance II", category: "fciMM" },
+  "pionero-pesos":             { name: "Pionero Pesos Plus Clase B", category: "fciMM" },
+  "fima-securities":           { name: "FIMA Galicia Securities Clase A", category: "fciMM" },
+  "galileo-pesos":             { name: "Galileo Pesos", category: "fciMM" },
+  "balanz-money-market":       { name: "Balanz Money Market", category: "fciMM" },
+  "schroder-renta-plus":       { name: "Schroder Renta Plus", category: "fciTasa" },
+  "megaqm-ahorro":             { name: "MEGAQM Ahorro", category: "fciTasa" },
+  "galileo-ahorro":            { name: "Galileo Ahorro", category: "fciTasa" },
+  "galileo-ahorro-plus":       { name: "Galileo Ahorro Plus", category: "fciTasa" },
+  "galileo-renta-fija":        { name: "Galileo Renta Fija", category: "fciTasa" },
+  "consultatio-renta-nacional":{ name: "Consultatio Renta Nacional", category: "fciTasa" },
+  "balanz-capital-ahorro":     { name: "Balanz Capital Ahorro", category: "fciTasa" },
+  "compass-ahorro":            { name: "Compass Ahorro", category: "fciTasa" },
+  "consultatio-ahorro-plus":   { name: "Consultatio Ahorro Plus Argentina", category: "fciTasa" },
+  "consultatio-renta-local":   { name: "Consultatio Renta Local", category: "fciTasa" },
+  "balanz-performance-2":      { name: "Balanz Performance II/III", category: "fciTasa" },
+  "consultatio-deuda-arg":     { name: "Consultatio Deuda Argentina", category: "fciCer" },
+  "galileo-multimercado-2":    { name: "Galileo Multimercado II", category: "fciCer" },
+  "delta-retorno-real":        { name: "Delta Retorno Real", category: "fciCer" },
+  "santander-superfondo-rf":   { name: "Santander Superfondo Renta Fija", category: "fciCer" },
+  "balanz-institucional":      { name: "Balanz Institucional", category: "fciCer" },
+  "megaqm-retorno-absoluto":   { name: "MEGAQM Retorno Absoluto", category: "fciCer" },
+  "schroder-renta-perf":       { name: "Schroder Renta Performance", category: "fciCer" },
+  "megaqm-cobertura":          { name: "MEGAQM Cobertura", category: "fciDlk" },
+  "consultatio-renta-fija-arg":{ name: "Consultatio Renta Fija Argentina", category: "fciDlk" },
+  "galileo-premium":           { name: "Galileo Premium", category: "fciDlk" },
+  "compass-renta-fija-3":      { name: "Compass Renta Fija III", category: "fciDlk" },
+  "balanz-capital-rf":         { name: "Balanz Capital Renta Fija", category: "fciDlk" },
+  "galileo-income":            { name: "Galileo Income", category: "fciUsd" },
+  "galileo-event-driven":      { name: "Galileo Event Driven", category: "fciUsd" },
+  "compass-desarrollo-arg-2":  { name: "Compass Desarrollo Argentino II", category: "fciUsd" },
+  "balanz-desarrollo":         { name: "Balanz Desarrollo", category: "fciUsd" },
+  "compass-renta-mixta-usd":   { name: "Compass Renta Mixta Dólares", category: "fciUsd" },
+  "galileo-multimercado-4":    { name: "Galileo Multimercado IV", category: "fciAcciones" },
+  "sf-value":                  { name: "SF Value", category: "fciAcciones" },
+  "galileo-acciones":          { name: "Galileo Acciones", category: "fciAcciones" },
+  "balanz-acciones":           { name: "Balanz Acciones", category: "fciAcciones" },
+  "megaq-quinquela":           { name: "Megainver Quinquela Abierto Pymes", category: "fciPymes" },
+  "cmf-fundcorp":              { name: "CMF Fundcorp Performance", category: "fciPymes" },
+  "galileo-pymes-b":           { name: "Galileo Abierto Pymes Clase B", category: "fciPymes" },
+};
+
+// Unificar info de todos los activos (directos + FCIs)
+const ALL_ACTIVOS = {};
+ACTIVOS_DIRECTOS.forEach(a => { ALL_ACTIVOS[a.id] = a; });
+Object.entries(FCIS_INFO).forEach(([id, info]) => { ALL_ACTIVOS[id] = { id, name: info.name, category: info.category }; });
+
+// ==========================================================
+// METADATOS DE CARTERAS (deben coincidir con carteras-modelo.html)
+// ==========================================================
+const TEMPLATES_META = {
+  "p-cons":  { label: "Pesos · Preservación",       moneda: "ARS" },
+  "p-mod":   { label: "Pesos · Moderada",           moneda: "ARS" },
+  "p-agr":   { label: "Pesos · Agresiva",           moneda: "ARS" },
+  "u-cons":  { label: "Dólar · Preservación",       moneda: "USD" },
+  "u-mod":   { label: "Dólar · Moderada",           moneda: "USD" },
+  "u-agr":   { label: "Dólar · Agresiva",           moneda: "USD" },
+  "rt-7030": { label: "Retorno Total · 70/30",      moneda: "MIX" },
+  "rt-5050": { label: "Retorno Total · 50/50",      moneda: "MIX" },
+};
+const ORDER = ["p-cons","p-mod","p-agr","u-cons","u-mod","u-agr","rt-7030","rt-5050"];
+
+// ==========================================================
+// STATE
+// ==========================================================
+let state = {
+  templates: {},              // se cargan desde Firestore o localStorage
+  selectedCartera: "",
+  mf: 0,
+  moneda: "ARS",
+  claseSelections: {},        // { "galileo-income": "Clase B", ... } - persistido
+  pfEstimaciones: {},         // { "galileo-multimercado-4": 10, ... } - % rendimiento sobre máximo
+  fb: { ready: false, savingTimer: null }
+};
+
+// ==========================================================
+// FIREBASE SYNC
+// ==========================================================
+function setFbStatus(s) {
+  const el = document.getElementById('fb-status');
+  if (!el) return;
+  const labels = { connecting: 'Conectando…', online: 'Online · Sync', syncing: 'Guardando…', offline: 'Modo offline', error: 'Error de conexión' };
+  el.className = `fb-status ${s}`;
+  el.innerHTML = `<span class="fb-dot"></span><span>${labels[s] || s}</span>`;
+}
+
+async function initFirebase() {
+  if (!window.SC_FB) return;
+  state.fb.ready = true;
+  const { db, doc, getDoc, setDoc, onSnapshot } = window.SC_FB;
+  setFbStatus('connecting');
+  try {
+    const cartRef = doc(db, "silvercloud", "carteras");
+    const roaRef  = doc(db, "silvercloud", "roa-config");
+
+    const [cartSnap, roaSnap] = await Promise.all([getDoc(cartRef), getDoc(roaRef)]);
+
+    if (cartSnap.exists()) {
+      const data = cartSnap.data().data;
+      if (data) state.templates = data;
+    }
+    if (roaSnap.exists()) {
+      const data = roaSnap.data().data;
+      if (data) {
+        if (data.claseSelections) state.claseSelections = data.claseSelections;
+        if (data.pfEstimaciones)  state.pfEstimaciones  = data.pfEstimaciones;
+      }
+    } else {
+      // fallback localStorage
+      try {
+        const local = localStorage.getItem("sc-roa-config");
+        if (local) {
+          const parsed = JSON.parse(local);
+          state.claseSelections = parsed.claseSelections || {};
+          state.pfEstimaciones  = parsed.pfEstimaciones  || {};
+        }
+      } catch(e) {}
+    }
+
+    populateCarteras();
+    render();
+
+    // Subscribirse a cambios en carteras (para reflejar ediciones en vivo)
+    onSnapshot(cartRef, (snap) => {
+      if (!snap.exists()) return;
+      const data = snap.data().data;
+      if (!data) return;
+      state.templates = data;
+      render();
+    }, (err) => console.warn('Sync carteras:', err));
+
+    // Subscribirse a cambios de la config ROA
+    onSnapshot(roaRef, (snap) => {
+      if (!snap.exists() || state.fb.savingTimer) return;
+      const data = snap.data().data;
+      if (!data) return;
+      state.claseSelections = data.claseSelections || {};
+      state.pfEstimaciones  = data.pfEstimaciones  || {};
+      render();
+    }, (err) => console.warn('Sync roa-config:', err));
+
+    setFbStatus('online');
+  } catch (e) {
+    console.error('Firebase init error:', e);
+    setFbStatus('offline');
+  }
+}
+
+function saveConfig() {
+  try { localStorage.setItem("sc-roa-config", JSON.stringify({ claseSelections: state.claseSelections, pfEstimaciones: state.pfEstimaciones })); } catch(e){}
+  if (!state.fb.ready || !window.SC_FB) return;
+  setFbStatus('syncing');
+  if (state.fb.savingTimer) clearTimeout(state.fb.savingTimer);
+  state.fb.savingTimer = setTimeout(async () => {
+    try {
+      const { db, doc, setDoc } = window.SC_FB;
+      await setDoc(doc(db, "silvercloud", "roa-config"), { data: { claseSelections: state.claseSelections, pfEstimaciones: state.pfEstimaciones }, updatedAt: Date.now() });
+      setFbStatus('online');
+    } catch(e) { console.warn('Save roa-config:', e); setFbStatus('offline'); }
+    state.fb.savingTimer = null;
+  }, 600);
+}
+
+// ==========================================================
+// UI HELPERS
+// ==========================================================
+function populateCarteras() {
+  const sel = document.getElementById('cartera-select');
+  sel.innerHTML = '<option value="">— Seleccionar —</option>';
+  ORDER.forEach(id => {
+    const meta = TEMPLATES_META[id];
+    const opt = document.createElement('option');
+    opt.value = id;
+    opt.textContent = meta.label;
+    sel.appendChild(opt);
+  });
+}
+
+function onCarteraChange(id) {
+  state.selectedCartera = id;
+  // Si la cartera es solo ARS o solo USD, fijar moneda automáticamente
+  const meta = TEMPLATES_META[id];
+  if (meta) {
+    if (meta.moneda === "ARS") setMoneda("ARS");
+    else if (meta.moneda === "USD") setMoneda("USD");
+    // si es MIX, dejar la que está
+  }
+  render();
+}
+
+function onMfChange(val) {
+  state.mf = parseFloat(val) || 0;
+  render();
+}
+
+function setMoneda(m) {
+  state.moneda = m;
+  document.getElementById('moneda-ars').classList.toggle('active', m === 'ARS');
+  document.getElementById('moneda-usd').classList.toggle('active', m === 'USD');
+  render();
+}
+
+function setClase(fciId, claseName) {
+  state.claseSelections[fciId] = claseName;
+  saveConfig();
+  render();
+}
+
+function setPfEstimacion(fciId, val) {
+  const num = parseFloat(val);
+  if (isNaN(num) || num < 0) state.pfEstimaciones[fciId] = 0;
+  else state.pfEstimaciones[fciId] = num;
+  saveConfig();
+  render();
+}
+
+function getFeeFor(activoId) {
+  // Devuelve { fee: %, label: string para mostrar, isFci: bool, hasOptions: bool }
+  const fciData = FCI_CLASES[activoId];
+  if (fciData) {
+    // Es FCI
+    if (fciData.notFound) {
+      return { fee: fciData.defaultFee, label: `${fciData.defaultFee.toFixed(2)}% (fee estándar)`, isFci: true, hasOptions: false };
+    }
+    const clases = fciData.clases;
+    const selected = state.claseSelections[activoId] || clases[0].n;
+    const claseObj = clases.find(c => c.n === selected) || clases[0];
+    return { fee: claseObj.f, label: `${claseObj.f.toFixed(2)}%`, isFci: true, hasOptions: true, clases, selectedClase: claseObj.n };
+  }
+  // Es activo directo
+  const a = ALL_ACTIVOS[activoId];
+  if (a) {
+    const cat = CATEGORIES[a.category];
+    if (cat && cat.direct) {
+      return { fee: cat.fee, label: `${cat.fee.toFixed(2)}% (estándar)`, isFci: false, hasOptions: false };
+    }
+  }
+  return { fee: 0, label: "—", isFci: false, hasOptions: false };
+}
+
+function fmtMoney(amount, moneda) {
+  if (amount === 0) return '0';
+  const sym = moneda === 'USD' ? 'US$' : '$';
+  return sym + ' ' + amount.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+function fmtPct(p) {
+  return p.toFixed(3) + '%';
+}
+
+// ==========================================================
+// RENDER
+// ==========================================================
+function render() {
+  const content = document.getElementById('content');
+  const id = state.selectedCartera;
+  if (!id) {
+    content.innerHTML = `<div class="card"><div class="empty-state">
+      <div class="empty-state-icon">📊</div>
+      Seleccioná una cartera modelo, ingresá el MF del cliente y elegí la moneda de cálculo para ver el ROA.
+    </div></div>`;
+    return;
+  }
+  const tpl = state.templates[id];
+  if (!tpl) {
+    content.innerHTML = `<div class="card"><div class="empty-state">
+      <div class="empty-state-icon">⚠</div>
+      No se encontraron datos para esta cartera. Verificá que la cartera esté armada en el módulo Carteras Modelo.
+    </div></div>`;
+    return;
+  }
+  const blocks = tpl.blocks || {};
+  const entries = Object.entries(blocks).filter(([, v]) => Number(v) > 0);
+  if (entries.length === 0) {
+    content.innerHTML = `<div class="card"><div class="empty-state">
+      <div class="empty-state-icon">📭</div>
+      La cartera "${TEMPLATES_META[id].label}" está vacía. Andá a Carteras Modelo y agregá activos primero.
+    </div></div>`;
+    return;
+  }
+
+  // Ordenar por categoría
+  const catOrder = Object.keys(CATEGORIES);
+  entries.sort((a, b) => {
+    const ca = ALL_ACTIVOS[a[0]]?.category;
+    const cb = ALL_ACTIVOS[b[0]]?.category;
+    const oa = catOrder.indexOf(ca);
+    const ob = catOrder.indexOf(cb);
+    if (oa !== ob) return oa - ob;
+    return Number(b[1]) - Number(a[1]);
+  });
+
+  // Construir tabla de activos
+  let lastCat = null;
+  let rowsHtml = '';
+  let totalMfFee = 0;
+  let totalPfFee = 0;
+  const fondosPF = []; // FCIs con performance fee presentes en cartera
+
+  entries.forEach(([activoId, peso]) => {
+    const a = ALL_ACTIVOS[activoId];
+    const cat = a ? CATEGORIES[a.category] : null;
+    if (a && a.category !== lastCat && cat) {
+      rowsHtml += `<tr class="cat-subheader"><td colspan="5"><span class="cat-subheader-dot" style="background:${cat.color};"></span>${cat.label}</td></tr>`;
+      lastCat = a.category;
+    }
+    const feeInfo = getFeeFor(activoId);
+    const pesoNum = Number(peso);
+    const montoActivo = (state.mf * pesoNum) / 100;
+    const mfAnual = (montoActivo * feeInfo.fee) / 100;
+    totalMfFee += mfAnual;
+
+    // Check si tiene PF
+    if (PERF_FEES[activoId]) {
+      fondosPF.push({ id: activoId, name: a ? a.name : activoId, peso: pesoNum, monto: montoActivo, pfRate: PERF_FEES[activoId] });
+    }
+
+    let feeCell;
+    if (feeInfo.hasOptions) {
+      const opts = feeInfo.clases.map(c =>
+        `<option value="${c.n}" ${c.n === feeInfo.selectedClase ? 'selected' : ''}>${c.n} — ${c.f.toFixed(2)}%</option>`
+      ).join('');
+      feeCell = `<select class="clase-select" onchange="setClase('${activoId}', this.value)">${opts}</select>`;
+    } else {
+      feeCell = `<span class="fee-fixed">${feeInfo.label}</span>`;
+    }
+
+    const pfBadge = PERF_FEES[activoId] ? `<span class="pf-badge">+ PF ${PERF_FEES[activoId]}%</span>` : '';
+
+    rowsHtml += `<tr>
+      <td><span class="activo-dot" style="background:${cat ? cat.color : '#888'};"></span><span class="activo-name">${a ? a.name : activoId}</span>${pfBadge}${a && a.subgroup ? `<div class="activo-sub">${a.subgroup}</div>` : ''}</td>
+      <td class="right">${pesoNum}%</td>
+      <td>${feeCell}</td>
+      <td class="right"><span class="fee-value">${fmtPct(feeInfo.fee)}</span></td>
+      <td class="right"><span class="roa-amount">${fmtMoney(mfAnual, state.moneda)}</span></td>
+    </tr>`;
+  });
+
+  // Tabla principal
+  let html = `<div class="card">
+    <div class="card-title">📋 ${TEMPLATES_META[id].label} — Detalle por activo</div>
+    <table class="activos-tabla">
+      <thead><tr>
+        <th>Activo</th>
+        <th class="right">Peso</th>
+        <th>Clase / Fee</th>
+        <th class="right">Fee anual</th>
+        <th class="right">ROA por MF</th>
+      </tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+  </div>`;
+
+  // Bloque Performance Fee
+  if (fondosPF.length > 0) {
+    let pfRows = '';
+    fondosPF.forEach(f => {
+      const rendEst = state.pfEstimaciones[f.id] !== undefined ? state.pfEstimaciones[f.id] : 0;
+      const pfMonto = (f.monto * rendEst / 100) * (f.pfRate / 100);
+      totalPfFee += pfMonto;
+      pfRows += `<div class="pf-row">
+        <div>
+          <div class="pf-row-name">${f.name}</div>
+          <div class="pf-row-sub">Peso ${f.peso}% · MF ${fmtMoney(f.monto, state.moneda)} · PF ${f.pfRate}% sobre máximo</div>
+        </div>
+        <div class="pf-cell-right">
+          <div class="pf-label-mini">Rendim. estimado</div>
+          <div class="pf-input-wrap" style="justify-content:flex-end;">
+            <input type="number" class="pf-input" min="0" step="0.5" value="${rendEst}" oninput="setPfEstimacion('${f.id}', this.value)"> <span style="color:var(--text-dim);font-size:13px;">%</span>
+          </div>
+        </div>
+        <div class="pf-cell-right">
+          <div class="pf-label-mini">Tasa PF</div>
+          <div style="font-weight:600;color:var(--text-bright);font-family:'Libre Baskerville',serif;">${f.pfRate}%</div>
+        </div>
+        <div class="pf-cell-right">
+          <div class="pf-label-mini">ROA por PF</div>
+          <div class="roa-amount">${fmtMoney(pfMonto, state.moneda)}</div>
+        </div>
+      </div>`;
+    });
+    html += `<div class="pf-section">
+      <div class="pf-title">⚡ Performance Fee (estimado)</div>
+      <div class="pf-row-header">
+        <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;font-weight:600;">Fondo</div>
+        <div class="pf-cell-right" style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;font-weight:600;">Estimación</div>
+        <div class="pf-cell-right" style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;font-weight:600;">Tasa</div>
+        <div class="pf-cell-right" style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;font-weight:600;">ROA estimado</div>
+      </div>
+      ${pfRows}
+      <div style="font-size:11px;color:var(--text-dim);margin-top:12px;line-height:1.5;font-style:italic;">
+        El PF se cobra solo cuando el fondo alcanza un nuevo máximo histórico. Ingresá el rendimiento estimado del fondo sobre su último máximo para calcular el ROA esperado.
+      </div>
+    </div>`;
+  }
+
+  // Cuadro resumen
+  const feeTotal = state.mf > 0 ? (totalMfFee / state.mf) * 100 : 0;
+  const totalGeneral = totalMfFee + totalPfFee;
+  const totalMensual = totalGeneral / 12;
+
+  html += `<div class="summary-card">
+    <div class="summary-title">💰 ROA Estimado</div>
+
+    <div class="summary-row">
+      <span class="lbl">MF del cliente</span>
+      <span class="val">${fmtMoney(state.mf, state.moneda)}</span>
+    </div>
+    <div class="summary-row">
+      <span class="lbl">Cartera</span>
+      <span class="val muted">${TEMPLATES_META[id].label}</span>
+    </div>
+
+    <div class="summary-row section">
+      <span class="lbl">▸ Management Fee</span>
+      <span class="val muted">${fmtPct(feeTotal)} anual ponderado</span>
+    </div>
+    <div class="summary-row">
+      <span class="lbl sub">ROA por MF anual</span>
+      <span class="val">${fmtMoney(totalMfFee, state.moneda)}</span>
+    </div>
+    <div class="summary-row">
+      <span class="lbl sub">ROA por MF mensual</span>
+      <span class="val muted">${fmtMoney(totalMfFee/12, state.moneda)}</span>
+    </div>
+
+    ${fondosPF.length > 0 ? `
+    <div class="summary-row section">
+      <span class="lbl">▸ Performance Fee (estimado)</span>
+      <span class="val muted">${fondosPF.length} fondo${fondosPF.length === 1 ? '' : 's'} con PF</span>
+    </div>
+    <div class="summary-row">
+      <span class="lbl sub">ROA por PF anual</span>
+      <span class="val">${fmtMoney(totalPfFee, state.moneda)}</span>
+    </div>
+    ` : ''}
+
+    <div class="summary-total">
+      <div class="summary-row">
+        <span class="lbl">ROA TOTAL ANUAL</span>
+        <span class="val">${fmtMoney(totalGeneral, state.moneda)}</span>
+      </div>
+      <div class="summary-row mensual">
+        <span class="lbl">ROA mensual promedio</span>
+        <span class="val">${fmtMoney(totalMensual, state.moneda)}</span>
+      </div>
+    </div>
+  </div>`;
+
+  content.innerHTML = html;
+}
+
+// ==========================================================
+// INIT
+// ==========================================================
+if (window.SC_FB) initFirebase();
+else window.addEventListener('sc-firebase-ready', initFirebase, { once: true });
+
+// Si Firebase no responde, igual mostrar la UI con localStorage
+setTimeout(() => {
+  if (!state.fb.ready) {
+    setFbStatus('offline');
+    // Intentar cargar templates desde localStorage
+    try {
+      const local = localStorage.getItem("sc-carteras-modelo");
+      if (local) state.templates = JSON.parse(local);
+      const localRoa = localStorage.getItem("sc-roa-config");
+      if (localRoa) {
+        const parsed = JSON.parse(localRoa);
+        state.claseSelections = parsed.claseSelections || {};
+        state.pfEstimaciones  = parsed.pfEstimaciones  || {};
+      }
+    } catch(e) {}
+    populateCarteras();
+    render();
+  }
+}, 8000);
+
+// Render inicial (con datos vacíos hasta que llegue Firebase)
+populateCarteras();
+render();
+</script>
+
+</body>
+</html>
