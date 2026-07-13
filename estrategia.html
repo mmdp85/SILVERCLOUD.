@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SilverCloud | Monitor de Estrategia</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Space+Mono:wght@400;700&display=swap');
+  :root{
+    --bg-primary:#0a0e17;--bg-secondary:#111827;--bg-card:#1a2235;--bg-card-hover:#1f2a40;
+    --bg-input:#0d1220;--border:#2a3550;--text-primary:#e8ecf4;--text-secondary:#8892a8;
+    --text-muted:#5a6580;--accent-blue:#4a9eff;--green:#34d399;--red:#f87171;
+    --gold:#fbbf24;--purple:#a78bfa;--cyan:#22d3ee;--orange:#fb923c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh}
+  .topnav{background:var(--bg-secondary);border-bottom:1px solid var(--border);padding:0.5rem 1.5rem;display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap}
+  .topnav a{font-family:'Space Mono',monospace;font-size:0.7rem;padding:0.35rem 0.8rem;border-radius:6px;text-decoration:none;color:var(--text-muted);transition:all 0.15s;border:1px solid transparent}
+  .topnav a:hover{color:var(--text-primary);background:var(--bg-card)}
+  .topnav a.active{color:var(--accent-blue);border-color:var(--accent-blue);background:rgba(74,158,255,0.08)}
+  .topnav .home-link{color:var(--text-secondary);font-weight:700;margin-right:0.5rem}
+
+  .container{max-width:1400px;margin:0 auto;padding:1.5rem}
+  .page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap;margin-bottom:1.2rem}
+  .page-title{font-size:1.3rem;font-weight:700;color:var(--accent-blue)}
+  .page-desc{font-size:0.8rem;color:var(--text-secondary);margin-top:0.2rem}
+  .asof{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text-muted)}
+  .asof input{background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--gold);
+    font-family:'Space Mono',monospace;font-size:0.75rem;padding:0.3rem 0.5rem;outline:none;width:135px}
+  .asof input:focus{border-color:var(--accent-blue)}
+
+  .moneda-tabs{display:flex;gap:0.5rem;margin-bottom:1rem}
+  .mtab{font-family:'Space Mono',monospace;font-size:0.8rem;padding:0.6rem 1.6rem;border-radius:10px;
+    border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted);cursor:pointer;transition:all 0.2s}
+  .mtab:hover{border-color:var(--accent-blue);color:var(--text-secondary)}
+  .mtab.active{background:var(--accent-blue);border-color:var(--accent-blue);color:var(--bg-primary);font-weight:700}
+
+  .filters{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center;padding:0.9rem 1.2rem;background:var(--bg-secondary);
+    border:1px solid var(--border);border-radius:10px;margin-bottom:1.2rem}
+  .fgroup{display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap}
+  .flabel{font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-right:0.2rem}
+  .chip{font-family:'Space Mono',monospace;font-size:0.7rem;padding:0.3rem 0.7rem;border-radius:6px;cursor:pointer;
+    border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted);transition:all 0.15s;display:flex;align-items:center;gap:0.35rem}
+  .chip:hover{border-color:var(--accent-blue);color:var(--text-secondary)}
+  .chip.active{background:var(--accent-blue);border-color:var(--accent-blue);color:var(--bg-primary);font-weight:700}
+
+  .table-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.2rem}
+  table{width:100%;border-collapse:collapse}
+  thead th{font-family:'Space Mono',monospace;font-size:0.55rem;text-transform:uppercase;letter-spacing:0.5px;
+    color:var(--text-muted);padding:0.7rem 0.9rem;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+  thead th.c{text-align:center}
+  tbody tr{border-bottom:1px solid rgba(42,53,80,0.35);vertical-align:top}
+  tbody tr:hover{background:var(--bg-card-hover)}
+  tbody td{padding:0.9rem;font-size:0.8rem;color:var(--text-secondary);line-height:1.55}
+  td.sem{text-align:center;width:60px;padding-top:1.05rem}
+  td.clase{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-primary);width:130px;text-align:center;font-weight:700;padding-top:1rem}
+  td.instr{font-family:'Space Mono',monospace;font-size:0.78rem;font-weight:700;color:var(--accent-blue);width:120px;text-align:center;padding-top:1rem}
+  td.perfil{width:110px;text-align:center;padding-top:1rem}
+  td.rac{font-size:0.79rem}
+  td.rac .lead{font-weight:700;color:var(--text-primary)}
+  td.acc{width:70px;text-align:center;padding-top:1rem;white-space:nowrap}
+
+  .luz{display:inline-block;width:15px;height:15px;border-radius:50%}
+  .luz-v{background:var(--green);box-shadow:0 0 10px rgba(52,211,153,0.35)}
+  .luz-a{background:var(--gold);box-shadow:0 0 10px rgba(251,191,36,0.35)}
+  .luz-r{background:var(--red);box-shadow:0 0 10px rgba(248,113,113,0.35)}
+  .luz-n{background:var(--text-muted);opacity:0.4}
+
+  .pf{font-family:'Space Mono',monospace;font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;
+    padding:0.18rem 0.5rem;border-radius:5px;border:1px solid;white-space:nowrap;display:inline-block}
+  .pf-c{color:var(--accent-blue);background:rgba(74,158,255,0.10);border-color:rgba(74,158,255,0.30)}
+  .pf-m{color:var(--gold);background:rgba(251,191,36,0.10);border-color:rgba(251,191,36,0.30)}
+  .pf-a{color:var(--red);background:rgba(248,113,113,0.10);border-color:rgba(248,113,113,0.30)}
+  .empty{color:var(--text-muted)}
+
+  .edit-input,.edit-area{background:var(--bg-input);border:1px solid var(--border);border-radius:5px;color:var(--text-secondary);
+    font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:0.35rem 0.5rem;outline:none;width:100%;resize:vertical}
+  .edit-input:focus,.edit-area:focus{border-color:var(--accent-blue)}
+  .edit-input.mono{font-family:'Space Mono',monospace;font-weight:700;color:var(--accent-blue);text-align:center;font-size:0.75rem}
+  .edit-input.clase{font-family:'Space Mono',monospace;color:var(--text-primary);text-align:center;font-size:0.72rem}
+  .edit-area{min-height:80px;line-height:1.5}
+  .edit-sel{background:var(--bg-input);border:1px solid var(--border);border-radius:5px;color:var(--text-secondary);
+    font-family:'Space Mono',monospace;font-size:0.68rem;padding:0.3rem 0.25rem;outline:none;width:100%}
+  .del-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.75rem;opacity:0.45;padding:0.2rem}
+  .del-btn:hover{color:var(--red);opacity:1}
+  .hint{font-family:'Space Mono',monospace;font-size:0.55rem;color:var(--text-muted);margin-top:0.3rem;display:block}
+
+  .addbar{display:none;align-items:center;gap:0.5rem;flex-wrap:wrap;padding:0.8rem 0.9rem;border-top:1px solid var(--border);background:var(--bg-secondary)}
+  .addbar.on{display:flex}
+  .btn-add{font-family:'Space Mono',monospace;font-size:0.7rem;padding:0.38rem 0.9rem;border-radius:7px;cursor:pointer;
+    background:var(--accent-blue);color:var(--bg-primary);border:none;font-weight:700}
+  .btn-add:hover{opacity:0.85}
+
+  .actions{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+  .btn{font-family:'DM Sans',sans-serif;font-size:0.8rem;padding:0.45rem 0.9rem;border-radius:8px;cursor:pointer;
+    border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);transition:all 0.2s}
+  .btn:hover{background:var(--bg-card-hover);color:var(--text-primary);border-color:var(--accent-blue)}
+  .btn.on{border-color:var(--accent-blue);color:var(--accent-blue)}
+
+  .leyenda{display:flex;gap:1.5rem;flex-wrap:wrap;padding:0.8rem 1.2rem;background:var(--bg-secondary);
+    border:1px solid var(--border);border-radius:10px;margin-bottom:1.2rem;font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--text-muted)}
+  .leyenda span{display:flex;align-items:center;gap:0.45rem}
+
+  .footer{text-align:center;padding:1rem 0 2rem;color:var(--text-muted);font-size:0.65rem;font-family:'Space Mono',monospace;line-height:1.8}
+
+  .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#0a0e17;border-top:1px solid #2a3550;z-index:50;padding:0.4rem 0.5rem 0.6rem;justify-content:space-around;align-items:center}
+  .bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:0.15rem;text-decoration:none;color:#5a6580;font-size:0.55rem;font-family:'Space Mono',monospace;padding:0.3rem 0.4rem;border-radius:8px;min-width:50px}
+  .bottom-nav a:hover,.bottom-nav a.active{color:#4a9eff}
+  .bottom-nav a .bn-icon{font-size:1.2rem;line-height:1}
+  @media(max-width:768px){.bottom-nav{display:flex}body{padding-bottom:70px}.container{padding:0.8rem}
+    .table-card{overflow-x:auto}table{min-width:820px}}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="index.html" class="home-link">← SC</a>
+  <a href="crypto.html">Crypto</a>
+  <a href="curva-pesos.html">Curva Tasa Fija</a>
+  <a href="precios-iol.html">Precios IOL</a>
+  <a href="cartera.html">Mi Cartera</a>
+  <a href="galileo.html">Galileo Fondos</a>
+  <a href="dolares-inversiones.html">Dólares Inv.</a>
+  <a href="estrategia.html" class="active">Estrategia</a>
+</div>
+
+<div class="container">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Monitor de Estrategia</div>
+      <div class="page-desc">Vista de la casa por clase de activo — convicción, instrumentos y racional</div>
+    </div>
+    <div class="asof">
+      Semana del <input id="asOf" placeholder="dd/mm/aaaa" onchange="saveData()">
+    </div>
+  </div>
+
+  <div class="moneda-tabs">
+    <button class="mtab active" data-m="all" onclick="setMoneda('all',this)">Todo</button>
+    <button class="mtab" data-m="usd" onclick="setMoneda('usd',this)">Dólares</button>
+    <button class="mtab" data-m="ars" onclick="setMoneda('ars',this)">Pesos</button>
+  </div>
+
+  <div class="filters">
+    <div class="fgroup">
+      <span class="flabel">Convicción</span>
+      <button class="chip active" data-s="all" onclick="setSem('all',this)">Todas</button>
+      <button class="chip" data-s="v" onclick="setSem('v',this)"><span class="luz luz-v" style="width:9px;height:9px;box-shadow:none"></span>Sobreponderar</button>
+      <button class="chip" data-s="a" onclick="setSem('a',this)"><span class="luz luz-a" style="width:9px;height:9px;box-shadow:none"></span>Neutral</button>
+      <button class="chip" data-s="r" onclick="setSem('r',this)"><span class="luz luz-r" style="width:9px;height:9px;box-shadow:none"></span>Evitar</button>
+    </div>
+    <div class="fgroup">
+      <span class="flabel">Perfil</span>
+      <button class="chip active" data-p="all" onclick="setPerfil('all',this)">Todos</button>
+      <button class="chip" data-p="c" onclick="setPerfil('c',this)">Conservador</button>
+      <button class="chip" data-p="m" onclick="setPerfil('m',this)">Moderado</button>
+      <button class="chip" data-p="a" onclick="setPerfil('a',this)">Agresivo</button>
+    </div>
+  </div>
+
+  <div class="leyenda">
+    <span><span class="luz luz-v" style="width:10px;height:10px;box-shadow:none"></span> Sobreponderar</span>
+    <span><span class="luz luz-a" style="width:10px;height:10px;box-shadow:none"></span> Neutral</span>
+    <span><span class="luz luz-r" style="width:10px;height:10px;box-shadow:none"></span> Evitar / subponderar</span>
+    <span style="margin-left:auto">El semáforo es convicción de la casa. El perfil es para quién sirve. Son ejes distintos.</span>
+  </div>
+
+  <div class="actions">
+    <button class="btn" id="btnEdit" onclick="toggleEdit()">✎ Editar</button>
+    <button class="btn" onclick="exportJSON()">↓ Exportar JSON</button>
+    <button class="btn" onclick="document.getElementById('importFile').click()">↑ Importar JSON</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
+    <button class="btn" onclick="resetData()" style="margin-left:auto">↺ Restaurar base</button>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th class="c" style="width:60px">Estrategia</th>
+          <th class="c" style="width:130px">Clase</th>
+          <th class="c" style="width:120px">Instrumentos</th>
+          <th class="c" style="width:110px">Perfil</th>
+          <th>Racional</th>
+          <th style="width:70px"></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="addbar" id="addbar">
+      <span class="flabel">Agregar fila en</span>
+      <select class="edit-sel" id="addMon" style="width:auto;min-width:130px">
+        <option value="usd">Dólares</option>
+        <option value="ars">Pesos</option>
+      </select>
+      <button class="btn-add" onclick="addRow()">+ Agregar clase</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    Monitor de estrategia semanal — vista de la casa, no constituye recomendación de inversión.<br>
+    SilverCloud &copy; 2026 — Estrategia — Datos guardados en tu navegador
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <a href="index.html"><span class="bn-icon">🏠</span>Home</a>
+  <a href="estrategia.html" class="active"><span class="bn-icon">🚦</span>Estrategia</a>
+  <a href="dolares-inversiones.html"><span class="bn-icon">💵</span>Dólares</a>
+  <a href="cartera.html"><span class="bn-icon">💼</span>Cartera</a>
+  <a href="carteras-modelo.html"><span class="bn-icon">🎯</span>Modelo</a>
+</div>
+
+<script>
+var KEY = 'sc_estrategia';
+var SEM = { v:'luz-v', a:'luz-a', r:'luz-r', '':'luz-n' };
+var PF  = { c:['Conservador','pf-c'], m:['Moderado','pf-m'], a:['Agresivo','pf-a'] };
+var MON = { usd:'Dólares', ars:'Pesos' };
+
+var BASE = {
+  asOf: '',
+  rows: [
+    {mon:'usd', sem:'', clase:'Soberanos ley extranjera', instr:'', pf:'', rac:''},
+    {mon:'usd', sem:'', clase:'Soberanos ley local',      instr:'', pf:'', rac:''},
+    {mon:'usd', sem:'', clase:'Provinciales',             instr:'', pf:'', rac:''},
+    {mon:'usd', sem:'', clase:'Corporativos (ON)',        instr:'', pf:'', rac:''},
+    {mon:'usd', sem:'', clase:'Fondos USD (afuera)',      instr:'', pf:'', rac:''},
+    {mon:'ars', sem:'', clase:'Tasa fija (LECAP/BONCAP)', instr:'', pf:'', rac:''},
+    {mon:'ars', sem:'', clase:'CER',                      instr:'', pf:'', rac:''},
+    {mon:'ars', sem:'', clase:'Duales',                   instr:'', pf:'', rac:''},
+    {mon:'ars', sem:'', clase:'Dólar linked / FX',        instr:'', pf:'', rac:''},
+    {mon:'ars', sem:'', clase:'Acciones / Merval',        instr:'', pf:'', rac:''}
+  ]
+};
+
+var data=null, moneda='all', sem='all', perfil='all', editMode=false;
+
+function loadData(){
+  try { var raw = localStorage.getItem(KEY); data = raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(BASE)); }
+  catch(e){ data = JSON.parse(JSON.stringify(BASE)); }
+}
+function saveData(){
+  data.asOf = document.getElementById('asOf').value;
+  localStorage.setItem(KEY, JSON.stringify(data));
+}
+function resetData(){
+  if(!confirm('¿Restaurar el monitor base? Se pierde todo lo que cargaste.')) return;
+  data = JSON.parse(JSON.stringify(BASE));
+  localStorage.setItem(KEY, JSON.stringify(data));
+  document.getElementById('asOf').value = '';
+  render();
+}
+function exportJSON(){
+  saveData();
+  var blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'estrategia-' + new Date().toISOString().slice(0,10) + '.json'; a.click();
+}
+function importJSON(e){
+  var f = e.target.files[0]; if(!f) return;
+  var r = new FileReader();
+  r.onload = function(ev){
+    try { data = JSON.parse(ev.target.result); localStorage.setItem(KEY, JSON.stringify(data));
+          document.getElementById('asOf').value = data.asOf || ''; render(); }
+    catch(err){ alert('Error: ' + err.message); }
+  };
+  r.readAsText(f); e.target.value = '';
+}
+
+function setMoneda(v,b){ moneda=v; document.querySelectorAll('.mtab').forEach(function(x){x.classList.remove('active')}); b.classList.add('active'); render(); }
+function setSem(v,b){ sem=v; act(b,'[data-s]'); render(); }
+function setPerfil(v,b){ perfil=v; act(b,'[data-p]'); render(); }
+function act(b,sel){ document.querySelectorAll('.chip'+sel).forEach(function(x){x.classList.remove('active')}); b.classList.add('active'); }
+
+function toggleEdit(){
+  editMode = !editMode;
+  var b = document.getElementById('btnEdit');
+  b.textContent = editMode ? '✓ Listo' : '✎ Editar';
+  b.classList.toggle('on', editMode);
+  document.getElementById('addbar').classList.toggle('on', editMode);
+  render();
+}
+function upd(i,f,v){ data.rows[i][f]=v; saveData(); if(f==='sem'||f==='pf'||f==='mon') render(); }
+function delRow(i){
+  if(!confirm('¿Eliminar "' + (data.rows[i].clase||'esta fila') + '"?')) return;
+  data.rows.splice(i,1); saveData(); render();
+}
+function addRow(){
+  var m = document.getElementById('addMon').value;
+  var last = -1;
+  data.rows.forEach(function(r,i){ if(r.mon===m) last=i; });
+  var nueva = {mon:m, sem:'', clase:'', instr:'', pf:'', rac:''};
+  if (last >= 0) data.rows.splice(last+1, 0, nueva);
+  else data.rows.push(nueva);
+  saveData(); render();
+}
+
+/* Negrita = la primera oración del racional, igual que en el informe */
+function lead(txt){
+  if (!txt) return '<span class="empty">—</span>';
+  var t = String(txt).trim();
+  var m = t.match(/^(.+?[.!?])(\s+)([\s\S]*)$/);
+  if (!m) return '<span class="lead">' + esc(t) + '</span>';
+  return '<span class="lead">' + esc(m[1]) + '</span> ' + esc(m[3]);
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function rowHTML(r,i){
+  if (editMode){
+    return '<tr>' +
+      '<td class="sem"><select class="edit-sel" onchange="upd('+i+',\'sem\',this.value)">' +
+        '<option value=""' +(r.sem===''?' selected':'')+ '>—</option>' +
+        '<option value="v"'+(r.sem==='v'?' selected':'')+'>● Sobrep.</option>' +
+        '<option value="a"'+(r.sem==='a'?' selected':'')+'>● Neutral</option>' +
+        '<option value="r"'+(r.sem==='r'?' selected':'')+'>● Evitar</option>' +
+      '</select></td>' +
+      '<td class="clase"><input class="edit-input clase" value="'+esc(r.clase||'')+'" placeholder="Clase" onchange="upd('+i+',\'clase\',this.value)"></td>' +
+      '<td class="instr"><input class="edit-input mono" value="'+esc(r.instr||'')+'" placeholder="GD38, AL30…" onchange="upd('+i+',\'instr\',this.value)"></td>' +
+      '<td class="perfil"><select class="edit-sel" onchange="upd('+i+',\'pf\',this.value)">' +
+        '<option value=""' +(r.pf===''?' selected':'')+ '>—</option>' +
+        '<option value="c"'+(r.pf==='c'?' selected':'')+'>Conservador</option>' +
+        '<option value="m"'+(r.pf==='m'?' selected':'')+'>Moderado</option>' +
+        '<option value="a"'+(r.pf==='a'?' selected':'')+'>Agresivo</option>' +
+      '</select></td>' +
+      '<td class="rac"><textarea class="edit-area" placeholder="Escribí el racional. La primera oración sale en negrita." onchange="upd('+i+',\'rac\',this.value)">'+esc(r.rac||'')+'</textarea>' +
+        '<span class="hint">La primera oración se muestra en negrita — usala como titular.</span></td>' +
+      '<td class="acc">' +
+        '<select class="edit-sel" style="margin-bottom:4px" onchange="upd('+i+',\'mon\',this.value)">' +
+          '<option value="usd"'+(r.mon==='usd'?' selected':'')+'>USD</option>' +
+          '<option value="ars"'+(r.mon==='ars'?' selected':'')+'>ARS</option>' +
+        '</select>' +
+        '<button class="del-btn" onclick="delRow('+i+')">✕</button>' +
+      '</td>' +
+    '</tr>';
+  }
+  var pf = r.pf ? '<span class="pf '+PF[r.pf][1]+'">'+PF[r.pf][0]+'</span>' : '<span class="empty">—</span>';
+  return '<tr>' +
+    '<td class="sem"><span class="luz '+SEM[r.sem||'']+'"></span></td>' +
+    '<td class="clase">'+(esc(r.clase||'') || '<span class="empty">—</span>')+'</td>' +
+    '<td class="instr">'+(esc(r.instr||'') || '<span class="empty">—</span>')+'</td>' +
+    '<td class="perfil">'+pf+'</td>' +
+    '<td class="rac">'+lead(r.rac)+'</td>' +
+    '<td class="acc"></td>' +
+  '</tr>';
+}
+
+function render(){
+  var idx = data.rows.map(function(r,i){ return {r:r,i:i}; }).filter(function(x){
+    return (moneda==='all' || x.r.mon===moneda) &&
+           (sem==='all'    || x.r.sem===sem) &&
+           (perfil==='all' || x.r.pf===perfil);
+  });
+  var html = '', mon = null;
+  idx.forEach(function(x){
+    if (moneda === 'all' && x.r.mon !== mon){
+      mon = x.r.mon;
+      html += '<tr class="blk"><td colspan="6" style="background:var(--bg-secondary);font-family:\'Space Mono\',monospace;' +
+              'font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-primary);font-weight:700;' +
+              'padding:0.6rem 0.9rem;border-bottom:1px solid var(--border)">' + MON[mon] + '</td></tr>';
+    }
+    html += rowHTML(x.r, x.i);
+  });
+  if (!html) html = '<tr><td colspan="6" style="text-align:center;padding:1.5rem;color:var(--text-muted)">Sin filas para este filtro</td></tr>';
+  document.getElementById('tbody').innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  loadData();
+  document.getElementById('asOf').value = data.asOf || '';
+  render();
+});
+</script>
+</body>
+</html>
