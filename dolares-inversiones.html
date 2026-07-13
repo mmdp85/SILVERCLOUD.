@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SilverCloud | Dólares Inversiones</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Space+Mono:wght@400;700&display=swap');
+  :root{
+    --bg-primary:#0a0e17;--bg-secondary:#111827;--bg-card:#1a2235;--bg-card-hover:#1f2a40;
+    --bg-input:#0d1220;--border:#2a3550;--text-primary:#e8ecf4;--text-secondary:#8892a8;
+    --text-muted:#5a6580;--accent-blue:#4a9eff;--green:#34d399;--red:#f87171;
+    --gold:#fbbf24;--purple:#a78bfa;--cyan:#22d3ee;--orange:#fb923c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh}
+  .topnav{background:var(--bg-secondary);border-bottom:1px solid var(--border);padding:0.5rem 1.5rem;display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap}
+  .topnav a{font-family:'Space Mono',monospace;font-size:0.7rem;padding:0.35rem 0.8rem;border-radius:6px;text-decoration:none;color:var(--text-muted);transition:all 0.15s;border:1px solid transparent}
+  .topnav a:hover{color:var(--text-primary);background:var(--bg-card)}
+  .topnav a.active{color:var(--accent-blue);border-color:var(--accent-blue);background:rgba(74,158,255,0.08)}
+  .topnav .home-link{color:var(--text-secondary);font-weight:700;margin-right:0.5rem}
+
+  .container{max-width:1400px;margin:0 auto;padding:1.5rem}
+  .page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap;margin-bottom:1.2rem}
+  .page-title{font-size:1.3rem;font-weight:700;color:var(--accent-blue)}
+  .page-desc{font-size:0.8rem;color:var(--text-secondary);margin-top:0.2rem}
+  .asof{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text-muted)}
+  .asof input{background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--gold);
+    font-family:'Space Mono',monospace;font-size:0.75rem;padding:0.3rem 0.5rem;outline:none;width:135px}
+  .asof input:focus{border-color:var(--accent-blue)}
+
+  .filters{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center;padding:0.9rem 1.2rem;background:var(--bg-secondary);
+    border:1px solid var(--border);border-radius:10px;margin-bottom:1.2rem}
+  .fgroup{display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap}
+  .flabel{font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-right:0.2rem}
+  .chip{font-family:'Space Mono',monospace;font-size:0.7rem;padding:0.3rem 0.7rem;border-radius:6px;cursor:pointer;
+    border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted);transition:all 0.15s}
+  .chip:hover{border-color:var(--accent-blue);color:var(--text-secondary)}
+  .chip.active{background:var(--accent-blue);border-color:var(--accent-blue);color:var(--bg-primary);font-weight:700}
+
+  .table-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.2rem}
+  table{width:100%;border-collapse:collapse}
+  thead th{font-family:'Space Mono',monospace;font-size:0.55rem;text-transform:uppercase;letter-spacing:0.5px;
+    color:var(--text-muted);padding:0.7rem 0.9rem;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap}
+  thead th:first-child,thead th:nth-child(2),thead th:nth-child(3){text-align:left}
+  tbody tr{border-bottom:1px solid rgba(42,53,80,0.35)}
+  tbody tr:hover{background:var(--bg-card-hover)}
+  tbody td{padding:0.5rem 0.9rem;font-family:'Space Mono',monospace;font-size:0.78rem;color:var(--text-secondary);text-align:right}
+  tbody td:first-child,tbody td:nth-child(2),tbody td:nth-child(3){text-align:left}
+  .tk{font-weight:700}
+  .num{font-weight:600;color:var(--text-primary)}
+  .ytm{font-weight:700;color:var(--text-primary);font-size:0.85rem}
+
+  tr.blk td{background:var(--bg-secondary);border-bottom:1px solid var(--border);
+    font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;
+    color:var(--text-primary);font-weight:700;padding:0.6rem 0.9rem;text-align:left}
+  tr.grp td{font-family:'Space Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:1.5px;
+    font-weight:700;padding:0.7rem 0.9rem 0.35rem;text-align:left;border-bottom:1px solid rgba(42,53,80,0.35)}
+
+  .pf{font-family:'Space Mono',monospace;font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;
+    padding:0.18rem 0.5rem;border-radius:5px;border:1px solid;white-space:nowrap}
+  .pf-c{color:var(--accent-blue);background:rgba(74,158,255,0.10);border-color:rgba(74,158,255,0.30)}
+  .pf-m{color:var(--gold);background:rgba(251,191,36,0.10);border-color:rgba(251,191,36,0.30)}
+  .pf-a{color:var(--red);background:rgba(248,113,113,0.10);border-color:rgba(248,113,113,0.30)}
+  .empty{color:var(--text-muted)}
+
+  .edit-input{background:var(--bg-input);border:1px solid var(--border);border-radius:4px;color:var(--gold);
+    font-family:'Space Mono',monospace;font-size:0.75rem;font-weight:700;padding:0.22rem 0.4rem;text-align:right;outline:none;width:75px}
+  .edit-input:focus{border-color:var(--accent-blue)}
+  .edit-input.txt{text-align:left;color:var(--text-secondary);font-weight:400;width:100%;min-width:170px}
+  .edit-input.tk{color:var(--accent-blue);text-align:left;width:105px}
+  .edit-sel{background:var(--bg-input);border:1px solid var(--border);border-radius:4px;color:var(--text-secondary);
+    font-family:'Space Mono',monospace;font-size:0.7rem;padding:0.22rem 0.3rem;outline:none}
+  .del-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.7rem;opacity:0.4;padding:0.2rem}
+  .del-btn:hover{color:var(--red);opacity:1}
+  .add-row{font-family:'Space Mono',monospace;font-size:0.65rem;padding:0.25rem 0.6rem;border-radius:6px;cursor:pointer;
+    border:1px solid var(--border);background:transparent;color:var(--text-muted);margin:0.5rem 0 0.5rem 0.9rem}
+  .add-row:hover{border-color:var(--accent-blue);color:var(--accent-blue)}
+
+  .actions{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+  .btn{font-family:'DM Sans',sans-serif;font-size:0.8rem;padding:0.45rem 0.9rem;border-radius:8px;cursor:pointer;
+    border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);transition:all 0.2s}
+  .btn:hover{background:var(--bg-card-hover);color:var(--text-primary);border-color:var(--accent-blue)}
+  .btn.on{border-color:var(--accent-blue);color:var(--accent-blue)}
+  .footer{text-align:center;padding:1rem 0 2rem;color:var(--text-muted);font-size:0.65rem;font-family:'Space Mono',monospace;line-height:1.8}
+
+  .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#0a0e17;border-top:1px solid #2a3550;z-index:50;padding:0.4rem 0.5rem 0.6rem;justify-content:space-around;align-items:center}
+  .bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:0.15rem;text-decoration:none;color:#5a6580;font-size:0.55rem;font-family:'Space Mono',monospace;padding:0.3rem 0.4rem;border-radius:8px;min-width:50px}
+  .bottom-nav a:hover,.bottom-nav a.active{color:#4a9eff}
+  .bottom-nav a .bn-icon{font-size:1.2rem;line-height:1}
+  @media(max-width:768px){.bottom-nav{display:flex}body{padding-bottom:70px}.container{padding:0.8rem}
+    .table-card{overflow-x:auto}table{min-width:760px}}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="index.html" class="home-link">← SC</a>
+  <a href="crypto.html">Crypto</a>
+  <a href="curva-pesos.html">Curva Tasa Fija</a>
+  <a href="precios-iol.html">Precios IOL</a>
+  <a href="cartera.html">Mi Cartera</a>
+  <a href="galileo.html">Galileo Fondos</a>
+  <a href="dolares-inversiones.html" class="active">Dólares Inv.</a>
+</div>
+
+<div class="container">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Dólares Inversiones</div>
+      <div class="page-desc">Opciones para dólares en cuenta — dentro y fuera de Argentina</div>
+    </div>
+    <div class="asof">
+      Datos al <input id="asOf" placeholder="dd/mm/aaaa" onchange="saveData()">
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="fgroup">
+      <span class="flabel">Zona</span>
+      <button class="chip active" data-f="all" onclick="setFiltro('all',this)">Todas</button>
+      <button class="chip" data-f="arg" onclick="setFiltro('arg',this)">Argentina</button>
+      <button class="chip" data-f="ext" onclick="setFiltro('ext',this)">Afuera</button>
+    </div>
+    <div class="fgroup">
+      <span class="flabel">Perfil</span>
+      <button class="chip active" data-p="all" onclick="setPerfil('all',this)">Todos</button>
+      <button class="chip" data-p="c" onclick="setPerfil('c',this)">Conservador</button>
+      <button class="chip" data-p="m" onclick="setPerfil('m',this)">Moderado</button>
+      <button class="chip" data-p="a" onclick="setPerfil('a',this)">Agresivo</button>
+    </div>
+    <div class="fgroup">
+      <span class="flabel">Orden</span>
+      <button class="chip active" data-s="none" onclick="setOrden('none',this)">Por bloque</button>
+      <button class="chip" data-s="ytm" onclick="setOrden('ytm',this)">YTM</button>
+      <button class="chip" data-s="dur" onclick="setOrden('dur',this)">Duration</button>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn" id="btnEdit" onclick="toggleEdit()">✎ Editar</button>
+    <button class="btn" onclick="exportJSON()">↓ Exportar JSON</button>
+    <button class="btn" onclick="document.getElementById('importFile').click()">↑ Importar JSON</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
+    <button class="btn" onclick="resetData()" style="margin-left:auto">↺ Restaurar base</button>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:14%">Instrumento</th>
+          <th style="width:38%">Descripción</th>
+          <th style="width:14%">Perfil</th>
+          <th style="width:12%">Duration</th>
+          <th style="width:12%">YTM</th>
+          <th style="width:4%"></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <button class="add-row" id="addBtn" onclick="addRow()" style="display:none">+ Agregar instrumento</button>
+  </div>
+
+  <div class="footer">
+    Duration modificada · YTM anualizada (TIR al vencimiento)<br>
+    El perfil clasifica el riesgo del instrumento, no el del cliente. No constituye recomendación de inversión.<br>
+    SilverCloud &copy; 2026 — Dólares Inversiones — Datos guardados en tu navegador
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <a href="index.html"><span class="bn-icon">🏠</span>Home</a>
+  <a href="precios-iol.html"><span class="bn-icon">🏦</span>Precios</a>
+  <a href="crypto.html"><span class="bn-icon">₿</span>Crypto</a>
+  <a href="cartera.html"><span class="bn-icon">💼</span>Cartera</a>
+  <a href="dolares-inversiones.html" class="active"><span class="bn-icon">💵</span>Dólares</a>
+</div>
+
+<script>
+var COL = {
+  ao:'#4a9eff', gd35:'#fbbf24', gd38:'#34d399', gd41:'#a78bfa',
+  prov:'#a78bfa', corp:'#fb923c', fondo:'#8892a8'
+};
+
+var BASE = {
+  asOf: '',
+  rows: [
+    {zona:'arg', blk:'Inversiones en Argentina', grp:'Soberanos — corto plazo', gcol:COL.ao,
+     tk:'AO28', col:COL.ao, desc:'Bonar 2028, ley local, amortizing', pf:'c', dur:'', ytm:''},
+    {zona:'arg', blk:'Inversiones en Argentina', grp:'Soberanos — corto plazo', gcol:COL.ao,
+     tk:'AL29', col:COL.ao, desc:'Bonar 2029, ley local', pf:'c', dur:'', ytm:''},
+
+    {zona:'arg', blk:'Inversiones en Argentina', grp:'Soberanos — largo plazo', gcol:COL.ao,
+     tk:'GD35', col:COL.gd35, desc:'Global 2035, ley NY, step-up, bullet', pf:'a', dur:'', ytm:''},
+    {zona:'arg', blk:'Inversiones en Argentina', grp:'Soberanos — largo plazo', gcol:COL.ao,
+     tk:'GD38', col:COL.gd38, desc:'Global 2038, ley NY, amortizing', pf:'a', dur:'', ytm:''},
+    {zona:'arg', blk:'Inversiones en Argentina', grp:'Soberanos — largo plazo', gcol:COL.ao,
+     tk:'GD41', col:COL.gd41, desc:'Global 2041, ley NY, indenture 2005', pf:'a', dur:'', ytm:''},
+
+    {zona:'arg', blk:'Inversiones en Argentina', grp:'Subsoberanos — provinciales', gcol:COL.prov,
+     tk:'CABA', col:COL.prov, desc:'Ciudad de Buenos Aires, ley NY', pf:'c', dur:'', ytm:''},
+    {zona:'arg', blk:'Inversiones en Argentina', grp:'Subsoberanos — provinciales', gcol:COL.prov,
+     tk:'ENTRE RÍOS', col:COL.prov, desc:'Provincia de Entre Ríos, ley NY', pf:'a', dur:'', ytm:''},
+    {zona:'arg', blk:'Inversiones en Argentina', grp:'Subsoberanos — provinciales', gcol:COL.prov,
+     tk:'CÓRDOBA', col:COL.prov, desc:'Provincia de Córdoba, ley NY', pf:'m', dur:'', ytm:''},
+
+    {zona:'arg', blk:'Inversiones en Argentina', grp:'Corporativos — obligaciones negociables', gcol:COL.corp,
+     tk:'ON 1', col:COL.corp, desc:'', pf:'', dur:'', ytm:''},
+    {zona:'arg', blk:'Inversiones en Argentina', grp:'Corporativos — obligaciones negociables', gcol:COL.corp,
+     tk:'ON 2', col:COL.corp, desc:'', pf:'', dur:'', ytm:''},
+    {zona:'arg', blk:'Inversiones en Argentina', grp:'Corporativos — obligaciones negociables', gcol:COL.corp,
+     tk:'ON 3', col:COL.corp, desc:'', pf:'', dur:'', ytm:''},
+
+    {zona:'ext', blk:'Fuera de Argentina — fondos en dólares', grp:'', gcol:COL.fondo,
+     tk:'COMPASS', col:COL.fondo, desc:'Renta fija LatAm, grado de inversión', pf:'c', dur:'', ytm:''},
+    {zona:'ext', blk:'Fuera de Argentina — fondos en dólares', grp:'', gcol:COL.fondo,
+     tk:'GALILEO EVENT DRIVEN', col:COL.fondo, desc:'Event driven, retorno absoluto', pf:'m', dur:'', ytm:''},
+    {zona:'ext', blk:'Fuera de Argentina — fondos en dólares', grp:'', gcol:COL.fondo,
+     tk:'FONDO 3', col:COL.fondo, desc:'', pf:'', dur:'', ytm:''}
+  ]
+};
+
+var KEY = 'sc_dolares_inv';
+var data = null, filtro = 'all', perfil = 'all', orden = 'none', editMode = false;
+
+var PF = { c:['Conservador','pf-c'], m:['Moderado','pf-m'], a:['Agresivo','pf-a'] };
+
+function loadData(){
+  try { var raw = localStorage.getItem(KEY); data = raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(BASE)); }
+  catch(e){ data = JSON.parse(JSON.stringify(BASE)); }
+}
+function saveData(){
+  data.asOf = document.getElementById('asOf').value;
+  localStorage.setItem(KEY, JSON.stringify(data));
+}
+function resetData(){
+  if (!confirm('¿Restaurar la tabla base? Se pierden los cambios guardados.')) return;
+  data = JSON.parse(JSON.stringify(BASE));
+  localStorage.setItem(KEY, JSON.stringify(data));
+  document.getElementById('asOf').value = '';
+  render();
+}
+function exportJSON(){
+  saveData();
+  var blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'dolares-inversiones-' + new Date().toISOString().slice(0,10) + '.json'; a.click();
+}
+function importJSON(e){
+  var f = e.target.files[0]; if(!f) return;
+  var r = new FileReader();
+  r.onload = function(ev){
+    try { data = JSON.parse(ev.target.result); localStorage.setItem(KEY, JSON.stringify(data));
+          document.getElementById('asOf').value = data.asOf || ''; render(); }
+    catch(err){ alert('Error: ' + err.message); }
+  };
+  r.readAsText(f); e.target.value = '';
+}
+
+function num(v){ if(v===''||v===null||v===undefined) return null; var s=String(v).replace(',','.'); var n=parseFloat(s); return isNaN(n)?null:n; }
+function ar(v,d){ return v===null ? null : v.toFixed(d).replace('.',','); }
+
+function setFiltro(v,b){ filtro=v; act(b,'[data-f]'); render(); }
+function setPerfil(v,b){ perfil=v; act(b,'[data-p]'); render(); }
+function setOrden(v,b){ orden=v; act(b,'[data-s]'); render(); }
+function act(b,sel){ document.querySelectorAll('.chip'+sel).forEach(function(x){x.classList.remove('active')}); b.classList.add('active'); }
+
+function toggleEdit(){
+  editMode = !editMode;
+  var b = document.getElementById('btnEdit');
+  b.textContent = editMode ? '✓ Listo' : '✎ Editar';
+  b.classList.toggle('on', editMode);
+  document.getElementById('addBtn').style.display = editMode ? 'inline-block' : 'none';
+  render();
+}
+function upd(i, field, val){ data.rows[i][field] = val; saveData(); if(field==='pf') render(); }
+function delRow(i){ if(!confirm('¿Eliminar ' + (data.rows[i].tk||'esta fila') + '?')) return; data.rows.splice(i,1); saveData(); render(); }
+function addRow(){
+  data.rows.push({zona:'arg', blk:'Inversiones en Argentina', grp:'Corporativos — obligaciones negociables',
+                  gcol:COL.corp, tk:'NUEVO', col:COL.corp, desc:'', pf:'', dur:'', ytm:''});
+  saveData(); render();
+}
+
+function dot(c){ return '<span style="display:inline-block;width:7px;height:7px;border-radius:2px;background:'+c+';margin-right:8px;vertical-align:1px"></span>'; }
+
+function rowHTML(r, i){
+  var dur = num(r.dur), ytm = num(r.ytm);
+  var cells;
+  if (editMode){
+    cells =
+      '<td>'+dot(r.col)+'<input class="edit-input tk" value="'+(r.tk||'')+'" onchange="upd('+i+',\'tk\',this.value)"></td>' +
+      '<td><input class="edit-input txt" value="'+(r.desc||'')+'" onchange="upd('+i+',\'desc\',this.value)" placeholder="ley, amortización, cupón…"></td>' +
+      '<td><select class="edit-sel" onchange="upd('+i+',\'pf\',this.value)">' +
+        '<option value=""'+(r.pf===''?' selected':'')+'>—</option>' +
+        '<option value="c"'+(r.pf==='c'?' selected':'')+'>Conservador</option>' +
+        '<option value="m"'+(r.pf==='m'?' selected':'')+'>Moderado</option>' +
+        '<option value="a"'+(r.pf==='a'?' selected':'')+'>Agresivo</option>' +
+      '</select></td>' +
+      '<td><input class="edit-input" value="'+(r.dur||'')+'" onchange="upd('+i+',\'dur\',this.value)" placeholder="0,0"></td>' +
+      '<td><input class="edit-input" value="'+(r.ytm||'')+'" onchange="upd('+i+',\'ytm\',this.value)" placeholder="0,0"></td>' +
+      '<td style="text-align:center"><button class="del-btn" onclick="delRow('+i+')">✕</button></td>';
+  } else {
+    var pf = r.pf ? '<span class="pf '+PF[r.pf][1]+'">'+PF[r.pf][0]+'</span>' : '<span class="empty">—</span>';
+    cells =
+      '<td class="tk" style="color:'+r.col+'">'+dot(r.col)+(r.tk||'')+'</td>' +
+      '<td>'+(r.desc || '<span class="empty">—</span>')+'</td>' +
+      '<td>'+pf+'</td>' +
+      '<td class="num">'+(dur===null?'<span class="empty">—</span>':ar(dur,1))+'</td>' +
+      '<td class="ytm">'+(ytm===null?'<span class="empty">—</span>':ar(ytm,1)+'%')+'</td>' +
+      '<td></td>';
+  }
+  return '<tr>'+cells+'</tr>';
+}
+
+function render(){
+  var idx = data.rows.map(function(r,i){ return {r:r, i:i}; })
+    .filter(function(x){
+      return (filtro==='all' || x.r.zona===filtro) && (perfil==='all' || x.r.pf===perfil);
+    });
+
+  var html = '';
+  if (orden === 'none'){
+    var blk = null, grp = null;
+    idx.forEach(function(x){
+      if (x.r.blk !== blk){ blk = x.r.blk; grp = null;
+        html += '<tr class="blk"><td colspan="6">'+blk+'</td></tr>'; }
+      if (x.r.grp && x.r.grp !== grp){ grp = x.r.grp;
+        html += '<tr class="grp"><td colspan="6" style="color:'+x.r.gcol+'">'+grp+'</td></tr>'; }
+      html += rowHTML(x.r, x.i);
+    });
+  } else {
+    var k = orden === 'ytm' ? 'ytm' : 'dur';
+    idx.sort(function(a,b){
+      var va = num(a.r[k]), vb = num(b.r[k]);
+      if (va === null) return 1;
+      if (vb === null) return -1;
+      return vb - va;
+    });
+    idx.forEach(function(x){ html += rowHTML(x.r, x.i); });
+  }
+  if (!html) html = '<tr><td colspan="6" style="text-align:center;padding:1.5rem;color:var(--text-muted)">Sin instrumentos para este filtro</td></tr>';
+  document.getElementById('tbody').innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  loadData();
+  document.getElementById('asOf').value = data.asOf || '';
+  render();
+});
+</script>
+</body>
+</html>
