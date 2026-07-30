@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4a9eff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SilverCloud">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-512.png">
+<title>Rendimientos · SilverCloud</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root{
+    --bg-primary:#060a12; --bg-sidebar:#0a0e17; --bg-sidebar-hover:#111827;
+    --bg-active:#141d2e; --border:#1a2540; --text-primary:#e8ecf4;
+    --text-secondary:#8892a8; --text-muted:#4a5568; --accent-blue:#4a9eff;
+    --accent-glow:rgba(74,158,255,.08); --gold:#fbbf24; --green:#34d399; --red:#f87171;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg-primary);color:var(--text-primary);
+    padding-bottom:78px;font-size:14px}
+
+  .topbar{background:var(--bg-sidebar);border-bottom:1px solid var(--border);
+    padding:1rem 1.4rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:30}
+  .topbar .back{color:var(--text-muted);text-decoration:none;font-size:1.2rem}
+  .topbar h1{font-size:1.1rem;font-weight:700;letter-spacing:-.4px}
+  .topbar .tag{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--text-muted);
+    text-transform:uppercase;letter-spacing:2px;margin-top:2px}
+  .topbar .sp{flex:1}
+
+  .wrap{max-width:1120px;margin:0 auto;padding:1.2rem 1.1rem}
+
+  .group{margin-bottom:.9rem}
+  .group-title{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--text-muted);
+    text-transform:uppercase;letter-spacing:2px;margin-bottom:.45rem}
+  .tabs{display:flex;gap:.45rem;flex-wrap:wrap}
+  .tab{background:var(--bg-sidebar);border:1px solid var(--border);color:var(--text-secondary);
+    padding:.5rem .9rem;border-radius:8px;cursor:pointer;font-size:.82rem;font-family:inherit;
+    transition:all .15s}
+  .tab:hover{background:var(--bg-sidebar-hover);color:var(--text-primary)}
+  .tab.on{background:var(--bg-active);border-color:var(--accent-blue);color:var(--text-primary);
+    box-shadow:0 0 20px var(--accent-glow)}
+  .tab:focus-visible{outline:2px solid var(--accent-blue);outline-offset:2px}
+  .tab.add{border-style:dashed;color:var(--text-muted)}
+
+  .panel{background:var(--bg-sidebar);border:1px solid var(--border);border-radius:12px;
+    padding:1rem 1.1rem;margin-bottom:1rem}
+  .panel h2{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--text-muted);
+    text-transform:uppercase;letter-spacing:2px;font-weight:400;margin-bottom:.85rem;
+    display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+  .panel h2 .sp{flex:1}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1rem}
+  .kpi{background:var(--bg-sidebar);border:1px solid var(--border);border-radius:12px;padding:.85rem .9rem}
+  .kpi .l{font-family:'Space Mono',monospace;font-size:.55rem;color:var(--text-muted);
+    text-transform:uppercase;letter-spacing:1.5px}
+  .kpi .v{font-size:1.5rem;font-weight:700;letter-spacing:-.5px;margin-top:.3rem}
+  .kpi .n{font-size:.68rem;color:var(--text-muted);margin-top:.15rem}
+
+  table{width:100%;border-collapse:collapse;font-size:.78rem}
+  th{font-family:'Space Mono',monospace;font-size:.55rem;color:var(--text-muted);font-weight:400;
+    text-transform:uppercase;letter-spacing:1px;padding:.4rem .2rem;text-align:center;
+    border-bottom:1px solid var(--border)}
+  th:first-child{text-align:left;padding-left:.4rem}
+  td{padding:.2rem;text-align:center;border-bottom:1px solid rgba(26,37,64,.55)}
+  td:first-child{text-align:left;padding-left:.4rem;color:var(--accent-blue);font-weight:500}
+  tbody tr:last-child td{border-bottom:0}
+  input.c{width:100%;min-width:46px;background:transparent;border:1px solid transparent;
+    color:var(--text-primary);text-align:center;padding:.35rem .1rem;border-radius:6px;
+    font-size:.78rem;font-family:inherit}
+  input.c:hover{border-color:var(--border)}
+  input.c:focus{outline:0;border-color:var(--accent-blue);background:var(--bg-active)}
+  input.c::placeholder{color:#2b3550}
+  .up{color:var(--green)}.dn{color:var(--red)}.zero{color:var(--text-muted)}
+  .calc{font-weight:700;background:rgba(20,29,46,.75)}
+  .infrow td{color:var(--gold);font-size:.72rem;background:rgba(251,191,36,.05)}
+  .infrow td:first-child{color:var(--gold);font-weight:400;font-style:italic}
+
+  .chart{width:100%;height:250px;display:block}
+  .grid{stroke:#16203a;stroke-width:1}
+  .axis{fill:#4a5568;font-family:'Space Mono',monospace;font-size:9px}
+  .leg{display:flex;gap:1.1rem;font-size:.72rem;color:var(--text-muted);margin-top:.6rem;flex-wrap:wrap}
+  .leg i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:.4rem;border-radius:2px}
+
+  button,select{background:var(--bg-active);border:1px solid var(--border);color:var(--text-primary);
+    padding:.45rem .8rem;border-radius:8px;cursor:pointer;font-size:.76rem;font-family:inherit}
+  button:hover,select:hover{border-color:var(--accent-blue)}
+  button:focus-visible,select:focus-visible{outline:2px solid var(--accent-blue);outline-offset:2px}
+  .hint{font-size:.72rem;color:var(--text-muted);line-height:1.65;margin-top:.7rem}
+  .row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-sidebar);
+    border-top:1px solid var(--border);z-index:50;padding:.4rem .5rem .6rem;
+    display:flex;justify-content:space-around;align-items:center}
+  .bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:.15rem;
+    text-decoration:none;color:var(--text-muted);font-size:.55rem;font-family:'Space Mono',monospace;
+    padding:.3rem .4rem;border-radius:8px;min-width:50px}
+  .bottom-nav a:hover,.bottom-nav a.active{color:var(--accent-blue)}
+  .bottom-nav a .bn-icon{font-size:1.2rem;line-height:1}
+
+  .printhead,.printfoot{display:none}
+
+  @media(max-width:768px){
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    table{font-size:.7rem}
+    input.c{min-width:32px;font-size:.68rem}
+    .wrap{padding:.9rem .7rem}
+  }
+
+  /* ── Versión impresa: institucional en blanco ── */
+  @media print{
+    @page{size:A4 landscape;margin:11mm 12mm}
+    body{background:#fff;color:#22262E;padding:0;font-size:10px;font-family:"Segoe UI",Helvetica,sans-serif}
+    .topbar,.bottom-nav,.group,.hint,button,select{display:none !important}
+    .wrap{max-width:none;padding:0}
+
+    .printhead{display:block;margin-bottom:14px}
+    .ph-row{display:flex;justify-content:space-between;align-items:flex-end;
+      border-bottom:2px solid #1A2942;padding-bottom:8px}
+    .ph-brand{font-family:Georgia,serif;font-size:15px;color:#1A2942;letter-spacing:.16em}
+    .ph-brand span{display:block;font-size:8px;letter-spacing:.2em;color:#6B7280;margin-top:3px}
+    .ph-date{font-size:9px;color:#6B7280;text-align:right;letter-spacing:.06em}
+    .ph-nombre{font-family:Georgia,serif;font-size:21px;color:#1A2942;margin-top:11px;font-weight:400}
+
+    .panel{background:#fff;border:0;border-top:1px solid #D8D3C8;border-radius:0;
+      padding:11px 0 0;margin-bottom:13px;page-break-inside:avoid}
+    .panel h2{color:#1A2942;font-size:9.5px;letter-spacing:.17em;margin-bottom:9px}
+
+    .kpis{gap:0;border:1px solid #D8D3C8;margin-bottom:15px}
+    .kpi{background:#fff;border:0;border-right:1px solid #D8D3C8;border-radius:0;text-align:center}
+    .kpi:last-child{border-right:0}
+    .kpi .l{color:#6B7280;font-size:8px}
+    .kpi .v{font-family:Georgia,serif;font-size:19px;color:#22262E;font-weight:400}
+    .kpi .n{color:#8A9099;font-size:8px}
+
+    th{color:#6B7280;border-bottom:1px solid #D8D3C8;font-size:7.5px;font-family:inherit}
+    td{border-bottom:1px solid #EFECE6;padding:3px 2px;font-size:9px}
+    td:first-child{color:#1A2942}
+    input.c{border:0 !important;background:transparent !important;color:#22262E;
+      font-size:9px;padding:0;min-width:0}
+    .calc{background:#F4F2ED;font-weight:700}
+    .infrow td{background:#FBF7EC;color:#8A6E2A;font-size:8.5px}
+    .infrow td:first-child{color:#8A6E2A}
+    .up{color:#2F6E4A !important}.dn{color:#A63A3A !important}.zero{color:#9AA0AA !important}
+    .grid{stroke:#E6E2DA}.axis{fill:#9AA0AA;font-family:inherit}
+    .ln-serie{stroke:#1A2942 !important}.ln-inf{stroke:#C9A961 !important}
+    .chart{height:200px}
+    .leg{color:#6B7280}
+
+    .printfoot{display:block;margin-top:16px;padding-top:8px;border-top:1px solid #D8D3C8;
+      font-size:6.8px;line-height:1.55;color:#7A8089;text-align:justify}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="back">←</a>
+  <div>
+    <h1>Rendimientos Mensuales</h1>
+    <div class="tag">Fondos y Carteras Modelo</div>
+  </div>
+  <span class="sp"></span>
+  <button onclick="window.print()">Imprimir / PDF</button>
+  <button onclick="exportar()">CSV</button>
+</div>
+
+<div class="wrap">
+
+  <div class="printhead">
+    <div class="ph-row">
+      <div class="ph-brand">SILVER CLOUD<span>ASSET MANAGEMENT · CNV ALYC 474</span></div>
+      <div class="ph-date">RENDIMIENTOS MENSUALES<br><b id="phFecha"></b></div>
+    </div>
+    <div class="ph-nombre" id="phNombre"></div>
+  </div>
+
+  <div class="group">
+    <div class="group-title">Fondos</div>
+    <div class="tabs" id="tabsFondo"></div>
+  </div>
+  <div class="group">
+    <div class="group-title">Carteras Modelo</div>
+    <div class="tabs" id="tabsCartera"></div>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="panel">
+    <h2>Grilla mensual (%)<span class="sp"></span>
+      <select id="selComp" onchange="setComp(this.value)">
+        <option value="ipc">Comparar vs inflación</option>
+        <option value="none">Sin comparador</option>
+      </select>
+      <button onclick="toggleInf()" id="btnInf">Ocultar fila IPC</button>
+    </h2>
+    <div style="overflow-x:auto"><table id="grid"></table></div>
+    <p class="hint">
+      Escribí el rendimiento del mes y se guarda solo. La columna <b>Año</b> compone los meses
+      cargados y no se edita. Para carteras en dólares elegí «sin comparador», porque medirlas
+      contra el IPC argentino no dice nada.
+    </p>
+  </div>
+
+  <div class="panel">
+    <h2>Evolución base 100</h2>
+    <div id="chartWrap"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Resumen anual</h2>
+    <div style="overflow-x:auto"><table id="anual"></table></div>
+    <p class="hint" id="notaAnual"></p>
+  </div>
+
+  <div class="panel">
+    <h2>Inflación INDEC<span class="sp"></span>
+      <button onclick="addAnioInf()">+ Año</button>
+    </h2>
+    <div style="overflow-x:auto"><table id="ginf"></table></div>
+    <p class="hint">
+      IPC nacional cargado hasta junio 2026. Cuando sale el dato nuevo lo escribís acá y se
+      recalculan el gráfico y el retorno real de todos los ítems.
+    </p>
+  </div>
+
+  <div class="panel">
+    <h2>Administrar</h2>
+    <div class="row">
+      <button onclick="addItem('fondo')">+ Fondo</button>
+      <button onclick="addItem('cartera')">+ Cartera modelo</button>
+      <button onclick="renombrar()">Renombrar actual</button>
+      <button onclick="borrar()">Eliminar actual</button>
+      <button onclick="reset()">Restaurar de fábrica</button>
+    </div>
+  </div>
+
+  <div class="printfoot">
+    Documento informativo. No constituye oferta pública ni recomendación de inversión.
+    Los rendimientos pasados no garantizan resultados futuros. Inflación: IPC nacional, INDEC.
+    Silver Cloud Asset Management · Agente Asesor Global de Inversiones, CNV matrícula 474.
+  </div>
+
+</div>
+
+<div class="bottom-nav">
+  <a href="index.html"><span class="bn-icon">🏠</span>Home</a>
+  <a href="precios-iol.html"><span class="bn-icon">🏦</span>Precios</a>
+  <a href="cartera.html"><span class="bn-icon">💼</span>Cartera</a>
+  <a href="carteras-modelo.html"><span class="bn-icon">🎯</span>Modelo</a>
+  <a href="rendimientos.html" class="active"><span class="bn-icon">📅</span>Rend.</a>
+</div>
+
+<script>
+/* ═════════ Datos de fábrica ═════════ */
+const KEY = 'sc_rendimientos_v2';
+const MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const DESDE = 2023;
+
+const INF_DEF = {
+  2023:[6.0,6.6,7.7,8.4,7.8,6.0,6.3,12.4,12.7,8.3,12.8,25.5],
+  2024:[20.6,13.2,11.0,8.8,4.2,4.6,4.0,4.2,3.5,2.7,2.4,2.7],
+  2025:[2.2,2.4,3.7,2.8,1.5,1.6,1.9,1.9,2.1,2.3,2.5,2.8],
+  2026:[2.9,2.9,3.4,2.6,2.1,1.9,null,null,null,null,null,null]
+};
+
+// Galileo Multimercado IV (GAMMER4) — fuente Bloomberg
+const GAMM4 = {
+  2023:[21.42,-2.53,2.93,15.09,13.68,19.5,6.85,32.78,-6.35,9.76,25.51,17.41],
+  2024:[21.0,-12.54,13.73,6.19,17.73,1.56,-3.6,7.2,0.44,4.83,14.11,4.6],
+  2025:[3.06,-5.34,4.27,-7.23,7.42,-4.17,10.89,-5.14,-2.33,31.69,2.64,0.52],
+  2026:[2.5,-9.58,8.0,0.68,6.37,-0.92,null,null,null,null,null,null]
+};
+
+const vacio = () => ({2023:Array(12).fill(null),2024:Array(12).fill(null),
+                      2025:Array(12).fill(null),2026:Array(12).fill(null)});
+
+const DEF = {
+  activo:'multi', verInf:true,
+  inflacion:JSON.parse(JSON.stringify(INF_DEF)),
+  items:[
+    {id:'multi', grupo:'fondo', comp:'ipc', nombre:'Galileo Multimercado IV',
+     data:JSON.parse(JSON.stringify(GAMM4))},
+    {id:'renta', grupo:'fondo', comp:'ipc', nombre:'Galileo Renta', data:vacio()}
+  ]
+};
+
+/* ═════════ Estado ═════════ */
+let S;
+try{
+  S = JSON.parse(localStorage.getItem(KEY)) || JSON.parse(JSON.stringify(DEF));
+  if(!S.items || !S.items.length) S = JSON.parse(JSON.stringify(DEF));
+  if(!S.inflacion) S.inflacion = JSON.parse(JSON.stringify(INF_DEF));
+}catch(e){ S = JSON.parse(JSON.stringify(DEF)); }
+
+const guardar = () => { try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} };
+const item = () => S.items.find(i => i.id === S.activo) || S.items[0];
+const usaIPC = () => item().comp !== 'none';
+
+/* ═════════ Utilidades ═════════ */
+const nf  = (n,d=2) => n.toLocaleString('es-AR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct = v => (v>0?'+':'') + nf(v,2) + '%';
+const cls = v => (v===null||v===undefined) ? 'zero' : (v>0?'up':v<0?'dn':'zero');
+const compone = arr => {
+  const v = (arr||[]).filter(x => x!==null && x!==undefined && x!=='');
+  return v.length ? (v.reduce((a,x) => a*(1+x/100),1) - 1) * 100 : null;
+};
+const anios = obj => Object.keys(obj).map(Number).filter(y => y>=DESDE).sort((a,b)=>a-b);
+function serie(data){
+  const out=[];
+  anios(data).forEach(y => (data[y]||[]).forEach((v,i) =>
+    out.push({f:y+'-'+String(i+1).padStart(2,'0'), v:(v===''?null:v)})));
+  return out;
+}
+function base100(pts, hasta){
+  let acc=100;
+  return pts.slice(0,hasta+1).map(p => {
+    if(p.v!==null && p.v!==undefined) acc *= (1+p.v/100);
+    return {f:p.f, v:acc};
+  });
+}
+const ultimoIdx = pts => pts.reduce((m,p,i) => (p.v!==null&&p.v!==undefined)?i:m, -1);
+
+/* ═════════ Render ═════════ */
+function render(){
+  tabs(); grilla(); ginf(); kpis(); chart(); anual();
+  document.getElementById('selComp').value = item().comp || 'ipc';
+  document.getElementById('btnInf').textContent = S.verInf ? 'Ocultar fila IPC' : 'Ver fila IPC';
+  document.getElementById('phNombre').textContent = item().nombre;
+  document.getElementById('phFecha').textContent =
+    new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'});
+}
+function tabs(){
+  const pinta = (g,el,label) => {
+    const list = S.items.filter(i => i.grupo===g);
+    document.getElementById(el).innerHTML =
+      list.map(i => '<button class="tab '+(i.id===S.activo?'on':'')+'" onclick="sel(\''+i.id+'\')">'+i.nombre+'</button>').join('') +
+      '<button class="tab add" onclick="addItem(\''+g+'\')">+ '+label+'</button>';
+  };
+  pinta('fondo','tabsFondo','Fondo');
+  pinta('cartera','tabsCartera','Cartera');
+}
+function sel(id){ S.activo=id; guardar(); render(); }
+function setComp(v){ item().comp=v; guardar(); render(); }
+
+const listaAnios = () =>
+  [...new Set([...anios(item().data), ...anios(S.inflacion)])].sort((a,b)=>b-a);
+
+function grilla(){
+  const it = item();
+  let html = '<thead><tr><th>Año</th>' + MESES.map(m=>'<th>'+m+'</th>').join('') +
+             '<th class="calc">Año</th></tr></thead><tbody>';
+  listaAnios().forEach(y => {
+    if(!it.data[y]) it.data[y] = Array(12).fill(null);
+    const fila = it.data[y], a = compone(fila);
+    html += '<tr><td>'+y+'</td>' + fila.map((v,i) =>
+      '<td><input class="c '+cls(v)+'" inputmode="decimal" placeholder="·" value="'+
+      (v===null||v===undefined?'':nf(v,2))+'" onchange="setV('+y+','+i+',this.value)"></td>').join('') +
+      '<td class="calc '+cls(a)+'">'+(a===null?'·':nf(a,2)+'%')+'</td></tr>';
+    if(S.verInf && usaIPC()){
+      const inf = S.inflacion[y] || Array(12).fill(null), ia = compone(inf);
+      html += '<tr class="infrow"><td>inflación</td>' +
+        inf.map(v => '<td>'+(v===null||v===undefined?'·':nf(v,2))+'</td>').join('') +
+        '<td>'+(ia===null?'·':nf(ia,2)+'%')+'</td></tr>';
+    }
+  });
+  document.getElementById('grid').innerHTML = html + '</tbody>';
+}
+function setV(y,m,txt){
+  const v = txt.trim().replace('%','').replace(',','.');
+  item().data[y][m] = v==='' ? null : (isNaN(parseFloat(v)) ? null : parseFloat(v));
+  guardar(); render();
+}
+function toggleInf(){ S.verInf=!S.verInf; guardar(); render(); }
+
+function ginf(){
+  let html = '<thead><tr><th>Año</th>' + MESES.map(m=>'<th>'+m+'</th>').join('') +
+             '<th class="calc">Año</th></tr></thead><tbody>';
+  anios(S.inflacion).sort((a,b)=>b-a).forEach(y => {
+    const a = compone(S.inflacion[y]);
+    html += '<tr><td>'+y+'</td>' + S.inflacion[y].map((v,i) =>
+      '<td><input class="c" inputmode="decimal" placeholder="·" value="'+
+      (v===null||v===undefined?'':nf(v,2))+'" onchange="setInf('+y+','+i+',this.value)"></td>').join('') +
+      '<td class="calc">'+(a===null?'·':nf(a,2)+'%')+'</td></tr>';
+  });
+  document.getElementById('ginf').innerHTML = html + '</tbody>';
+}
+function setInf(y,m,txt){
+  const v = txt.trim().replace('%','').replace(',','.');
+  S.inflacion[y][m] = v==='' ? null : (isNaN(parseFloat(v)) ? null : parseFloat(v));
+  guardar(); render();
+}
+function addAnioInf(){
+  const y = Math.max.apply(null, anios(S.inflacion)) + 1;
+  S.inflacion[y] = Array(12).fill(null);
+  S.items.forEach(i => i.data[y] = Array(12).fill(null));
+  guardar(); render();
+}
+
+function kpis(){
+  const ps = serie(item().data), pi = serie(S.inflacion);
+  const iS = ultimoIdx(ps), iI = ultimoIdx(pi);
+  const accS = iS<0 ? null : base100(ps,iS).slice(-1)[0].v - 100;
+  const accI = iI<0 ? null : base100(pi,iI).slice(-1)[0].v - 100;
+  const iC = Math.min(iS,iI);
+  const real = (usaIPC() && iC>=0)
+    ? (base100(ps,iC).slice(-1)[0].v / base100(pi,iC).slice(-1)[0].v - 1)*100 : null;
+  const nota = !usaIPC() ? 'sin comparador'
+    : iC<0 ? 'sin datos'
+    : (iC<iS ? 'hasta '+MESES[+ps[iC].f.slice(5)-1].toLowerCase()+' '+ps[iC].f.slice(2,4)+' · falta IPC'
+             : 'vs IPC, mismo tramo');
+  const ult = iS<0 ? null : ps[iS];
+  const card = (l,v,n,c) => '<div class="kpi"><div class="l">'+l+'</div><div class="v '+
+    (c||'')+'">'+v+'</div><div class="n">'+n+'</div></div>';
+  document.getElementById('kpis').innerHTML =
+    card('Último mes', ult?pct(ult.v):'—',
+         ult?MESES[+ult.f.slice(5)-1]+' '+ult.f.slice(0,4):'sin datos', cls(ult&&ult.v)) +
+    card('Acumulado', accS===null?'—':pct(accS), 'desde ene '+DESDE, cls(accS)) +
+    card('Inflación', !usaIPC()?'—':(accI===null?'—':pct(accI)),
+         usaIPC()?'desde ene '+DESDE:'no aplica','') +
+    card('Retorno real', real===null?'—':pct(real), nota, cls(real));
+}
+
+function chart(){
+  const it = item();
+  const ps = serie(it.data), pi = serie(S.inflacion);
+  const iS = ultimoIdx(ps);
+  const hasta = usaIPC() ? Math.max(iS, ultimoIdx(pi)) : iS;
+  if(hasta < 1){
+    document.getElementById('chartWrap').innerHTML =
+      '<p class="hint">Cargá al menos dos meses para ver el gráfico.</p>';
+    return;
+  }
+  const A = base100(ps,hasta), B = base100(pi,hasta);
+  const hayS = iS >= 0;
+  const W=980,H=250,PL=54,PR=12,PT=12,PB=26;
+  const vis = usaIPC() ? (hayS?A.concat(B):B) : A;
+  const hi = Math.max.apply(null, vis.map(p=>p.v));
+  const lo = Math.min.apply(null, [100].concat(vis.map(p=>p.v)));
+  const y0 = lo*0.94, y1 = hi*1.06;
+  const X = i => PL + i*(W-PL-PR)/Math.max(1,A.length-1);
+  const Y = v => PT + (1-(v-y0)/(y1-y0))*(H-PT-PB);
+  const path = s => s.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.v).toFixed(1)).join(' ');
+  let g='';
+  for(let i=0;i<=4;i++){
+    const v = y0+(y1-y0)*i/4, yy = Y(v);
+    g += '<line class="grid" x1="'+PL+'" y1="'+yy+'" x2="'+(W-PR)+'" y2="'+yy+'"/>' +
+         '<text class="axis" x="'+(PL-7)+'" y="'+(yy+3)+'" text-anchor="end">'+
+         Math.round(v).toLocaleString('es-AR')+'</text>';
+  }
+  const paso = Math.max(1, Math.ceil(A.length/8));
+  A.forEach((p,i) => {
+    if(i%paso && i!==A.length-1) return;
+    g += '<text class="axis" x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle">'+p.f.slice(2)+'</text>';
+  });
+  document.getElementById('chartWrap').innerHTML =
+    '<svg class="chart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">' + g +
+    (usaIPC() ? '<path class="ln-inf" d="'+path(B)+'" fill="none" stroke="#fbbf24" stroke-width="2"/>' : '') +
+    (hayS ? '<path class="ln-serie" d="'+path(A)+'" fill="none" stroke="#4a9eff" stroke-width="2.4"/>' : '') +
+    '</svg><div class="leg">' +
+    '<span><i style="background:#4a9eff"></i>'+it.nombre+
+      (hayS?' · '+nf(A.slice(-1)[0].v,2):' · sin datos')+'</span>' +
+    (usaIPC() ? '<span><i style="background:#fbbf24"></i>Inflación INDEC · '+nf(B.slice(-1)[0].v,2)+'</span>' : '') +
+    '<span style="margin-left:auto">Base 100 = ene '+DESDE+'</span></div>';
+}
+
+function anual(){
+  const it = item(), ipc = usaIPC();
+  let html = '<thead><tr><th>Año</th><th>Rendimiento</th>' +
+             (ipc?'<th>Inflación</th><th>Retorno real</th>':'') +
+             '<th>Meses cargados</th></tr></thead><tbody>';
+  let hayParcial = false;
+  listaAnios().forEach(y => {
+    const ff = it.data[y] || [], ii = S.inflacion[y] || [];
+    const a = compone(ff), inf = compone(ii);
+    const com = ff.map((v,i) => (v!==null&&v!==undefined&&ii[i]!==null&&ii[i]!==undefined)?i:-1)
+                  .filter(i=>i>=0);
+    const cf = compone(com.map(i=>ff[i])), ci = compone(com.map(i=>ii[i]));
+    const real = (cf!==null&&ci!==null) ? ((1+cf/100)/(1+ci/100)-1)*100 : null;
+    const n = ff.filter(v => v!==null&&v!==undefined).length;
+    const parcial = com.length && com.length < n;
+    if(parcial) hayParcial = true;
+    html += '<tr><td>'+y+'</td><td class="'+cls(a)+'">'+(a===null?'·':pct(a))+'</td>' +
+      (ipc ? '<td>'+(inf===null?'·':pct(inf))+'</td><td class="'+cls(real)+
+             '" style="font-weight:700">'+(real===null?'·':pct(real))+(parcial?' *':'')+'</td>' : '') +
+      '<td class="zero">'+n+'/12</td></tr>';
+  });
+  document.getElementById('anual').innerHTML = html + '</tbody>';
+  document.getElementById('notaAnual').textContent = (ipc && hayParcial)
+    ? '* el retorno real de ese año se calcula solo sobre los meses que ya tienen dato de inflación.'
+    : '';
+}
+
+/* ═════════ Administrar ═════════ */
+function addItem(grupo){
+  const n = prompt(grupo==='fondo' ? 'Nombre del fondo:' : 'Nombre de la cartera modelo:');
+  if(!n) return;
+  const id = 'i'+Date.now();
+  S.items.push({id:id, grupo:grupo, comp:'ipc', nombre:n.trim(), data:vacio()});
+  S.activo = id; guardar(); render();
+}
+function renombrar(){
+  const it = item(), n = prompt('Nuevo nombre:', it.nombre);
+  if(!n) return;
+  it.nombre = n.trim(); guardar(); render();
+}
+function borrar(){
+  if(S.items.length===1) return alert('Tiene que quedar al menos un ítem.');
+  if(!confirm('¿Eliminar "'+item().nombre+'" y sus datos?')) return;
+  S.items = S.items.filter(i => i.id !== S.activo);
+  S.activo = S.items[0].id; guardar(); render();
+}
+function reset(){
+  if(!confirm('Esto borra todo lo cargado a mano. ¿Seguir?')) return;
+  S = JSON.parse(JSON.stringify(DEF)); guardar(); render();
+}
+function exportar(){
+  const it = item();
+  let csv = it.nombre + '\nAño,' + MESES.join(',') + ',Anual\n';
+  listaAnios().slice().reverse().forEach(y => {
+    csv += y + ',' + (it.data[y]||Array(12).fill(null))
+      .map(v => v===null||v===undefined?'':String(v).replace('.',',')).join(',') +
+      ',' + (compone(it.data[y]) === null ? '' : compone(it.data[y])) + '\n';
+  });
+  csv += '\nInflación INDEC\n';
+  anios(S.inflacion).forEach(y => {
+    csv += y + ',' + S.inflacion[y]
+      .map(v => v===null||v===undefined?'':String(v).replace('.',',')).join(',') +
+      ',' + (compone(S.inflacion[y]) === null ? '' : compone(S.inflacion[y])) + '\n';
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download = it.nombre.replace(/\s+/g,'_') + '_rendimientos.csv';
+  a.click();
+}
+
+render();
+</script>
+</body>
+</html>

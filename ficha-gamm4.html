@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ficha — Galileo Multimercado IV</title>
+<style>
+:root{
+  --navy:#1A2942;
+  --navy-soft:#2C4062;
+  --gold:#C9A961;
+  --paper:#FDFCFA;
+  --rule:#D8D3C8;
+  --ink:#22262E;
+  --muted:#6B7280;
+  --pos:#2F6E4A;
+  --neg:#A63A3A;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:#8E9099;
+  font-family:"Segoe UI",Helvetica,Arial,sans-serif;
+  color:var(--ink);
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+h1,h2,h3,.serif{font-family:Georgia,"Times New Roman",serif}
+
+/* ---------- Toolbar ---------- */
+.bar{
+  position:sticky;top:0;z-index:20;
+  background:var(--navy);color:#fff;
+  padding:10px 18px;display:flex;gap:12px;align-items:center;
+  font-size:13px;
+}
+.bar b{font-family:Georgia,serif;letter-spacing:.04em;font-weight:normal}
+.bar .sp{flex:1}
+.bar button{
+  background:var(--gold);border:0;color:#1A2942;
+  padding:7px 16px;border-radius:2px;font-size:12.5px;
+  letter-spacing:.06em;text-transform:uppercase;cursor:pointer;
+}
+.bar button:hover{background:#D9BC77}
+.bar button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.bar small{color:#B9C2D2}
+
+/* ---------- Page ---------- */
+.page{
+  width:210mm;min-height:297mm;
+  margin:22px auto;background:var(--paper);
+  box-shadow:0 14px 44px rgba(0,0,0,.3);
+  padding:16mm 15mm 13mm;
+  position:relative;display:flex;flex-direction:column;
+}
+.head{display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:2px solid var(--navy);padding-bottom:9px}
+.head .brand{font-family:Georgia,serif;font-size:15px;color:var(--navy);letter-spacing:.16em}
+.head .brand span{display:block;font-size:8.5px;letter-spacing:.2em;color:var(--muted);margin-top:3px}
+.head .asof{font-size:9.5px;color:var(--muted);text-align:right;letter-spacing:.06em}
+
+.title{margin:14px 0 2px;font-size:25px;color:var(--navy);line-height:1.12}
+.subtitle{font-size:11px;color:var(--muted);letter-spacing:.05em;margin-bottom:14px}
+.subtitle b{color:var(--navy);font-weight:600}
+
+h2{
+  font-size:11px;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--navy);margin:0 0 8px;padding-bottom:5px;
+  border-bottom:1px solid var(--rule);font-weight:normal;
+}
+.sect{margin-bottom:15px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.cols-3{display:grid;grid-template-columns:1.35fr 1fr;gap:15px}
+
+/* ---------- Ficha datos ---------- */
+.dl{font-size:10px;border-top:1px solid #EDEAE3}
+.dl div{display:flex;justify-content:space-between;gap:10px;
+  padding:4.5px 2px;border-bottom:1px solid #EDEAE3}
+.dl dt{color:var(--muted)}
+.dl dd{margin:0;font-weight:600;text-align:right}
+.obj{font-size:10px;line-height:1.62;color:#3B414C;text-align:justify}
+
+/* ---------- Performance ---------- */
+.perf{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.pcard{border:1px solid var(--rule);padding:9px 8px;text-align:center;background:#fff}
+.pcard .lbl{font-size:8.5px;letter-spacing:.13em;color:var(--muted);text-transform:uppercase}
+.pcard .val{font-family:Georgia,serif;font-size:19px;margin-top:4px;letter-spacing:-.01em}
+.up{color:var(--pos)}.dn{color:var(--neg)}.na{color:#9AA0AA}
+
+table{width:100%;border-collapse:collapse;font-size:9.5px}
+th{font-weight:600;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.1em;font-size:8px;text-align:right;padding:5px 4px;
+  border-bottom:1px solid var(--rule)}
+th:first-child{text-align:left}
+td{padding:4.5px 4px;text-align:right;border-bottom:1px solid #F0EDE7}
+td:first-child{text-align:left}
+tbody tr:last-child td{border-bottom:0}
+.mgrid td,.mgrid th{padding:4px 1px;font-size:7.6px}
+.mgrid .yr{font-weight:700;color:var(--navy);text-align:left}
+.mgrid .tot{font-weight:700;border-left:1px solid var(--rule)}
+.empty{font-size:9.5px;color:var(--muted);font-style:italic;padding:14px 0;text-align:center}
+
+/* ---------- Chart ---------- */
+.chart{width:100%;height:150px;display:block}
+.chart .grid{stroke:#EAE6DE;stroke-width:1}
+.chart .axis{fill:#9AA0AA;font-size:7.5px}
+.leg{display:flex;gap:14px;font-size:8.5px;color:var(--muted);margin-top:5px}
+.leg i{display:inline-block;width:16px;height:2.5px;vertical-align:middle;margin-right:5px}
+
+/* ---------- Composición ---------- */
+.donutrow{display:grid;grid-template-columns:170px 1fr;gap:18px;align-items:center}
+.donut{width:170px;height:170px;display:block}
+.donut .ctr-v{font-family:Georgia,serif;font-size:15px;fill:var(--navy)}
+.donut .ctr-l{font-size:6px;fill:var(--muted);letter-spacing:.16em}
+.donut path{stroke:var(--paper);stroke-width:1.5}
+.wbar{height:4px;background:#EDEAE3;position:relative;margin-top:3px}
+.wbar i{display:block;height:100%;background:var(--navy-soft)}
+.dot{display:inline-block;width:7px;height:7px;margin-right:6px;border-radius:1px}
+.tick{font-family:"SF Mono",Consolas,monospace;font-weight:600;font-size:9px}
+
+/* ---------- Footer ---------- */
+.foot{margin-top:auto;padding-top:9px;border-top:1px solid var(--rule)}
+.disc{font-size:7.2px;line-height:1.55;color:#7A8089;text-align:justify}
+.fline{display:flex;justify-content:space-between;font-size:8px;
+  color:var(--navy);letter-spacing:.06em;margin-top:7px}
+
+@media print{
+  body{background:#fff}
+  .bar{display:none}
+  .page{margin:0;box-shadow:none;width:auto;min-height:0;page-break-after:always}
+  .page:last-child{page-break-after:auto}
+}
+@page{size:A4;margin:0}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <b>FICHA · GALILEO MULTIMERCADO IV</b>
+  <small id="warn"></small>
+  <span class="sp"></span>
+  <button onclick="window.print()">Guardar PDF</button>
+</div>
+
+<!-- ══════════════════════ PÁGINA 1 ══════════════════════ -->
+<div class="page">
+  <div class="head">
+    <div class="brand">SILVER CLOUD<span>ASSET MANAGEMENT · CNV ALYC 474</span></div>
+    <div class="asof">FICHA DEL FONDO<br><b id="asof1"></b></div>
+  </div>
+
+  <h1 class="title" id="fname"></h1>
+  <div class="subtitle" id="fsub"></div>
+
+  <div class="cols-3 sect">
+    <div>
+      <h2>Objetivo y estrategia</h2>
+      <p class="obj" id="obj"></p>
+      <h2 style="margin-top:13px">Métricas de riesgo (1 año)</h2>
+      <table id="met"></table>
+    </div>
+    <div>
+      <h2>Datos del fondo</h2>
+      <dl class="dl" id="datos"></dl>
+    </div>
+  </div>
+
+  <div class="sect">
+    <h2>Rendimiento</h2>
+    <div class="perf" id="perf"></div>
+  </div>
+
+  <div class="sect">
+    <h2>Rendimientos mensuales (%)</h2>
+    <table class="mgrid" id="mgrid"></table>
+  </div>
+
+  <div class="sect">
+    <h2>Evolución base 100</h2>
+    <div id="chartWrap"></div>
+  </div>
+
+  <div class="foot">
+    <div class="fline"><span>Silver Cloud Asset Management</span><span>Página 1 de 2</span></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ PÁGINA 2 ══════════════════════ -->
+<div class="page">
+  <div class="head">
+    <div class="brand">SILVER CLOUD<span>ASSET MANAGEMENT · CNV ALYC 474</span></div>
+    <div class="asof">COMPOSICIÓN DE CARTERA<br><b id="asof2"></b></div>
+  </div>
+
+  <h1 class="title" style="font-size:20px;margin-top:13px">Composición de la cartera</h1>
+  <div class="subtitle" id="csub"></div>
+
+  <div class="sect">
+    <h2>Distribución por tipo de activo</h2>
+    <div class="donutrow">
+      <div id="donut"></div>
+      <table id="cats"></table>
+    </div>
+  </div>
+
+  <div class="cols sect">
+    <div>
+      <h2>Principales posiciones</h2>
+      <table id="top"></table>
+    </div>
+    <div>
+      <h2>Renta variable por sector</h2>
+      <table id="sect"></table>
+    </div>
+  </div>
+
+
+  <div class="foot">
+    <p class="disc">
+      Documento de carácter informativo. No constituye oferta pública ni recomendación de inversión.
+      Las inversiones en fondos comunes de inversión no constituyen depósitos en entidades financieras
+      ni cuentan con garantía alguna. Los rendimientos pasados no garantizan resultados futuros.
+      La información de cartera corresponde a la fecha indicada y puede haber variado. Silver Cloud
+      Asset Management actúa como Agente Asesor Global de Inversiones registrado ante la CNV bajo
+      matrícula 474. Fuente de datos: Galileo Argentina SGFCI, CAFCI y elaboración propia.
+    </p>
+    <div class="fline"><span>Silver Cloud Asset Management</span><span>Página 2 de 2</span></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   BLOQUE DE DATOS — editá solo esto
+   ═══════════════════════════════════════════════════════════ */
+
+const FONDO = {
+  nombre:  'Galileo Multimercado IV',
+  clase:   'Clase A',
+  ticker:  'GAMMER4',
+  tipo:    'Renta mixta · Pesos',
+  fecha:   '',                       // vacío = fecha de hoy
+  fechaCartera: '',                  // fecha de la posición; vacío = fecha de hoy
+  datos: {
+    'Sociedad gerente'  : 'Galileo Argentina SGFCI',
+    'Sociedad depositaria': 'Banco Comafi',
+    'Moneda'            : 'Pesos (ARS)',
+    'Clasificación'     : 'Renta mixta',
+    'Inicio de la clase': '17/11/2022',
+    'Inversión mínima'  : 'ARS 1.000',
+    'Honorario de administración': '5,00%',
+    'Gastos totales'    : '5,40%',
+    'Suscripción'       : '2,00%',
+    'Rescate'           : '5,00%',
+    'Plazo de rescate'  : 'T+2',
+    'Ticker Bloomberg'  : 'GAMMER4'
+  },
+  objetivo: 'El fondo persigue la apreciación del capital en el largo plazo a través de una cartera '+
+            'diversificada de renta mixta, gestionando activamente el riesgo asociado. Invierte al menos '+
+            'el 75% en instrumentos financieros y valores negociables emitidos en el país y denominados '+
+            'en moneda de curso legal, con exposición a acciones locales, títulos públicos, instrumentos '+
+            'CER y dólar linked, obligaciones negociables y hasta un 25% en activos del exterior.'
+};
+
+// Rendimientos por período — value null si no lo tenés
+const PERF = [
+  {lbl:'YTD 2026', v:6.21},
+  {lbl:'2025', v:35.60},
+  {lbl:'2024', v:98.46},
+  {lbl:'2023', v:309.29}
+];
+
+// Métricas de riesgo a 1 año
+const METRICAS = [
+  ['Sharpe',                 '-0,09'],
+  ['Volatilidad anualizada', '26,10%'],
+  ['Sortino',                '-0,18'],
+  ['Downside risk',          '14,51%']
+];
+
+// Rendimientos mensuales en % — null donde falte. Ene→Dic.
+const MENSUAL = {
+  2026:[2.5,-9.58,8.0,0.68,6.37,-0.92,null,null,null,null,null,null],
+  2025:[3.06,-5.34,4.27,-7.23,7.42,-4.17,10.89,-5.14,-2.33,31.69,2.64,0.52],
+  2024:[21.0,-12.54,13.73,6.19,17.73,1.56,-3.6,7.2,0.44,4.83,14.11,4.6],
+  2023:[21.42,-2.53,2.93,15.09,13.68,19.5,6.85,32.78,-6.35,9.76,25.51,17.41]
+};
+
+// Serie de cuotaparte para el base 100. Formato: ['AAAA-MM-DD', valor]
+const NAV = [
+  ['2025-12-31', 13611.11]
+];
+
+// Inflación INDEC — IPC nacional, variación mensual %. Ene→Dic.
+const INFLACION = {
+  2023: [6.0, 6.6, 7.7, 8.4, 7.8, 6.0, 6.3, 12.4, 12.7, 8.3, 12.8, 25.5],
+  2024: [20.6, 13.2, 11.0, 8.8, 4.2, 4.6, 4.0, 4.2, 3.5, 2.7, 2.4, 2.7],
+  2025: [2.2, 2.4, 3.7, 2.8, 1.5, 1.6, 1.9, 1.9, 2.1, 2.3, 2.5, 2.8],
+  2026: [2.9, 2.9, 3.4, 2.6, 2.1, 1.9, null, null, null, null, null, null]
+};
+const BENCH_NOMBRE = 'Inflación (IPC INDEC)';
+const DESDE = 2023;   // año de inicio del base 100
+
+// Cartera. per100:true para bonos que cotizan cada 100 nominales.
+const CARTERA = [
+  {cat:'Acciones', color:'#1A2942', pos:[
+    {t:'CAPX', s:'Oil & Gas', q:52572, p:3930.0}, {t:'ALUA', s:'Industrial', q:412510, p:994.0}, {t:'BYMA', s:'Financiero', q:1600000, p:302.75}, {t:'BMA', s:'Financiero', q:6000, p:14550.0}, {t:'GGAL', s:'Financiero', q:103111, p:7820.0}, {t:'BBAR', s:'Financiero', q:5000, p:10050.0}, {t:'ECOG', s:'Utilities', q:65000, p:3012.5}, {t:'HARG', s:'Industrial', q:130550, p:1585.0}, {t:'TXAR', s:'Industrial', q:819141, p:674.0}, {t:'OEST', s:'Servicios', q:268818, p:772.0}, {t:'TRAN', s:'Utilities', q:40000, p:3612.5}, {t:'CEPU', s:'Utilities', q:140000, p:2333.0}, {t:'MIRG', s:'Industrial', q:8967, p:16400.0}, {t:'YPFD', s:'Oil & Gas', q:4500, p:79500.0}, {t:'TGSU2', s:'Oil & Gas', q:40000, p:9470.0}, {t:'TGNO4', s:'Oil & Gas', q:40000, p:4012.5}, {t:'PAMP', s:'Oil & Gas', q:105000, p:5445.0}
+  ]},
+  {cat:'CEDEARs', color:'#3E5A82', pos:[
+    {t:'ORCL', s:'Tecnología', q:2500, p:63875.0}, {t:'COPX', s:'Commodities', q:16000, p:8735.0}, {t:'NVDA', s:'Tecnología', q:6000, p:13110.0}, {t:'AMZN', s:'Tecnología', q:100000, p:2567.5}, {t:'MSFT', s:'Tecnología', q:17500, p:20930.0}, {t:'META', s:'Tecnología', q:6500, p:39400.0}, {t:'MU', s:'Tecnología', q:800, p:261350.0}, {t:'NOW', s:'Tecnología', q:100000, p:1010.0}, {t:'VIST', s:'Oil & Gas', q:6000, p:34220.0}, {t:'MELI', s:'Tecnología', q:17883, p:24750.0}, {t:'UBER', s:'Servicios', q:3000, p:56500.0}
+  ]},
+  {cat:'LECAPs', color:'#8B9CB3', pos:[
+    {t:'T15E7', q:100000000, p:1.5}, {t:'S30S6', q:80000000, p:1.3}
+  ]},
+  {cat:'CER / Duales', color:'#5D7699', pos:[
+    {t:'TZXD6', q:135117985, p:2.68}, {t:'TZXD7', q:168462378, p:2.48}, {t:'TZX28', q:130000000, p:1.458}, {t:'TTS26', q:230000000, p:1.5}, {t:'TTD26', q:120000000, p:1.65}, {t:'TMF27', q:250000000, p:0.83}, {t:'TXMJO', q:250000000, p:0.822}
+  ]},
+  {cat:'Dólar linked', color:'#B0A47A', pos:[
+    {t:'EAC10', q:69227, p:1360.0}, {t:'G42NO', q:39477, p:1360.0}
+  ]},
+  {cat:'Liquidez / Plazo fijo', color:'#C9A961', pos:[
+    {t:'Plazo fijo', q:1, p:390000000.0}
+  ]}
+];
+
+/* ═══════════════════════════════════════════════════════════
+   RENDER — de acá para abajo no hace falta tocar
+   ═══════════════════════════════════════════════════════════ */
+
+const MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const nf = (n,d=2) => n.toLocaleString('es-AR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct = v => (v>0?'+':'') + nf(v,2) + '%';
+const cls = v => v===null||v===undefined ? 'na' : (v>=0?'up':'dn');
+
+function fechaCartera(){
+  const d = FONDO.fechaCartera ? new Date(FONDO.fechaCartera+'T12:00') : new Date();
+  return d.toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'});
+}
+function fechaHoy(){
+  const d = FONDO.fecha ? new Date(FONDO.fecha+'T12:00') : new Date();
+  return d.toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'});
+}
+
+/* ---- Cabeceras ---- */
+document.getElementById('asof1').textContent = fechaHoy();
+document.getElementById('asof2').textContent = fechaCartera();
+document.getElementById('fname').textContent = FONDO.nombre + ' — ' + FONDO.clase;
+document.getElementById('fsub').innerHTML =
+  FONDO.tipo + ' · Ticker <b>' + FONDO.ticker + '</b>';
+document.getElementById('obj').textContent = FONDO.objetivo;
+
+/* ---- Datos del fondo ---- */
+document.getElementById('datos').innerHTML =
+  Object.entries(FONDO.datos)
+    .map(([k,v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+
+/* ---- Métricas ---- */
+document.getElementById('met').innerHTML =
+  '<tbody>' + METRICAS.map(([k,v]) =>
+    `<tr><td>${k}</td><td style="font-weight:600">${v}</td></tr>`).join('') + '</tbody>';
+
+/* ---- Cards de performance ---- */
+document.getElementById('perf').innerHTML = PERF.map(p => `
+  <div class="pcard">
+    <div class="lbl">${p.lbl}</div>
+    <div class="val ${cls(p.v)}">${p.v===null?'—':pct(p.v)}</div>
+  </div>`).join('');
+
+/* ---- Series mensuales del fondo ---- */
+function mensualDesdeNav(){
+  const out = {};
+  if (NAV.length < 2) return out;
+  const ord = [...NAV].sort((a,b)=>a[0]<b[0]?-1:1);
+  const cierre = {};
+  ord.forEach(([f,v]) => cierre[f.slice(0,7)] = v);
+  const keys = Object.keys(cierre).sort();
+  for (let i=1;i<keys.length;i++){
+    const [y,m] = keys[i].split('-').map(Number);
+    (out[y] = out[y] || Array(12).fill(null))[m-1] = (cierre[keys[i]]/cierre[keys[i-1]] - 1) * 100;
+  }
+  return out;
+}
+const AUTO = mensualDesdeNav();
+
+// serie mensual efectiva del fondo por año (MENSUAL pisa lo derivado del NAV)
+function filaFondo(y){
+  const man = MENSUAL[y] || Array(12).fill(null);
+  const aut = AUTO[y]    || Array(12).fill(null);
+  return man.map((v,i) => (v===null||v===undefined) ? (aut[i]??null) : v);
+}
+const compone = arr => {
+  const v = arr.filter(x => x!==null && x!==undefined);
+  return v.length ? (v.reduce((a,x) => a*(1+x/100), 1) - 1) * 100 : null;
+};
+
+const años = [...new Set([...Object.keys(MENSUAL), ...Object.keys(AUTO), ...Object.keys(INFLACION)])]
+              .map(Number).filter(y => y >= DESDE).sort((a,b)=>b-a);
+
+/* ---- Grilla mensual ---- */
+document.getElementById('mgrid').innerHTML =
+  '<thead><tr><th></th>' + MESES.map(m=>`<th>${m}</th>`).join('') +
+  '<th class="tot">Año</th></tr></thead><tbody>' +
+  años.map(y => {
+    const f = filaFondo(y), a = compone(f);
+    return `<tr><td class="yr">${y}</td>` +
+      f.map(v => `<td class="${cls(v)}">${v===null?'·':nf(v,2)}</td>`).join('') +
+      `<td class="tot ${cls(a)}">${a===null?'·':nf(a,2)}</td></tr>`;
+  }).join('') + '</tbody>';
+
+/* ---- Base 100: fondo vs inflación ---- */
+function serieMensual(fn){
+  const pts = [];
+  años.slice().reverse().forEach(y => {
+    fn(y).forEach((v,i) => pts.push({f:`${y}-${String(i+1).padStart(2,'0')}`, v}));
+  });
+  return pts;
+}
+function base100(pts, desdeIdx){
+  let acc = 100; const out = [];
+  pts.forEach((p,i) => {
+    if (i < desdeIdx) return;
+    if (p.v !== null && p.v !== undefined) acc *= (1 + p.v/100);
+    out.push({f:p.f, v:acc, real:p.v!==null&&p.v!==undefined});
+  });
+  return out;
+}
+function chart(){
+  const pf  = serieMensual(filaFondo);
+  const pi  = serieMensual(y => INFLACION[y] || Array(12).fill(null));
+  const hayFondo = pf.some(p => p.v !== null && p.v !== undefined);
+  const ultimo = Math.max(
+    pf.reduce((m,p,i) => p.v!==null&&p.v!==undefined ? i : m, -1),
+    pi.reduce((m,p,i) => p.v!==null&&p.v!==undefined ? i : m, -1)
+  );
+  if (ultimo < 1){
+    document.getElementById('chartWrap').innerHTML =
+      '<div class="empty">Sin datos suficientes para el base 100.</div>';
+    return;
+  }
+  const A = base100(pf, 0).slice(0, ultimo+1);
+  const B = base100(pi, 0).slice(0, ultimo+1);
+  if (!hayFondo) document.getElementById('warn').textContent =
+    '· Faltan los rendimientos mensuales del fondo';
+
+  const W=680, H=155, PL=40, PR=8, PT=8, PB=18;
+  const vis = hayFondo ? A.concat(B) : B;
+  const hi = Math.max(...vis.map(p=>p.v)), lo = Math.min(100, ...vis.map(p=>p.v));
+  const y0 = lo*0.96, y1 = hi*1.04;
+  const X = i => PL + i*(W-PL-PR)/Math.max(1,A.length-1);
+  const Y = v => PT + (1-(v-y0)/(y1-y0))*(H-PT-PB);
+  const path = s => s.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.v).toFixed(1)).join(' ');
+
+  let g='';
+  for (let i=0;i<=3;i++){
+    const v = y0 + (y1-y0)*i/3, yy = Y(v);
+    g += `<line class="grid" x1="${PL}" y1="${yy}" x2="${W-PR}" y2="${yy}"/>
+          <text class="axis" x="${PL-6}" y="${yy+2.5}" text-anchor="end">${Math.round(v).toLocaleString('es-AR')}</text>`;
+  }
+  const paso = Math.max(1, Math.ceil(A.length/7));
+  A.forEach((p,i) => {
+    if (i % paso && i !== A.length-1) return;
+    g += `<text class="axis" x="${X(i)}" y="${H-5}" text-anchor="middle">${p.f.slice(2)}</text>`;
+  });
+
+  document.getElementById('chartWrap').innerHTML = `
+    <svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      ${g}
+      <path d="${path(B)}" fill="none" stroke="#C9A961" stroke-width="1.6"/>
+      ${hayFondo?`<path d="${path(A)}" fill="none" stroke="#1A2942" stroke-width="2"/>`:''}
+    </svg>
+    <div class="leg">
+      <span><i style="background:#1A2942"></i>${FONDO.nombre}</span>
+      <span><i style="background:#C9A961"></i>${BENCH_NOMBRE}</span>
+      <span style="margin-left:auto">Base 100 = ene ${DESDE}</span>
+    </div>
+    <table style="margin-top:9px">
+      <thead><tr><th>Año</th><th>Fondo</th><th>Inflación</th><th>Retorno real</th></tr></thead>
+      <tbody>${
+        años.slice().reverse().map(y => {
+          const f = compone(filaFondo(y)), inf = compone(INFLACION[y] || []);
+          const real = (f!==null && inf!==null) ? ((1+f/100)/(1+inf/100)-1)*100 : null;
+          return `<tr><td>${y}</td>
+            <td class="${cls(f)}">${f===null?'·':pct(f)}</td>
+            <td>${inf===null?'·':pct(inf)}</td>
+            <td class="${cls(real)}" style="font-weight:700">${real===null?'·':pct(real)}</td></tr>`;
+        }).reverse().join('')
+      }</tbody>
+    </table>`;
+}
+chart();
+
+/* ---- Composición ---- */
+const val = p => p.q * p.p / (p.per100 ? 100 : 1);
+const todasPos = () => CARTERA.flatMap(c => c.pos.map(p => ({...p, cat:c.cat, color:c.color, v:val(p)})));
+const cats = CARTERA.map(c => ({
+  ...c,
+  total: c.pos.reduce((s,p) => s + val(p), 0)
+}));
+const TOTAL = cats.reduce((s,c) => s + c.total, 0);
+
+document.getElementById('csub').innerHTML = 'Posición al ' + fechaCartera();
+
+/* torta (dona) por tipo de activo */
+(function donut(){
+  const S=170, R=76, r=46, C=S/2;
+  const arco = (a0,a1,rad) => {
+    const p = a => [C + rad*Math.cos(a), C + rad*Math.sin(a)];
+    const [x0,y0]=p(a0), [x1,y1]=p(a1);
+    return {x0,y0,x1,y1, big: (a1-a0) > Math.PI ? 1 : 0};
+  };
+  let ang = -Math.PI/2, d = '';
+  cats.forEach(c => {
+    const span = c.total/TOTAL * Math.PI*2;
+    // un solo sector completo no se puede dibujar con un arco: lo parto en dos
+    const tramos = span > Math.PI*1.999 ? [[ang,ang+Math.PI],[ang+Math.PI,ang+span]] : [[ang,ang+span]];
+    tramos.forEach(([a0,a1]) => {
+      const o = arco(a0,a1,R), i = arco(a0,a1,r);
+      d += `<path fill="${c.color}" d="M ${o.x0} ${o.y0} A ${R} ${R} 0 ${o.big} 1 ${o.x1} ${o.y1}
+             L ${i.x1} ${i.y1} A ${r} ${r} 0 ${i.big} 0 ${i.x0} ${i.y0} Z"/>`;
+    });
+    ang += span;
+  });
+  const mayor = cats.reduce((a,b) => b.total > a.total ? b : a);
+  document.getElementById('donut').innerHTML = `
+    <svg class="donut" viewBox="0 0 ${S} ${S}">
+      ${d}
+      <text class="ctr-v" x="${C}" y="${C-1}" text-anchor="middle">${nf(mayor.total/TOTAL*100,1)}%</text>
+      <text class="ctr-l" x="${C}" y="${C+11}" text-anchor="middle">MAYOR TENENCIA</text>
+    </svg>`;
+})();
+
+document.getElementById('cats').innerHTML =
+  '<thead><tr><th>Tipo de activo</th><th>Peso</th></tr></thead><tbody>' +
+  cats.map(c => `<tr>
+      <td><span class="dot" style="background:${c.color}"></span>${c.cat}</td>
+      <td style="font-weight:700">${nf(c.total/TOTAL*100,2)}%
+        <span class="wbar"><i style="width:${(c.total/TOTAL*100).toFixed(1)}%"></i></span>
+      </td>
+    </tr>`).join('') +
+  `<tr><td style="font-weight:700;padding-top:7px">Total</td>
+       <td style="font-weight:700;padding-top:7px">100,00%</td></tr>` +
+  '</tbody>';
+
+// distribución por sector de la renta variable
+const RV = todasPos().filter(p => p.s);
+const rvTot = RV.reduce((s,p) => s + p.v, 0);
+const sect = [...new Set(RV.map(p => p.s))]
+  .map(s => ({s, v: RV.filter(p => p.s===s).reduce((a,p)=>a+p.v,0)}))
+  .sort((a,b) => b.v - a.v);
+document.getElementById('sect').innerHTML =
+  '<thead><tr><th>Sector</th><th>Sobre RV</th><th>Sobre cartera</th></tr></thead><tbody>' +
+  sect.map(x => `<tr><td>${x.s}</td>
+      <td>${nf(x.v/rvTot*100,2)}%</td>
+      <td style="font-weight:700">${nf(x.v/TOTAL*100,2)}%
+        <span class="wbar"><i style="width:${Math.min(100,x.v/TOTAL*100*4).toFixed(1)}%"></i></span>
+      </td></tr>`).join('') +
+  `<tr><td style="font-weight:700;padding-top:6px">Renta variable</td>
+       <td style="font-weight:700;padding-top:6px">100,00%</td>
+       <td style="font-weight:700;padding-top:6px">${nf(rvTot/TOTAL*100,2)}%</td></tr>` +
+  '</tbody>';
+
+const todas = todasPos().sort((a,b) => b.v - a.v);
+const TOPN = 7;
+document.getElementById('top').innerHTML =
+  '<thead><tr><th>Activo</th><th style="text-align:left">Tipo de activo</th>' +
+  '<th>Peso sobre la cartera</th></tr></thead><tbody>' +
+  todas.slice(0,TOPN).map(p => {
+    const w = p.v/TOTAL*100;
+    return `<tr>
+      <td><span class="tick">${p.t}</span></td>
+      <td style="text-align:left;color:#6B7280">${p.cat}</td>
+      <td style="font-weight:700">${nf(w,2)}%
+        <span class="wbar"><i style="width:${Math.min(100,w*11).toFixed(1)}%"></i></span>
+      </td></tr>`;
+  }).join('') +
+  '</tbody>';
+</script>
+</body>
+</html>
