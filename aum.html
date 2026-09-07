@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es" data-darkreader-mode="ignore">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark only">
+<meta name="darkreader-lock">
+<title>SilverCloud Advisors — AUM por cuenta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: dark; }
+  html { color-scheme: dark only; background: #0d1117; }
+  :root {
+    --bg:#0d1117; --bg-soft:#161b22; --bg-card:#1a2030; --bg-card-2:#1c2330;
+    --border:#2a3343; --border-soft:#1e2533;
+    --text:#d8dee9; --text-bright:#f0f6fc; --text-dim:#8b95a8; --text-light:#6b748a;
+    --navy:#5b86c7; --navy-2:#4b73b0; --navy-3:#3c5f96; --navy-4:#2d4c7c; --navy-5:#243656;
+    --violet:#a37bc7; --green:#3fb950; --yellow:#d29922; --red:#f85149;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:'Open Sans',sans-serif;
+         font-weight:300; font-size:14px; line-height:1.6; padding:24px; }
+  .container { max-width:1560px; margin:0 auto; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; font-size:11px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--text-dim); text-decoration:none; margin-bottom:16px;
+    transition:color .15s; font-weight:400; }
+  .back-link:hover { color:var(--navy); }
+  .header { border-bottom:2px solid var(--navy); padding-bottom:20px; margin-bottom:28px;
+    display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; }
+  .header-brand h1 { margin:0; font-family:'Libre Baskerville',serif; font-style:italic;
+    font-weight:400; font-size:26px; color:var(--text-bright); }
+  .header-brand h1 strong { color:var(--navy); font-weight:700; }
+  .header-brand .brand-line { font-weight:300; color:var(--text-dim); font-size:11px;
+    letter-spacing:2px; text-transform:uppercase; margin-top:4px; }
+  .header-actions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--bg-card); border:1px solid var(--border); color:var(--text); padding:7px 14px;
+    font-family:inherit; font-weight:400; font-size:11px; cursor:pointer; border-radius:2px;
+    transition:all .15s; text-transform:uppercase; letter-spacing:.8px; }
+  .btn:hover { background:var(--navy); color:#fff; border-color:var(--navy); }
+  .btn-primary { border-color:var(--navy); color:var(--navy); }
+  .btn-danger:hover { background:var(--red); border-color:var(--red); color:#fff; }
+  .fb-status { display:inline-flex; align-items:center; gap:6px; font-size:10px; letter-spacing:1px;
+    text-transform:uppercase; color:var(--text-dim); padding:4px 10px; border-radius:2px;
+    background:var(--bg-card); border:1px solid var(--border); }
+  .fb-status .fb-dot { width:8px; height:8px; border-radius:50%; background:var(--text-light); }
+  .fb-status.online .fb-dot { background:var(--green); animation:fb-pulse 2s ease-in-out infinite; }
+  .fb-status.offline .fb-dot { background:var(--yellow); }
+  .fb-status.error .fb-dot { background:var(--red); }
+  .fb-status.syncing .fb-dot { background:var(--navy); animation:fb-pulse .6s ease-in-out infinite; }
+  @keyframes fb-pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+  .aum-lead { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:16px; }
+  .aum-lead .big { font-family:'Libre Baskerville',serif; font-weight:700; font-size:32px;
+    color:var(--text-bright); font-variant-numeric:tabular-nums; letter-spacing:-.01em; }
+  .aum-lead .sub { color:var(--text-dim); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; }
+  .tierbar { display:flex; height:36px; border:1px solid var(--border); border-radius:2px;
+    overflow:hidden; margin-bottom:10px; }
+  .tierbar button { border:0; padding:0; cursor:pointer; font:inherit; font-size:11px; font-weight:600;
+    color:#0d1117; transition:filter .15s; font-variant-numeric:tabular-nums; }
+  .tierbar button:hover { filter:brightness(1.18); }
+  .tierbar button[aria-pressed="true"] { box-shadow:inset 0 -4px 0 var(--violet); }
+  .tierbar button:focus-visible { outline:2px solid var(--violet); outline-offset:-3px; }
+  .tierlegend { display:flex; gap:26px; flex-wrap:wrap; font-size:11px; color:var(--text-dim);
+    margin-bottom:22px; }
+  .tierlegend i { width:9px; height:9px; display:inline-block; border-radius:2px; margin-right:7px; }
+  .tierlegend b { color:var(--text); font-weight:600; font-variant-numeric:tabular-nums; }
+
+  .alta { border:1px solid var(--navy-5); background:var(--bg-card); border-radius:2px;
+    padding:14px 16px; margin-bottom:22px; }
+  .alta[hidden] { display:none; }
+  .alta-title { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-dim);
+    font-weight:600; margin-bottom:12px; }
+  .alta-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr auto auto; gap:10px; align-items:end; }
+  .alta-field label { display:block; font-size:10px; letter-spacing:1px; text-transform:uppercase;
+    color:var(--text-light); margin-bottom:4px; }
+  .alta-field input, .alta-field select { width:100%; background:var(--bg); border:1px solid var(--border);
+    color:var(--text-bright); font-family:inherit; font-size:13px; padding:7px 9px; border-radius:2px; }
+  .alta-field input:focus, .alta-field select:focus { outline:none; border-color:var(--navy); }
+  .alta-msg { font-size:11px; color:var(--red); margin-top:9px; min-height:16px; }
+  .alta-msg.ok { color:var(--green); }
+
+  .filters { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
+  .filters input, .filters select { background:var(--bg); border:1px solid var(--border);
+    color:var(--text); font-family:inherit; font-size:12px; padding:7px 10px; border-radius:2px; }
+  .filters input { min-width:260px; }
+  .filters input:focus, .filters select:focus { outline:none; border-color:var(--navy); color:var(--text-bright); }
+  .filters .spacer { margin-left:auto; }
+  .filters .tally { font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--text-dim);
+    font-variant-numeric:tabular-nums; }
+
+  table.aum-tabla { width:100%; border-collapse:collapse; font-size:12.5px; }
+  table.aum-tabla thead th { text-align:left; color:var(--text-dim); font-weight:600; font-size:10px;
+    text-transform:uppercase; letter-spacing:1px; padding:10px 6px; border-bottom:1px solid var(--border);
+    background:var(--bg); position:sticky; top:0; z-index:2; white-space:nowrap; }
+  table.aum-tabla thead th.fill { color:var(--violet); }
+  table.aum-tabla thead th.sortable { cursor:pointer; user-select:none; }
+  table.aum-tabla thead th.sortable:hover { color:var(--text-bright); }
+  table.aum-tabla thead th.right { text-align:right; }
+  table.aum-tabla td { padding:7px 6px; border-bottom:1px solid var(--border-soft); vertical-align:middle;
+    white-space:nowrap; }
+  table.aum-tabla td.right { text-align:right; font-variant-numeric:tabular-nums; }
+  table.aum-tabla td.num { font-variant-numeric:tabular-nums; }
+  table.aum-tabla td.name { white-space:normal; min-width:260px; color:var(--text-bright); font-weight:400; }
+  table.aum-tabla tbody tr:hover { background:var(--bg-card); }
+  table.aum-tabla tr.cut td { border-top:2px solid var(--navy-4); }
+  .pick { cursor:pointer; color:var(--text-light); min-width:112px; }
+  .pick.set { color:var(--text-bright); font-weight:400; }
+  .pick:hover { background:var(--bg-card-2); }
+  .pick select, .pick input { width:100%; background:var(--bg); border:1px solid var(--navy);
+    color:var(--text-bright); font-family:inherit; font-size:12px; padding:3px; border-radius:2px; outline:none; }
+  .editable { cursor:pointer; }
+  .editable:hover { background:var(--bg-card-2); }
+  .tier-tag { font-size:10px; letter-spacing:.8px; text-transform:uppercase; color:var(--text-dim); }
+  .manual { font-size:9px; letter-spacing:.8px; text-transform:uppercase; color:var(--violet);
+    border:1px solid var(--violet); border-radius:2px; padding:0 5px; margin-left:8px; }
+  .del { background:none; border:0; color:var(--text-light); cursor:pointer; font-size:13px;
+    padding:0 4px; line-height:1; }
+  .del:hover { color:var(--red); }
+  .up { color:var(--green); } .down { color:var(--red); }
+  .sd { color:var(--text-light); font-style:italic; }
+  .empty { padding:48px; text-align:center; color:var(--text-dim); font-style:italic; }
+  .footer-note { color:var(--text-light); font-size:10px; text-align:center; margin-top:32px;
+    padding-top:20px; border-top:1px solid var(--border); }
+  .footer-note .firm-name { font-family:'Libre Baskerville',serif; font-style:italic;
+    color:var(--navy); font-size:11px; }
+  @media (max-width:900px){ .alta-grid { grid-template-columns:1fr 1fr; } }
+  @media (max-width:800px){ body{padding:14px} .filters input{min-width:100%} }
+  @media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
+</style>
+
+<!-- Firebase SDK (v10 modular, via CDN ESM) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot, enableIndexedDbPersistence }
+    from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyBuFlhGKaw_AIWkeIjosoNMDZIuLRYttA4",
+    authDomain: "silvercloud-71501.firebaseapp.com",
+    projectId: "silvercloud-71501",
+    storageBucket: "silvercloud-71501.firebasestorage.app",
+    messagingSenderId: "282888674360",
+    appId: "1:282888674360:web:7decaae1570648b59a5acd"
+  };
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    try { await enableIndexedDbPersistence(db); } catch(e) { console.warn('Persistencia offline no disponible:', e.code); }
+    window.SC_FB = { db, doc, getDoc, setDoc, onSnapshot };
+  } catch(e) { console.warn('Firebase no disponible:', e); }
+  window.dispatchEvent(new Event('firebase-ready'));
+</script>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="back-link">← Dashboard</a>
+  <div class="header">
+    <div class="header-brand">
+      <h1>Silver<strong>Cloud</strong> Advisors</h1>
+      <div class="brand-line">AUM por cuenta · CNV #474</div>
+    </div>
+    <div class="header-actions">
+      <span class="fb-status connecting" id="fb-status"><span class="fb-dot"></span><span>Conectando…</span></span>
+      <button class="btn btn-primary" onclick="toggleAlta()">+ Cuenta</button>
+      <button class="btn" onclick="exportCSV()">↓ CSV</button>
+      <button class="btn" onclick="exportJSON()">↓ JSON</button>
+      <button class="btn" onclick="document.getElementById('import-file').click()">↑ Importar</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
+      <button class="btn btn-danger" onclick="resetClasificacion()">Reset clasificación</button>
+    </div>
+  </div>
+
+  <div class="aum-lead">
+    <span class="big" id="lead-total"></span>
+    <span class="sub" id="lead-sub"></span>
+  </div>
+  <div class="tierbar" id="tierbar"></div>
+  <div class="tierlegend" id="tierlegend"></div>
+
+  <div class="alta" id="alta" hidden>
+    <div class="alta-title">Alta de cuenta</div>
+    <div class="alta-grid">
+      <div class="alta-field"><label for="a-cli">Cliente</label>
+        <input id="a-cli" type="text" placeholder="Razón social o apellido, nombre"></div>
+      <div class="alta-field"><label for="a-cus">Custodio</label>
+        <select id="a-cus"><option>INVIU</option><option>BALANZ</option><option>Otro</option></select></div>
+      <div class="alta-field"><label for="a-cta">Comitente</label>
+        <input id="a-cta" type="text" placeholder="Opcional"></div>
+      <div class="alta-field"><label for="a-aum">AUM USD</label>
+        <input id="a-aum" type="text" inputmode="decimal" placeholder="0"></div>
+      <button class="btn btn-primary" onclick="altaCuenta()">Agregar</button>
+      <button class="btn" onclick="toggleAlta(false)">Cancelar</button>
+    </div>
+    <div class="alta-msg" id="alta-msg"></div>
+  </div>
+
+  <div class="filters">
+    <input type="search" id="q" placeholder="Buscar cliente o comitente" aria-label="Buscar">
+    <select id="fCust"><option value="">Todos los custodios</option><option>INVIU</option>
+      <option>BALANZ</option><option>Otro</option></select>
+    <select id="fEstado"><option value="">Todos los estados</option><option>Sin clasificar</option>
+      <option>OK</option><option>Excepción</option><option>Autodidacta</option><option>Corregir</option>
+      <option>Potencial</option></select>
+    <select id="fCartera"><option value="">Adm. y autodidactas</option><option>Administrada</option>
+      <option>Autodidacta</option></select>
+    <select id="fOrigen"><option value="">Todas las altas</option><option>Del archivo</option>
+      <option>Cargadas a mano</option></select>
+    <span class="spacer tally" id="tally"></span>
+  </div>
+
+  <table class="aum-tabla">
+    <thead><tr>
+      <th class="sortable" data-k="i">#</th>
+      <th class="sortable" data-k="n">Cliente</th>
+      <th class="sortable" data-k="c">Custodio</th>
+      <th>Cuenta</th>
+      <th class="sortable right" data-k="a">AUM USD</th>
+      <th class="sortable" data-k="t">Tramo</th>
+      <th class="fill">Estado</th><th class="fill">Tipo de cartera</th><th class="fill">Perfil</th>
+      <th class="fill">Objetivo</th><th class="fill">Of. productor</th><th class="fill">Of. comercial</th>
+      <th class="fill">Of. de inversión</th>
+      <th class="right">% del total</th>
+      <th></th>
+    </tr></thead>
+    <tbody id="tb"></tbody>
+  </table>
+  <div class="empty" id="empty" hidden>Ninguna cuenta cumple el filtro.</div>
+
+  <div class="footer-note">
+    <span class="firm-name">Silver<strong>Cloud</strong> Advisors</span> · CNV #474 ·
+    AUM al cierre en USD sobre Inviu y Balanz — una fila por cuenta, sin consolidar por titular
+  </div>
+</div>
+
+<script>
+const RAW = [["COMPAÑIA AMERICANA DE LAPICES SRL","BALANZ","108578",16741436.69],["SURUR JORGE DANIEL Y/O RATTI MARIA CECILIA Y/O SURUR JULIETA ALICIA","BALANZ","472619",11957883.66],["TROPICAL ARGENTINA SRL","BALANZ","100956",9282028.13],["NEROVA SA","BALANZ","108579",8971170.15],["TRANSPORTES JOSE BERALDI SA","BALANZ","100100",5210027.04],["CLUB SOCIAL Y DEPORTIVO DEFENSA Y JUSTICIA","BALANZ","110895",3862312.79],["BREMEN TOOLS ARGENTINA S.A.","BALANZ","103971",3315047.15],["DEL AZAR FUCHS LUIS EDUARDO Y/O DEL AZAR JÁLID ALBERTO","BALANZ","555801",3237486.02],["HERPET SA","BALANZ","109548",2946881.64],["GROSZMANN ANDRÉS RICARDO Y/O HELMAN VANESA SOLANGE","BALANZ","480754",2824612.77],["CARMONA LEON GERARDO","BALANZ","883071",2435451.52],["CHAIMAN HECTOR OSVALDO Y/O CHAIMAN FEDERICO Y/O CHAIMAN ANDREA","BALANZ","36674",2392202.88],["Diojtar, Claudio Daniel","INVIU","4227",2210050.84],["HANDLEY HERBERT BRIAN","BALANZ","402615",1884364.38],["FLAME S.A.","BALANZ","101758",1876890.79],["CERA - VILARIÑO, MATIAS","INVIU","480476",1698743.24],["SUEÑO FUEGUINO S A","INVIU","216068",1635236.47],["FRUTICOLA SASHA SRL","BALANZ","108722",1617451.01],["BERALDI CITESA TRANSPORTES SA","BALANZ","110128",1527157.09],["DEL AZAR JALID ALBERTO Y/O DEL AZAR MARIANA","BALANZ","541843",1496748.99],["MASE HERNAN FIDEL Y/O MAS MARIA CAROLINA","BALANZ","956131",1464558.91],["SURUR JORGE DANIEL Y/O SURUR VIRGINIA Y/O SURUR JULIETA ALICIA","BALANZ","472373",1370328.95],["IAFE MEOD S.R.L.","INVIU","209068",1368002.39],["UNION SGR","BALANZ","100056",1297600.69],["SARACCO ALEJANDRO RAUL Y/O INVERNATI GABRIELA CLAUDIA","BALANZ","472586",1284676.79],["VIVO GUSTAVO HORACIO","BALANZ","26687",1244810.96],["ZYS FACTORS SA","BALANZ","104607",1233899.38],["REFI PAMPA SA","BALANZ","100148",1090205.3],["SURUR JULIETA ALICIA Y/O OTHEGUY PABLO AGUSTIN","BALANZ","478597",1078976.28],["B-LIFE S.A.","INVIU","237999",1035632.79],["ALVARIÑAS MARCELO EDUARDO Y/O CARAMELO PATRICIA","BALANZ","27276",970289.08],["FUNDACION BANCO DE ALIMENTOS","BALANZ","161605",945820.88],["Nelson, Juan Santiago","INVIU","14070",856505.83],["FASSI Y GISMONDI SOC. CAP. 1 SEC. IV","BALANZ","109958",849957.54],["Ichaso, Ignacio","INVIU","9061",838935.35],["MICHELINI JORGE PABLO Y/O MARBAN KARINA ANDREA Y/O MICHELINI MALENA","BALANZ","931912",818870.44],["SURUR JULIETA ALICIA Y/O SURUR JORGE DANIEL","BALANZ","378246",764163.49],["CERA - CARASSALE, CECILIA VIRGINIA","INVIU","480867",752901.48],["CERA - MARCOS, CARLOS EDUARDO","INVIU","480860",751971.96],["RINGA NORBERTO FABIAN","BALANZ","329359",742891.64],["SMAILA ALEXIS MATIAS","BALANZ","401552",734486.94],["CIANCAGLINI MARTA MARIA","BALANZ","1443279",722786.2],["ORTIZ MARCELA LAURA","BALANZ","1473282",722539.67],["DEL AZAR MARIANA Y/O DEL AZAR JÁLID ALBERTO","BALANZ","1333833",712384.98],["MULLER ALEJANDRO HUMBERTO Y/O MÜLLER IVAN","BALANZ","1572764",691490.07],["SIBILIA FRANCO OMAR","BALANZ","1473299",690321.01],["AGUER MARIO BERNARDO","BALANZ","328814",685347.06],["MOLINARI GRACIELA NIEVES Y/O COVINI HECTOR NORBERTO","BALANZ","1307338",664291.68],["FALCO FERNANDO LUIS Y/O ROSSETTO ADRIANA DEL VALLE","BALANZ","348165",655496.44],["Christian , Guerrien","INVIU","207290",635628.56],["Gigliani, Maria Ines","INVIU","7276",618005.67],["SURUR Y ASOCIADOS SRL","BALANZ","104613",614823.94],["CAGNOLI FABIO NORBERTO","BALANZ","498390",574751.7],["CERA - MARCOS, IVAN","INVIU","480861",552176.44],["JACIA SRL","BALANZ","104309",537126.66],["PEREDA TERESA Y/O LLORENTE RAFAEL","BALANZ","338460",519663.64],["SIBILIA ARIEL ALEJANDRO Y/O SANTOS VERONICA CONCEPCION","BALANZ","36597",473262.38],["MARCO DEL PONT SANTIAGO MIGUEL","BALANZ","25927",466921.54],["STERNBERG GONZALO","BALANZ","374515",457091.28],["TREND INGENIERIA SRL","BALANZ","100212",449792.87],["HUHN JUANA Y/O TORBIDONI HUGO","BALANZ","326496",439615.56],["CAGNOLI PABLO HUGO","BALANZ","498692",438143.3],["EDISEC SRL","BALANZ","102689",433823.71],["ESTABLECIMIENTO EL CARMEN SRL","BALANZ","107160",426400.66],["MICHELINI MARCELA LILIAN Y/O MICHELINI JORGE PABLO","BALANZ","926693",426148.15],["PAGNI CARLOS ORLANDO","BALANZ","472503",425939.7],["RODRIGUEZ TRAVERSO MARIO FERNANDO","BALANZ","955350",414282.05],["ORTS MARIO JORGE Y/O OTERO SILVINA ELENA","BALANZ","323495",412658.74],["SAMPIETRO SERGIO MIGUEL","BALANZ","27053",409497.13],["GRANDVAL ESTEBAN Y/O ORCOYEN DOLORES","BALANZ","36227",407175.14],["TAURO AUTOMOTORES SA","BALANZ","102366",401380.44],["CHAIMAN ANDREA Y/O CHAIMAN HECTOR OSVALDO","BALANZ","36577",394202.18],["CASTELLANO HERNAN HORACIO","BALANZ","346343",386609.11],["SHREIBER ZINA Y/O HANDLEY HERBERT BRIAN","BALANZ","929601",384142.57],["MATHET MARIA","BALANZ","1285822",383541.36],["DO PICO ALFREDO FRANCISCO Y/O DO PICO FRANCISCO","BALANZ","1700077",379455.06],["RODOLFO FERRARI E HIJO SACFIA","BALANZ","102976",378326.87],["BOLADO GUILLERMO HECTOR","BALANZ","1443280",377231.95],["ESPAÑOL, HECTOR GUSTAVO","INVIU","242857",371006.48],["ACEVEDO LUIS HUMBERTO Y/O MUÑOZ GUADALUPE","BALANZ","1434446",367468.9],["MARQUEZ FERNANDO ERNESTO Y/O SURUR ELENA SUSANA Y/O MARQUEZ MARTIN ERNESTO","BALANZ","479787",367334.7],["BONADEO GONZALO DIEGO Y/O CAREY CARMELA","BALANZ","935188",361067.24],["AGROMARKET SA","INVIU","1216",355983.03],["FRIAS JORGE HUMBERTO Y/O FRIAS SANTIAGO FABIAN Y/O FAVILLA VILMA GLADYS Y/O FRIA","BALANZ","472323",354316.04],["SPINELLI ECHEVERRIA, ANIBAL ADRIAN","INVIU","234964",352980.8],["ALLO MARIA SUSANA","BALANZ","424772",351341.39],["AVRUJ ALEJANDRO MANUEL Y/O DEGTIAR MARINA FERNANDA","BALANZ","542221",345902.35],["BALLESTER PEDRO MATIAS","BALANZ","860462",345232.54],["CIANCAGLINI MARIA","BALANZ","1684087",345065.73],["BERTINO GERMAN ARIEL","BALANZ","1534745",344595.34],["CASIRO ALEJANDRO LUIS Y/O KIM HYO SHIN","BALANZ","349804",344045.99],["DOBUL S.A.","BALANZ","104354",341018.0],["DEJEAN JULIETA Y/O ROLLA FERNANDO JAVIER","BALANZ","586142",337681.73],["- CERA GUERRIEN, CHRISTIAN ALAIN","INVIU","480262",335104.01],["PIGNA FELIPE ISIDRO Y/O PIGNA MARTIN Y/O PIGNA JULIAN","BALANZ","471484",333086.67],["TROGLIA MARIA CELINA","BALANZ","549983",333080.32],["BARBARULO NESTOR MARTIN Y/O ALONSO KARINA VERONICA","BALANZ","402855",330069.26],["WOJTAL DANIEL ESTEBAN Y/O WOJTAL MARIA CECILIA Y/O RENAU MARIA ALICIA LEONOR","BALANZ","1694903",329702.32],["DIRUBE MARIA MARTA","BALANZ","1662477",328427.29],["DE CONTO HERNAN ALEJANDRO","BALANZ","430800",327077.25],["PODESTA LUCIA","BALANZ","567713",321002.73],["GOLDEN FRUIT SA","BALANZ","109310",319860.28],["FUNDACION KONEX","BALANZ","163330",303946.52],["Montero, Osvaldo Ismael","INVIU","13247",303527.26],["NOVARESIO LUIS ESTEBAN","BALANZ","445041",303319.34],["CINTRAN NICOLAS","BALANZ","1463288",302498.43],["NOGUEIRA ALICIA GRACIELA Y/O MARTINI HUGO","BALANZ","485608",301503.99],["GIGLIANI, ALEJANDRO","INVIU","258796",300577.23],["CERRUTI MARIA MARCELA Y/O ZORREGUIETA MARTIN","BALANZ","1345649",293136.11],["NEIRA ECHEVESTE MARIA FERNANDA Y/O BADEIGTS CARLOS FABIAN","BALANZ","934756",290341.82],["CASA UNIDA S. R. L.","INVIU","220715",288058.35],["DE MIGUEL HORACIO RODOLFO Y/O DE MIGUEL MARIA ELENA Y/O DE MIGUEL LUCILA MARIA Y","BALANZ","1253688",284774.22],["BLUMETTI NORA SUSANA Y/O MARAZZI VICTORIA BELEN","BALANZ","1560300",280561.8],["Terrile, Fernando Martin","INVIU","20141",275960.69],["FRIZZERA OSCAR MARTIN Y/O XANCO ALEJANDRA","BALANZ","1401786",275581.3],["PALADINI, MARIA MARCELA ANDREA","INVIU","268339",275379.55],["VARDE DANIEL FRANCISCO JAVIER Y/O VARDE FRANCISCO ANTONIO PEDRO","BALANZ","1110663",274704.17],["TOMAGHELLO, HUGO CESAR","INVIU","223602",272743.58],["MELI PEÑI SA","BALANZ","105444",271827.4],["TISCORNIA, RAMIRO","INVIU","259050",271810.27],["FALCO MARTA SUSANA Y/O BERNARDI GUSTAVO OSCAR","BALANZ","324968",265215.92],["BROZZI SERGIO GABRIEL Y/O RIVAS NATALIA CAROLINA","BALANZ","1639427",264151.27],["Zarlenga, Elsa Maria Elvira","INVIU","26033",262909.9],["Rancaño, Paula","INVIU","229157",261059.08],["SOLA MARIA ISABEL Y/O DIAZ GUILLERMO","BALANZ","476759",258887.67],["GENBAYGEN S.R.L.","BALANZ","101783",257613.72],["GOLDARACENA SANTIAGO","BALANZ","32608",255901.16],["RACCA ELINA ANGELA ANA","BALANZ","319798",249944.57],["AGRADI RICARDO DANIEL Y/O MATURO LAURA MARIA","BALANZ","477202",243180.83],["Gerold, Daniel Gustavo","INVIU","7214",241201.31],["QUINTEROS CARLOS ALBERTO","BALANZ","1515985",239164.74],["SANTOS VERONICA CONCEPCION","BALANZ","622127",239120.0],["LOPEZ GRISOLIA VIRGINIA GRACIELA","BALANZ","686499",236491.72],["Garcia Tejera, Silvina Susana","INVIU","7265",235607.06],["VARDE DANIEL FRANCISCO JAVIER","BALANZ","993077",232128.06],["ARAMBARRI GERMAN Y/O GUERRA DE ABREU MARICEL ANDREA","BALANZ","923725",231773.48],["LALOR LUIS MARIA","BALANZ","1461444",231705.8],["Porteyro Ibarra, Julio Cesar","INVIU","16216",231603.78],["KOGAN DANTE LEONARDO","BALANZ","944276",224959.94],["Marco Del Pont, Mariano","INVIU","13260",223731.7],["Calio, Gustavo Orlando","INVIU","209032",218688.36],["Nattkemper, Edmundo Federico","INVIU","14080",215690.56],["CORRAL, ADRIANA INES","INVIU","222336",214763.31],["CERA - VEGA, OSCAR ALFREDO","INVIU","480622",214297.38],["REYNAL FREIXAS MIGUEL MARTIN Y/O LARREA MARTINA","BALANZ","1400163",213011.55],["MORENO JOSE MARTIN Y/O BRUNI ANDREA NATALIA","BALANZ","1337390",210519.93],["MARTIRENE ANGEL OMAR","BALANZ","354472",209690.94],["Mendizabal, Juan Carlos","INVIU","13428",209225.14],["ADAMIC CATALINA Y/O VASSALLO GERARDO GUSTAVO","BALANZ","1700323",205527.27],["URRA, EMILIANO FERMIN","INVIU","209215",205501.68],["Guerin, Juan Francisco","INVIU","233246",205318.51],["ARDANAZ MARIA LUJAN Y/O PORCHETTO SEBASTIAN ALFREDO","BALANZ","1398465",203854.69],["DURAN DIEGO ALEJANDRO","BALANZ","374084",203116.17],["FALCO MARIA ELENA Y/O STABIO JUAN MATIAS","BALANZ","318707",201997.66],["FRIAS SANTIAGO FABIAN Y/O FRIAS MARIA DEL PILAR Y/O FRIAS JORGE HUMBERTO","BALANZ","474522",198616.4],["DIAZ COLODRERO FERNANDO","BALANZ","360979",198140.97],["SARQUIS EDUARDO JORGE Y/O GRILLO CATALINA VICTORIA","BALANZ","1624513",194692.76],["VOLLERT DANIELA Y/O HERMIDA MANUEL Y/O HERMIDA GONZALO Y/O HERMIDA AGUSTINA","BALANZ","1349525",193127.25],["Gooding, Alejandro Haroldo","INVIU","7277",190954.37],["SACILOTTO DANIELA SILVINA","BALANZ","1167683",189869.44],["QUINTEROS PABLO DAMIAN","BALANZ","1516173",188482.74],["DEL BLANCO MARCELO ALBERTO Y/O VAZQUEZ RODRIGUEZ CONSTANZA","BALANZ","476180",187954.1],["FOSSEMALE MARIA NOEL","BALANZ","1432174",186652.48],["MARTIN SHIPPING & CO SA","BALANZ","103540",186444.82],["PIORNO LEANDRO MANUEL","BALANZ","387556",184956.05],["DUFFARD MARIA EUGENIA Y/O CAVANAGH GASTON","BALANZ","334925",184182.46],["ROAL SRL","BALANZ","102925",183179.48],["GEROLD INGRID MARIANA Y/O ALVES DE LIMA ALBERTO ENRIQUE","BALANZ","322661",180590.21],["PEREZ ALVARO ISMAEL JAVIER Y/O SARQUIS ELENA MARIA","BALANZ","378819",174974.37],["KRON ELECTRONICS SA","BALANZ","105849",174969.99],["AGRICON SA","BALANZ","105402",173284.48],["VAINER JULIO SILVIO Y/O KOGAN RAQUEL LILIANA","BALANZ","1551101",172806.79],["PARCHEICZUK NADIA VANESA","BALANZ","951831",171981.31],["GARCIA GONZALEZ, BELEN","INVIU","259684",169067.09],["OSLO ARGENTINA SA","INVIU","15073",168051.2],["BODINO MATIAS LUIS","BALANZ","24591",166986.19],["ZAMBON JORDAN BERNABE","BALANZ","1209380",163219.69],["Garcia Tejera, Dolores","INVIU","7263",159568.91],["MAURO DIEGO CARLOS Y/O MAURO JUAN FRANCISCO","BALANZ","1320463",158975.17],["BOYADJIAN RUBEN ESTEBAN Y/O ROISMAN RAQUEL VERONICA","BALANZ","594741",158947.4],["MESUNO GERMAN FEDERICO Y/O CORALLO SILVIA ELBA","BALANZ","26139",157482.78],["CRIAPAMPA SA","BALANZ","102872",156767.93],["CERA - GOMEZ, MIGUEL ALEJANDRO","INVIU","480279",156126.23],["FOSSI CARINA VALERIA Y/O SOSA HUGO MARCELO","BALANZ","1663744",155598.82],["LAMAS MIGUEL ANGEL Y/O SANCHEZ ACOSTA DORA BEATRIZ Y/O LAMAS MARIA CANDELARIA","BALANZ","946805",155463.35],["Alonso, Alejandro Eduardo","INVIU","1215",155126.83],["VIVO IGNACIO","BALANZ","526467",154445.77],["GASPARINO TABORDA CARLOS GABRIEL Y/O DIYARIAN MAIDA LORENA","BALANZ","1313934",153248.29],["VON BISCHOFFSHAUSEN LORELEY DIANA ELIZABETH Y/O CANERO ALFREDO EZEQUIEL","BALANZ","1623778",151591.52],["KVIATEK, ARIEL DAMIAN","INVIU","228598",151504.83],["NOVILLO ASTRADA MARIA CECILIA Y/O MATHET MARIA","BALANZ","1404021",147688.29],["INDIJ MARIANO","BALANZ","1532787",147648.99],["FRIDMAN DANIELA LAURA","BALANZ","28361",147343.42],["ANGELERI MARCOS ALBERTO","BALANZ","371768",146147.08],["AGENCIA MARITIMA MARTIN SRL","BALANZ","100520",145833.33],["ALFREDO CESAR GOUGY S.A.","BALANZ","103112",144840.48],["CARDINALE BOYADJIAN RICARDO JAVIER","BALANZ","377372",143850.56],["GOLDFELD JAVIER IGNACIO Y/O DESSEL ABIGAIL ILEANA","BALANZ","478492",142757.48],["INDIJ DAMIAN MAXIMILIANO Y/O TAMMARAZIO ANDREA","BALANZ","419860",140831.18],["BOZZO RODRIGO MARTIN Y/O BOZZO JORGE AGUSTÍN","BALANZ","1627931",140467.58],["Lima, Jorge","INVIU","212922",140331.73],["DELGADO, JOAQUIN IGNACIO","INVIU","224882",139923.0],["Gomez Comelli, Pedro","INVIU","238629",139883.24],["CERA - ORCIUOLO, ANA MARIA","INVIU","480940",138472.17],["Quse, Ariel Matias","INVIU","174997",136793.33],["ALMIROTY CARLOS ALBERTO","BALANZ","342098",136624.55],["BCSA SD GALILEO MULTIMERCADO IV FCI","BALANZ","40623",132175.67],["LAMM ALBERTO","BALANZ","25779",131718.08],["Pereyra Zorraquin, Francisco Julian","INVIU","16193",131631.88],["MAGNANINI CARLOS ABEL Y/O DUVOY CONSTANZA MARIA","BALANZ","1461307",131160.03],["Wilensky, Alberto Luis","INVIU","23014",129909.53],["Guber, Ana","INVIU","217191",127191.65],["JAUGUST JOSE MANUEL","BALANZ","319803",126644.08],["Goldaracena, Mario Joaquin","INVIU","7327",123715.84],["VITKE SA","BALANZ","102031",120768.37],["FERRO, CINTIA ANABELA","INVIU","247802",120364.73],["PURICELLI JOSE LUIS","BALANZ","877686",120269.83],["ANADON ELISA MARIA","BALANZ","1512961",119550.34],["QUINTEROS CARLA DANIELA","BALANZ","1516166",119167.77],["D ATRI, FRANCISCO NORBERTO","INVIU","262228",117865.97],["BRACCO, MARIA PATRICIA","INVIU","229173",116724.88],["LOGISTICA TINAC SA","BALANZ","101726",116575.92],["PELLIZZETTI PEDRO","BALANZ","721085",115823.24],["Oistaczer, Sandra Lia","INVIU","4175",114982.81],["Bustamante, Julio Cesar","INVIU","2348",114597.72],["HERMIDA GONZALO Y/O D ANGELO RODRIGUEZ MARIA BELÉN","BALANZ","1462937",113531.08],["Orsei, Pablo Fernando","INVIU","15093",112904.97],["VIRASORO MIGUEL Y/O VIRASORO LUCRECIA","BALANZ","413646",112356.99],["Díaz, Manuel Francisco","INVIU","228850",112316.47],["Di Franco, Nicolas Hector","INVIU","4297",112232.96],["PORCHETTO SEBASTIAN ALFREDO Y/O ARDANAZ MARIA LUJAN","BALANZ","1398695",110899.65],["POLACEK KARINA","BALANZ","36079",110853.28],["ROITMAN DIEGO MARTIN","BALANZ","403856",110392.46],["RENAU MARIA ALICIA LEONOR Y/O WOJTAL MARIA CECILIA","BALANZ","36679",108121.92],["BLUMETTI NORA SUSANA Y/O MARAZZI CONSTANZA","BALANZ","1555703",107656.31],["PICCOLI NESTOR OMAR Y/O CARBONE KARINA ALEJANDRA","BALANZ","338108",105861.78],["DE MIGUEL HORACIO RODOLFO Y/O DE MIGUEL MARIA","BALANZ","1519100",105554.56],["SCALISE, PAOLA VANESA","INVIU","245280",104737.72],["SCALISE, GISELA ELIZABETH","INVIU","245326",104737.72],["HAWES ANTHONY","BALANZ","1598608",104615.6],["GARCIA AMELIO, LEONARDO RAUL","INVIU","246389",103819.33],["SANTANDER NICOLÁS ALFREDO","BALANZ","28281",103630.43],["DIGEX SRL","BALANZ","101358",103575.66],["ANZIZAR MARIA MARTA","BALANZ","23343",103452.73],["ZUCHOVICKI CLAUDIO ADRIAN Y/O BACMAN VERONICA VIVIANA","BALANZ","485119",102800.45],["TALLERES GRAFICOS GAROFALO SRL","BALANZ","103708",102640.69],["BETCHAKIAN LEONARDO Y/O RADRIZZANI ANA CECILIA","BALANZ","1455337",101096.87],["DE ELIA ANA","BALANZ","1408864",100631.88],["FRANCIA JAVIER Y/O FRANCIA TIZIANO ORLANDO","BALANZ","1645848",98675.73],["LEIDERMAN SUSANA MABEL Y/O GUBER ANA","BALANZ","38960",98437.62],["ANDRADE DE ARAMBURU MANUEL SEGUNDO MARIA","BALANZ","362366",97145.73],["BERIZ SRL","BALANZ","101362",97094.01],["GOMEZ ROBERTO SECUNDINO","BALANZ","1084026",95943.94],["MACOME LUCA Y/O ACUÑA  JANINA RENEE","BALANZ","913870",95520.18],["FIGUEROA MULHALL IGNACIO FRANCO","BALANZ","1686442",89926.8],["ALDAO ANA Y/O ALDAO RICARDO CLODOMIRO","BALANZ","1073701",87400.14],["FERNANDEZ GONZALEZ RICARDO MANUEL Y/O HENSHAW JULIA INES","BALANZ","1473054",87143.15],["Arevalo, Luciano","INVIU","1205",86353.81],["MÜLLER IVAN Y/O MULLER ALEJANDRO HUMBERTO","BALANZ","1567887",85190.88],["GASPARINI GUSTAVO OSCAR Y/O FERREYRO MARIELA PAULA","BALANZ","322327",85159.69],["VENTIMIGLIA MATEO EZEQUIEL","BALANZ","1267828",84884.82],["Nelson, Esperanza","INVIU","14069",83845.05],["LLORENTE MAGDALENA","BALANZ","507753",83559.14],["MORENO KIERNAN, CRISTIAN","INVIU","193024",83409.28],["HANDLEY BENJAMIN HERIBERTO Y/O HANDLEY HERBERT BRIAN","BALANZ","1321295",82988.69],["VENTIMIGLIA JULIETA INES","BALANZ","1365814",79458.9],["CONTARTESE SUSANA ISABEL","BALANZ","39197",79384.25],["DEL BLANCO MARCELO ALBERTO","BALANZ","517765",79365.14],["AMERIS SRL","BALANZ","101300",77512.64],["GAGLIARDI MARIA PIA ROSARIO","BALANZ","479166",77265.58],["LIGA ARGENTINA DE LUCHA CONTRA EL CANCER ASOCIACION CIVIL","BALANZ","101024",76530.88],["De Pablo, Juan Carlos","INVIU","4133",76248.54],["De Reatti, Adrian Pablo","INVIU","4321",75982.46],["BERALDI MARIANO FABIAN","BALANZ","496251",75900.05],["FEUERMANN TAMARA Y/O CASIRO NICOLAS","BALANZ","347988",75418.29],["Urani, Pablo","INVIU","20505",74790.8],["GIRARD, MARTA ESTHER","INVIU","230554",74246.94],["MARCO DEL PONT JUAN","BALANZ","26471",74008.31],["LA ONDULADA SA","INVIU","187686",73952.46],["BUCCA BLAS GUIDO Y/O CAPRONI BEATRIZ","BALANZ","899492",73566.41],["D´ALTO ALFREDO JOSE Y/O D´ALTO MARIO VICTOR","BALANZ","344692",72593.84],["MORENO KIERNAN CRISTIAN Y/O TOSSOUNIAN GORDON DAVIS LUISA AIDA EUGENIA","BALANZ","471043",72469.26],["GRANDE NADIA JUDIT","BALANZ","424659",72127.14],["GARCIA RODRIGO DAVID Y/O GARCIA GUSTAVO DAVID","BALANZ","947368",71943.06],["Virasoro, Francisco Javier","INVIU","21157",71317.55],["MIGUENS FELIPE Y/O RODRIGUEZ MEDICA MARIA EUGENIA","BALANZ","581558",70606.47],["REBAGLIATI NESTOR GERONIMO","BALANZ","342329",70240.31],["Giacobbe, Emiliano Facundo","INVIU","7278",69826.13],["GARCIA THIEME IGNACIO EDUARDO","BALANZ","288166",69561.96],["TAQUINI PAULA","BALANZ","1572178",68099.87],["TRIAS DECENA FANNY GUADALUPE","BALANZ","947557",67623.75],["MATHET FELIX","BALANZ","1502655",67383.81],["SUCESION DE OLANO JORGE GABRIEL","BALANZ","39669",67359.77],["MIGNONE CARMELA","BALANZ","480656",65743.38],["BINDI GABRIELA ELENA Y/O BLOCH RICARDO HORACIO","BALANZ","937808",65332.82],["ARBARELLO LEANDRO Y/O DARTIGUELONGUE PAULA","BALANZ","380253",65207.65],["PENTA BROKER SOCIEDAD DE PRODUCTORES ASESORES DE SEGUROS S.A.","BALANZ","164222",65077.73],["Gaynor, Alejandro Patricio","INVIU","7163",64642.21],["CAREY CARMELA Y/O BONADEO GONZALO DIEGO","BALANZ","1103663",64631.63],["TOGNETTI MARIANA PAULA Y/O CANALE TOGNETTI NATALIA RENATA","BALANZ","779934",64469.38],["VIVO ESTEBAN Y/O RAVENNA VALERIA MARIA","BALANZ","875037",63876.41],["LOPEZ GRISOLIA VIRGINIA GRACIELA Y/O CAPELLI MATIAS","BALANZ","927830",62715.38],["ROTHLISBERGER ARIEL HERNAN","BALANZ","329525",62405.71],["LEYACK WALGER SANTIAGO","BALANZ","721636",61513.29],["PINI, ANGELES MARÍA","INVIU","212739",61247.68],["JARMOLUK MARTIN GERARDO ROMÁN","BALANZ","382139",61000.51],["FERNANDEZ ALEJANDRA SUSANA Y/O HEINRICH ANDRES Y/O HEINRICH JAN","BALANZ","542462",60914.95],["SERVICIOS DE INNOVACION EMPRESARIAL SA","BALANZ","104636",60554.62],["DAVID CRISTINA GRACIELA Y/O ESPASANDIN ANALIA Y/O ESPASANDIN NATALIA","BALANZ","1661061",60440.49],["MARCO DEL PONT MARIANO","BALANZ","25671",59897.4],["POWER MARINE SRL","BALANZ","108111",59892.48],["INNOVATIO SA","BALANZ","102045",59316.85],["BERNARDI MARIA EUGENIA","BALANZ","683335",59267.05],["Cederberg, Maria Luisa","INVIU","3369",59024.45],["WINER, GABRIEL JORGE","INVIU","248440",57894.64],["FASSI RAMIRO FERNANDO","BALANZ","1371267",57819.07],["VIRASORO ROSARIO Y/O VIRASORO MIGUEL","BALANZ","1175319",57394.59],["FASSI CARLOS MARCELO","BALANZ","1192557",56566.7],["Lucchetti, Dario Raul","INVIU","233936",56548.75],["CAREY CARMELA","BALANZ","729268",56430.3],["MOHADEB CECILIA INES, Cecilia Inés","INVIU","235154",55878.4],["Parodi, Celina","INVIU","229865",55717.82],["CASIRO DANIELA LAURA Y/O GREISORIS LUCIANA","BALANZ","930509",54985.9],["CASSIS NICOLÁS ALBERTO Y/O TAGLIOLI MARIANA","BALANZ","1493397",54709.31],["MONELOS ALICIA GRACIELA Y/O SAMPIETRO MARIA CECILIA","BALANZ","437442",54578.02],["NOS UNIMOS SAS","BALANZ","108377",53229.72],["ELOWSON CORA Y/O MIRA ROQUE VALENTIN","BALANZ","347224",52977.63],["MARBAN KARINA ANDREA Y/O MICHELINI JORGE PABLO Y/O MICHELINI MALENA","BALANZ","1292595",51789.05],["CANCI OSVALDO CARLOS Y/O PINTO SILVIA ALEJANDRA","BALANZ","533318",50767.63],["WINOGRAD RAFAEL ERNESTO Y/O TRENES CARINA","BALANZ","385888",50703.19],["ARAUJO CARLOS MARIA","BALANZ","1232348",48300.79],["CASTIELLA, MARCELO GUILLERMO","INVIU","213334",47784.71],["GUNNINGHAM FRANCISCA MARGARITA Y/O NELSON JUAN SANTIAGO","BALANZ","951202",46447.34],["HARFUCH MARIA MARTA","BALANZ","34828",45993.77],["LAGO SEBASTIAN ALFREDO Y/O DEPETRIS MARIA PAULA","BALANZ","37155",45922.76],["Rubio, Guillermo Alejandro","INVIU","18201",45919.34],["FERNANDEZ EMMA","BALANZ","1671794",45568.29],["DIAGNOSTICO MEDICO DRES. DE MARTINO SRL","BALANZ","163423",44140.47],["Estrugamou, Maria","INVIU","5039",44122.58],["RUIZ LUQUE EZEQUIEL MARIANO","BALANZ","1041560",43751.25],["VIBES FEDERICO PABLO","BALANZ","415295",42658.31],["MAEDNABAR SRL","INVIU","210673",41748.43],["FRIGERIO JUAN BAUTISTA","BALANZ","339514",41384.23],["DEL AZAR NICOLÁS ENRIQUE Y/O DEL AZAR AGUSTIN","BALANZ","1335199",40980.42],["VALLE FABIAN ALEJANDRO MANUEL Y/O ROITMAN ANA LAURA","BALANZ","327569",39882.13],["POLACEK PEDRO Y/O COUSO RIELO MARIA REMEDIOS","BALANZ","425536",39872.47],["Lado, VALENTINA","INVIU","12255",39617.82],["DEL AZAR AGUSTIN Y/O DEL AZAR NICOLÁS ENRIQUE","BALANZ","1335219",39065.4],["AVENA JULIO CESAR","BALANZ","410368",38120.59],["PERRONE GABRIEL GUSTAVO","BALANZ","438710",38031.71],["FELDMANN PABLO ANDRES Y/O URBANI MARIA DANIELA","BALANZ","1201419",37848.63],["Reyes, Ruben Oscar","INVIU","18168",37753.26],["Munck, Ana Corina","INVIU","13347",37750.94],["SALVUCCI RUBEN ALBERTO Y/O SALVUCCI JAVIER DARIO Y/O IDIARTE SARA ISABEL Y/O SAL","BALANZ","934108",37591.93],["ALTER MARIO Y/O HELLER BEATRIZ GRACIELA Y/O ALTER MATIAS Y/O ALTER BARBARA","BALANZ","977026",37531.28],["ESPASANDIN ANALIA","BALANZ","1353101",36501.68],["Romanelli, Gustavo Andres","INVIU","18076",36494.28],["FORCAS SRL","BALANZ","104616",35615.72],["FELLER SILVANA PAOLA","BALANZ","981435",35293.29],["RATTI MARIA FERNANDA Y/O RATTI MARIA CECILIA","BALANZ","479175",35227.2],["FORNARI, OSVALDO CARLOS","INVIU","211620",32978.85],["Napoli Garcia Moritan, Carlos Federico","INVIU","14038",32649.57],["MASETTI FERNANDO RICARDO EMILIO","BALANZ","36907",32639.84],["ALTER MATIAS","BALANZ","649395",31982.76],["LELOIR, GUILLERMO FEDERICO","INVIU","246578",31801.78],["Marco Del Pont, Juan","INVIU","13270",31432.61],["Barber, Matias Eduardo","INVIU","2225",31185.83],["ALARALAB SA","INVIU","1277",31125.44],["MASEDA RICO HORACIO Y/O LEVY MARCELA CARMEN","BALANZ","337820",30512.15],["CERA  - Capdevielle, Julieta","INVIU","480291",30380.46],["De Pablo, Cecilia Maria","INVIU","239032",30222.09],["BARGADOS JOSE DANIEL","BALANZ","1674166",30102.47],["Ovando, Gaspar Federico","INVIU","159997",29602.02],["JACARANDA SA","BALANZ","162133",29506.92],["Navarini, Santiago","INVIU","14059",29487.64],["PAZ FACUNDO MANUEL","BALANZ","325093",29487.28],["MATTOS MARTIN CESAR Y/O HERRERA MURUA FERNANDA","BALANZ","1194493",29386.75],["Cortese, Damian Dario","INVIU","3243",29337.18],["KASPAR GUILLERMINA","BALANZ","26917",29106.56],["KELLER SARMIENTO ANDREAS MAXIMIANO","BALANZ","495269",28744.74],["HOGG NICOLÁS","BALANZ","501041",28522.63],["OTHEGUY PABLO AGUSTIN Y/O SURUR JULIETA ALICIA","BALANZ","796394",28497.64],["Hernandez, Alberto Marcelo","INVIU","242089",28321.97],["KANTER SNAIDER ERIC","BALANZ","628374",27749.63],["GONZALEZ DEL SOLAR CARLOS FRANCISCO Y/O GOMEZ PALMES TERESA JOSEFINA Y/O GONZÁLE","BALANZ","1219729",27261.73],["PEREYRA ZORRAQUIN FRANCISCO","BALANZ","27893",26572.6],["FAERSTEIN ARIADNA FERNANDA Y/O LIFSCHITZ MARCELO DAVID","BALANZ","680027",25670.33],["FALCO ROSSETTO ALEJANDRO","BALANZ","336638",25587.33],["Landi, Laura","INVIU","12156",25277.72],["PELLIZZETTI HECTOR","BALANZ","471302",25085.55],["DRYLA SA","BALANZ","101403",24918.75],["MURO MARIA VICTORIA","BALANZ","338308",24907.98],["PIRILLO ANTONIO RAFAEL Y/O GONZALEZ ELIZABETH LILIANA","BALANZ","429718",24884.27],["VELAZCO IGNACIO TOMÁS Y/O SACILOTTO DANIELA SILVINA","BALANZ","1596982",24852.77],["LA CONTINUA SRL","BALANZ","101216",24677.4],["Silber, Gerardo Pablo","INVIU","19411",23993.65],["GONZALEZ RAUL GUSTAVO Y/O GONZALEZ JUAN PABLO Y/O GONZALEZ LUZ MARIA","BALANZ","477814",23954.16],["Espinosa, Maria Soledad","INVIU","191473",23875.69],["SURUR VIRGINIA ALICIA Y/O SURUR JULIETA ALICIA","BALANZ","357298",23726.72],["TEJON PABLO NELSON","BALANZ","457044",22182.97],["Chedufau, Sebastian Maria","INVIU","3426",22085.74],["BRONSTEN JAVIER SERGIO","BALANZ","563673",21912.66],["ORSEI CARLOS SEBASTIAN","BALANZ","652269",21642.0],["ROSENBERG ARIEL JORGE","BALANZ","564797",21589.47],["IRURZUN MARIA CECILIA","BALANZ","490256",21451.74],["De Santis, Mariela","INVIU","4161",21088.57],["CAPILLA JUAN PABLO","BALANZ","286470",21037.28],["SALCEDO JORGE ANIBAL","BALANZ","278572",20774.93],["ROJAS MARIA AGUSTINA Y/O PONT LEZICA FEDERICO MARIA","BALANZ","28861",20704.33],["RANCAÑO, GABRIELA","INVIU","247375",20649.78],["CUBO MÁGICO CONTENIDOS SRL","BALANZ","106082",19874.14],["HEMMING JUAN FRANCISCO","BALANZ","33155",19832.3],["MOREA PABLO","BALANZ","989681",19053.51],["Miranda, Maria Elena","INVIU","13218",18904.76],["VILLAR PABLO Y/O CANALE PAULA CECILIA","BALANZ","29902",18487.24],["HEINRICH TOMAS","BALANZ","347781",18099.87],["DUARTE MARCELA MARIA DE LOURDES Y/O ALONSO PAMPIN MIGUEL","BALANZ","423426",18081.79],["MATONE MARIA LAURA","BALANZ","391792",17695.98],["DARGET FRANCESCA MANUELA","BALANZ","502924",17211.73],["PICONE LUCAS MATIAS Y/O PICONE DANIEL NESTOR Y/O PICONE NICOLAS MARTIN","BALANZ","502247",16814.12],["LESCHIUTTA DUILIO ARMANDO","BALANZ","29373",16660.33],["BIANCO NORMA ADRIANA","BALANZ","399573",16540.26],["Tarres, Julieta","INVIU","84314",16479.58],["BOURLOT GASTON","BALANZ","717605",16247.22],["MUSARRA MARINA ANDREA","BALANZ","481453",16111.8],["FIGUEROA, HORACIO ALFREDO","INVIU","230158",16036.71],["TRILNICK CYNTHIA ANDREA Y/O POJAGHI TOMAS","BALANZ","1691423",15429.74],["VIVO AGUSTINA","BALANZ","26704",15415.22],["Machado, Joaquin","INVIU","223420",14975.61],["PIGNA MARTIN","BALANZ","775977",14078.77],["DIAZ SOLA GONZALO Y/O DIAZ SOLA PILAR Y/O DIAZ SOLA IGNACIO Y/O DIAZ SOLA FATIMA","BALANZ","390436",13890.83],["JERSONSKY MARTA SABINA Y/O FRIDMAN GERARDO CÉSAR","BALANZ","400993",13727.12],["BRAUN BIDAU MARÍA TERESA Y/O DIRADOURIAN SONIA","BALANZ","25673",13550.66],["VERBEKE NESTOR ELVIO Y/O COLOMBO SILVIA BEATRIZ","BALANZ","475099",13362.88],["SANCHEZ MARIA INES .","BALANZ","715949",13337.43],["HELMAN VANESA SOLANGE","BALANZ","1518461",12985.55],["Pedrero, Federico Jose","INVIU","16282",12614.74],["DI PASQUALE ALEJANDRO MATIAS","BALANZ","741856",11993.11],["SOKOL FLORENCIA","BALANZ","1346131",11377.63],["DE MICHELI VALENTINA","BALANZ","1246711",10838.83],["Castiella, Josefina","INVIU","219962",10787.52],["BRACCO LUCAS MARTIN","BALANZ","25703",10755.8],["OBEJERO MILAGROS","BALANZ","385299",10682.76],["GRILLO MARIA GENOVEVA","BALANZ","444070",10670.1],["GRINGRAS SANDRA BETINA Y/O PIGNA MARTIN Y/O PIGNA JULIAN","BALANZ","504282",10650.02],["Gunningham, Diego Juan","INVIU","7156",10443.99],["MACHERA FELIPE JOSE","BALANZ","448176",10371.33],["ZORREGUIETA MARTIN","BALANZ","28971",10339.06],["TAMER FEDERICO JUAN Y/O MARTINEZ WAGNER CYNTHIA","BALANZ","439239",10337.75],["CINCO CERROS FRACCION SUR SAS","BALANZ","101622",10252.5],["SURUR CANDELARIA Y/O RATTI MARIA CECILIA Y/O SURUR JORGE DANIEL","BALANZ","871969",10181.4],["GRUPO TSA SRL","INVIU","7341",10128.18],["OBERST ALEJANDRO RODOLFO Y/O LUNA MIRIAM BEATRIZ","BALANZ","369435",10010.27],["BRUNNER MARIANA","BALANZ","534556",10000.0],["ZUBERBUHLER MARCELA","BALANZ","482632",9918.56],["Fahey Duarte, Federico","INVIU","6183",9893.36],["Castiella, Maria Pia","INVIU","174324",9689.3],["RUA ARIEL ALBERTO RAMON Y/O FERNANDEZ LORENA BEATRIZ","BALANZ","361070",9628.48],["VASSARA ALBERTO VICTOR","BALANZ","643883",8859.69],["Marco Del Pont, Tomas","INVIU","13335",8181.08],["LATEULADE JULIAN ESTEBAN Y/O FERRARESSO MARIA AGUSTINA","BALANZ","428872",8003.8],["GALMARINI ALEJANDRO ATILIO","BALANZ","426138",7978.74],["BOYADJIAN ROXANA VALERIA","BALANZ","335646",7805.73],["Nardini, Adrian Matias","INVIU","14058",7740.76],["CHURBA NATALIO","BALANZ","39909",7707.19],["BIREMBAUM GASTON ARIEL Y/O RZEZAK LUCIANA","BALANZ","339062",7693.28],["Gordon Davis, Margarita Ana","INVIU","7328",7433.93],["GRAÑA, MARIA GABRIELA","INVIU","257928",7339.28],["FRANCIA ALEJANDRO DOMINGO JOS","BALANZ","274602",7254.39],["Darget, Augusto Leonardo","INVIU","4160",7162.32],["SOKOL JORGE SANTIAGO Y/O MELO Y CEPERO LUCIA ALCIRA","BALANZ","39431",7100.39],["BLANCO JUDIT ROSANA Y/O RAMON RODOLFO JOSE","BALANZ","26767",6981.02],["ANTUNEZ FELIPE Y/O ANTUNEZ FACUNDO Y/O ANTUNEZ ROBERTO DANIEL","BALANZ","319446",6815.97],["Ortiz De Rozas, Gabriela Susana","INVIU","15023",6637.88],["BELLOUARD FRANCISCO JOSE","BALANZ","1663967",6504.41],["Utrera, Facundo Ulises","INVIU","241129",6452.94],["SPARK ENERGY SOLUTIONS SA","BALANZ","102732",5867.89],["Napoli Garcia Moritan, Carlos Federico","INVIU","14034",5769.79],["FALCO ROSSETTO DANIELA LAURA","BALANZ","347293",5623.98],["Castiella, Patricio Agustin","INVIU","159970",5500.26],["Graziano, Osvaldo Antonio","INVIU","7152",4991.87],["VENTIMIGLIA CARLA VALERIA","BALANZ","26405",4975.21],["COLEMAN MARIA DE LAS MERCEDES","BALANZ","454651",4948.85],["DE ORO OCAMPO MARIA PAULA Y/O ARCE HERRERA VICTOR MANUEL","BALANZ","384940",4619.9],["VAREZIC ANTONIO MIGUEL ANGEL Y/O VAREZIC JUAN CARLOS","BALANZ","435202",4499.69],["FERNANDEZ SASSO MARCELO","BALANZ","369737",4381.35],["PRIMUS SONIA Y/O MIRA ROQUE VALENTIN","BALANZ","26046",4241.62],["NASCIMBENE AUGUSTO","BALANZ","514032",4052.82],["Dominguez, Gustavo Oscar","INVIU","4203",4010.4],["CANIEVSKY ELIAS ABRAHAM","BALANZ","1344308",3866.47],["PESCIO MARIA SILVINA Y/O BADINO LYNCH LUIS","BALANZ","746377",3833.48],["KLAPPENBACH CRISTIAN","BALANZ","406578",3754.1],["Spinetta, Maria Florencia Lourdes","INVIU","19212",3744.41],["FERNANDEZ CARLOS HUGO Y/O GONZALEZ NORA RUT","BALANZ","39710",3610.76],["DE MICHELI MANUEL","BALANZ","263112",3507.1],["WOLKOMIRSKI SERGIO FABIAN","BALANZ","1346402",3213.0],["Chiaraviglio, Horacio Ismael","INVIU","3367",3095.18],["ZEMBORAIN ROMULO IGNACIO","BALANZ","312655",3047.34],["De La Carcova, María Ines","INVIU","4229",2803.51],["LAMAS MIGUEL ANGEL Y/O SAN MIGUEL PAULA MARIA","BALANZ","320732",2743.49],["CORAITA SEBASTIÁN Y/O CARNEIRO MARIA ALEJANDRA","BALANZ","1245733",2599.67],["ORIANI PAULA","BALANZ","351616",2344.14],["Falco Rossetto, Javier","INVIU","6195",2254.86],["KESER JUAN MARTIN","BALANZ","27193",2196.02],["Narbais, Marina","INVIU","14077",2160.87],["CORIA MARIANA GISELLE Y/O SAUCEDO CHRISTIAN PABLO","BALANZ","693497",2136.12],["MAREK MARIELA","BALANZ","998971",1816.63],["Molina, Claudia Elena","INVIU","13435",1777.95],["HOSCH DIEGO CESAR","BALANZ","365196",1694.05],["PRADO MARIA FELISA","BALANZ","452033",1524.53],["Garcia Pereyra, Gonzalo Lorenzo","INVIU","7120",1310.3],["COSENTINO MARIA PAZ","BALANZ","886850",1299.7],["ORTIZ DE ROZAS SILVINA ANDREA","BALANZ","353466",1068.36],["PIGNA JULIAN","BALANZ","460414",1041.23],["BLANCO, SUCESIÓN DE JUAN JOSE","INVIU","2226",780.96],["Azcoitia, Lucas Fernando","INVIU","128855",719.25],["Ponce, Francisco German","INVIU","16170",639.91],["VENTIMIGLIA CARLA VALERIA Y/O DE MICHELI JUAN IGNACIO","BALANZ","1577919",631.7],["WINOGRAD MILENA RAQUEL","BALANZ","397895",523.65],["MONCHOLI PABLO","BALANZ","566160",469.58],["Ortiz De Rozas, Martin Guillermo","INVIU","15053",456.78],["TOSSOUNIAN Y BOYADJIAN SA","BALANZ","103983",339.03],["PILARESAGRO S.A.","BALANZ","101468",298.52],["CALDERON JOSE LUIS","BALANZ","490305",226.1],["DE TEZANOS PINTO DOLORES","BALANZ","402289",215.61],["Coria, Mariana Giselle","INVIU","186935",198.07],["LOGISTICA URBANA SA","BALANZ","101811",182.92],["MALDONADO MARIANO FAVIO GABRIEL","BALANZ","348333",159.26],["Couso Rielo, Maria Remedios","INVIU","3423",152.13],["AZUMENDI JOSE MARIA","BALANZ","331556",151.97],["SALVUCCI JAVIER DARIO Y/O CASAGRANDE SORIA MARIA LAURA","BALANZ","25696",138.03],["D´ALTO MARIA VERONICA Y/O CORONEL DIEGO ESTEBAN","BALANZ","420537",123.15],["MARRA CARLOS HORACIO Y/O MARRA MARIA CELESTE","BALANZ","786174",113.66],["METROCUBICO SA","BALANZ","107933",108.52],["BIREMBAUM VINICIUS","BALANZ","916336",104.09],["GANADERA VERDESPAMPAS SA","BALANZ","103243",94.88],["CHURBA FEDERICO LAZARO Y/O GOLDFEDER HEIDI","BALANZ","986707",91.79],["OCHOA NATALIA SOLEDAD","BALANZ","566130",86.49],["CHURBA LETICIA LILIANA","BALANZ","514671",78.92],["SMM SH","BALANZ","111322",77.38],["SUCESION DE CHURBA LEON Y/O CHURBA FEDERICO LAZARO","BALANZ","381868",76.54],["MATTOS MARTIN CESAR","BALANZ","955857",70.38],["FRIAS HORACIO","BALANZ","441631",69.59],["Devoto , Juan Ignacio","INVIU","229936",60.21],["AZZARRI JUAN CRUZ Y/O SEIJO PAULA VERONICA","BALANZ","480170",50.49],["OROSA ALVAREZ ELSA NOEL","BALANZ","352018",48.83],["ESTERMAN MARGARITA PERLA Y/O ENRIQUEZ RICARDO","BALANZ","38413",47.81],["AIZENBERG ESTELA SUSANA","BALANZ","422198",47.71],["DOSICOLOR S.A.","BALANZ","106473",41.34],["BRAJKOVIC RUBEN DARIO Y/O GIUNTOLI VIVIANA CLAUDIA","BALANZ","1530032",41.14],["MJM INVERSIONES S.A.","INVIU","172194",39.22],["Naisberg, Carina","INVIU","14048",38.62],["MERINO JUAN CARLOS JOSE","BALANZ","414464",33.31],["Benegas, Juan Segundo","INVIU","245236",33.26],["D´ALTO MARIO VICTOR Y/O D´ALTO ALFREDO JOSE","BALANZ","345219",31.98],["MOREA PABLO","BALANZ","",30.9],["Levin, Daniel Abraham","INVIU","12137",29.81],["Genovese, Gustavo Javier","INVIU","225989",22.33],["HOSCH ARTURO CESAR","BALANZ","27479",20.15],["LAGO MARIA LUZ","BALANZ","323735",19.63],["ODONE MARTIN HORACIO","BALANZ","687475",18.04],["RIPAMONTI ROBERTO EDUARDO Y/O MEZZADRA JULIO ENRIQUE","BALANZ","36583",17.93],["DIAZ GUILLERMO JUAN Y/O FASCIOLO SILVANA","BALANZ","456366",17.82],["MUSARRA OSCAR ALFREDO","BALANZ","389435",17.75],["SAN MIGUEL MARCOS Y/O SAN MIGUEL PAULA MARIA Y/O SAN MIGUEL MARIANA","BALANZ","602450",14.86],["Cappelletti, Nadia","INVIU","3199",12.58],["CAILLET BOIS MARIANO PABLO","BALANZ","39754",11.47],["MARTINEZ PERLA ASUNCIÓN","BALANZ","367602",11.38],["LAGO JUAN PABLO","BALANZ","39164",10.5],["ELOWSON LUCIA  y/o ORMACHEA JUAN FERMIN","BALANZ","25797",9.15],["ALVAREZ COLOMBRES FERNANDO LUIS Y/O BLANCO CRISTINA NELLY","BALANZ","476197",8.4],["FACILITIES ENERGY SA","BALANZ","109487",7.85],["SVARC FEDERICO EUGENIO Y/O GRUÑEIRO ANA MARÍA DEL CARMEN","BALANZ","1451626",7.23],["GABBA JUAN ENRIQUE","BALANZ","353496",6.98],["FRERS SANTIAGO Y/O COLLCUTT MARIA MICHELE ALEXIA","BALANZ","1437690",6.98],["DARGET MATEO AUGUSTO","BALANZ","487030",6.66],["MANDER LEONARDO ADOLFO Y/O SALOMON ROMINA PATRICIA","BALANZ","34680",6.06],["AFFINITAS ARGENTINA SA","BALANZ","102150",4.44],["GRANADO MARIA INES Y/O KISHKILL JOSEPH GERARD","BALANZ","38412",4.31],["GÓMEZ REPETTO GUSTAVO ENRIQUE","BALANZ","38062",4.16],["BERARDI INCHAUSPE JUAN PABLO","BALANZ","463595",4.09],["JMA 3 S.R.L.","BALANZ","101450",4.02],["GEROLD FEDERICO ALBERTO Y/O MARIEL MARIA GABRIELA","BALANZ","38687",3.66],["ARAGON LUIS ALBERTO Y/O GENOVÉS MARÍA VIRGINIA CORINA","BALANZ","35145",3.39],["ICHASO IGNACIO Y/O CLUSELLAS CATALINA","BALANZ","338852",3.39],["DPMG S.A.","INVIU","212383",2.82],["BERALDI FABIAN","BALANZ","417685",2.82],["PALLADINO LUCAS","BALANZ","339224",2.77],["Esnaola, Silvia Irene","INVIU","2343",2.5],["PABLO PEDRO COURREGES SA","BALANZ","101952",2.5],["CASTIELLA MATIAS","BALANZ","515480",2.5],["Maulhardt, Claudio Miguel","INVIU","13459",2.32],["FURLONG MARIA MARGARITA","BALANZ","1176243",2.25],["GIMENO EMILIO MARIANO Y/O GIMENO MARCELA ADRIANA","BALANZ","476499",2.14],["VILLA VICENTE OSVALDO Y/O VILLA PABLO OSVALDO","BALANZ","952346",1.75],["Duarte, Paula Maria del Pilar","INVIU","4303",1.7],["RAJNERMAN ARIEL","BALANZ","37681",1.67],["TRANSPORTE BIANCALANA S.R.L.","BALANZ","107889",1.66],["COURREGES FERNANDO LUIS","BALANZ","342827",1.63],["ROSENTHAL HERNAN EZEQUIEL","BALANZ","452398",1.56],["BOYADJIAN RUBEN ESTEBAN Y/O TOSSOUNIAN JORGE GABRIEL","BALANZ","477233",1.54],["CORDA ALEJANDRO Y/O ANTIC DANA NIEVES","BALANZ","348607",1.48],["Plaksin, Gabriel Silvio","INVIU","16253",1.4],["ALDAO MAGDALENA","BALANZ","321549",1.37],["Arana, Maria Soledad","INVIU","1257",1.36],["FARINA PABLO ANTONIO Y/O KUNTSCHER MARIA EUGENIA","BALANZ","36640",1.33],["RODRIGUEZ STORTONI GONZALO MAURO","BALANZ","540216",1.32],["Vasile, Diego Martin","INVIU","21132",1.31],["CAGNOLI FABIO NORBERTO","BALANZ","",1.27],["M.I. CONSTRUCCIONES S.R.L","BALANZ","102871",1.22],["RODOLFO FERRARI E HIJO S A C F I A","INVIU","239119",1.2],["COHEN DIEGO JAVIER Y/O KARTOFEL VANINA PAOLA","BALANZ","433823",1.14],["LIGA ARGENTINA DE LUCHA CONTRA EL CANCER ASOCIACION CIVIL","BALANZ","",1.08],["GONZALEZ NOGUEIRA MARIA INES","BALANZ","936047",1.08],["NUMERANDO S.A.S","BALANZ","106955",1.04],["LESCHIUTTA SALOME","BALANZ","79960",1.01],["MARCET GERMAN FEDERICO Y/O GIROTTI LUCILA","BALANZ","376112",1.01],["Naisberg, Gabriela","INVIU","14062",0.94],["FISCHBOCK MATIAS JUAN","BALANZ","412169",0.85],["NITRA CAT SRL","INVIU","14088",0.83],["HANONO SAUL ADRIAN Y/O CANIEVSKY ADRIANA JUDITH","BALANZ","1341009",0.77],["SHREIBER ZINA","BALANZ","",0.68],["PROYECTARQ SOCIEDAD ANONIMA","INVIU","231643",0.63],["BIANCO EDELMAR BRUNO","BALANZ","401564",0.62],["GARCIA GONZALO RAUL","BALANZ","27370",0.61],["SAN MIGUEL MARCOS Y/O SAN MIGUEL PAULA MARIA Y/O SAN MIGUEL MARIANA","BALANZ","",0.6],["DIPPOLITO LAURA GABRIELA","BALANZ","319107",0.55],["DUFFARD JORGE ALBERTO","BALANZ","435968",0.55],["SANCHEZ JUAN FACUNDO","BALANZ","",0.55],["BEDOYA CALVO MONICA BETHSABE","BALANZ","325137",0.54],["Otero, Carlos Alberto","INVIU","15069",0.53],["LUPI MONICA SUSANA","BALANZ","332073",0.52],["ABDALA FERNANDO","BALANZ","605914",0.52],["SAUD LUIS ARIEL","BALANZ","397493",0.48],["GOWLAND ALEJANDRO","BALANZ","808742",0.48],["TAVERA NESTOR ABEL Y/O TAVERA GABRIEL WALTER","BALANZ","471634",0.47],["Picone, Daniel Nestor","INVIU","16339",0.46],["CHAIMAN FEDERICO","BALANZ","265861",0.44],["CHIRNICINERO, SERGIO DANIEL","INVIU","191372",0.43],["ENTRE S.R.L.","INVIU","217703",0.42],["CALDERON JOSE LUIS","BALANZ","",0.42],["BULBARELLA JOAQUIN","BALANZ","491050",0.41],["Baigorri, Maria Del Carmen Pilar","INVIU","2383",0.39],["Rodriguez, Andrea Fabiana","INVIU","18260",0.38],["BRUSAU MARIA SOLEDAD","BALANZ","588895",0.35],["ISSEL, HUGO ROBERTO","INVIU","190404",0.34],["ALMIROTY MARIA BELEN Y/O CASASOLA NICOLAS SEBASTIAN","BALANZ","505443",0.34],["MONCHOLI PABLO","BALANZ","",0.32],["LAGO RICARDO ALFREDO","BALANZ","39583",0.3],["BOURNISSENT ROLANDO EDGARDO Y/O BORGOBELLO ANDREA CARINA","BALANZ","343907",0.28],["SAGUIER LUCIA","BALANZ","537559",0.25],["COLONIA SA","BALANZ","106036",0.25],["DEFIBA SERVICIOS PORTUARIOS SA","BALANZ","108551",0.25],["BOYADJIAN SONIA MABEL Y/O TOSSOUNIAN JORGE GABRIEL","BALANZ","570874",0.23],["MENDONÇA MARTIN","BALANZ","34556",0.22],["PAFUNDI MIGUEL ANGEL Y/O MIRANDA GLADYS","BALANZ","325643",0.22],["BERARDI INCHAUSPE S.A","BALANZ","102213",0.21],["TORRETTA AGUSTINA","BALANZ","402336",0.21],["CAGNOLI PABLO HUGO","BALANZ","",0.21],["Pescio, Cesar Antonio","INVIU","16151",0.2],["SHREIBER ZINA","BALANZ","414775",0.2],["ZEMBORAIN MAGDALENA","BALANZ","702716",0.14],["LAPAL SA","BALANZ","106760",0.13],["Saucedo, Christian Pablo","INVIU","50530059",0.1],["MORGAN MARINA","BALANZ","354078",0.1],["RIVAROSA RENE ALFREDO","BALANZ","426274",0.1],["Avila, Jose Luis","INVIU","1278",0.08],["Landi, Carolina Maria","INVIU","12177",0.08],["MOYA PATRICIO","BALANZ","397250",0.08],["BAUAB, BRAULIO DALTON","INVIU","195522",0.07],["PAZZI ANDRES","BALANZ","35103",0.07],["HK SYSTEMS SRL","BALANZ","100642",0.07],["RUIVAL DANIEL FRANCISCO","BALANZ","27225",0.06],["CILIA SUSANA SILVIA Y/O MATONE MARIA LAURA","BALANZ","476393",0.06],["OSUNA EDUARDO ALCIDES","BALANZ","738664",0.06],["OXFORD POLO CLUB S.A.","BALANZ","106704",0.05],["CASIRO FERNANDO MARTIN","BALANZ","869072",0.05],["ESTANCIA NOGALES SA","BALANZ","162735",0.05],["DUSSEL PATRICIO GUILLERMO","BALANZ","36065",0.04],["BEREZOVSKY FABIAN LEON","BALANZ","588360",0.03],["BAILEZ LEONARDO MIGUEL Y/O GUASCO NADIA JAQUELINE","BALANZ","324433",0.02],["SANCHEZ JUAN FACUNDO","BALANZ","388123",0.02],["ALVAREZ COLOMBRES GONZALO JAVIER Y/O NAVARRETE GERTNER ANAHI","BALANZ","479416",0.02],["REBAGLIATI DIEGO","BALANZ","26108",0.01],["KLONAL S R L","INVIU","207723",0.0],["OIRANDE SA","INVIU","15097",0.0],["DASS ELDORADO SRL","INVIU","214687",0.0],["CONTROL Y LOGISTICA S.A","INVIU","202788",0.0],["RACEDO Y DIAZ SRL","INVIU","187781",0.0],["Saucedo, Sucesión de Oscar Alberto","INVIU","19539",0.0],["Bellafronte , Vicente","INVIU","241135",0.0],["HK SYSTEMS S.R.L.","INVIU","217203",0.0],["RICZI SA","INVIU","174860",0.0],["Capdevielle, Julieta","INVIU","207828",0.0],["Chaskielberg, Hector Claudio","INVIU","3258",0.0],["BANCO COMAFI SA SD GALILEO MULTIMERCADO IV","INVIU","153316",0.0],["Gomez, Miguel Alejandro","INVIU","207377",0.0],["Mayol, Alejandro Emmanuel","INVIU","13422",0.0],["Sarquis, Santiago","INVIU","19514",0.0],["Scagliotti, Sofia Ines","INVIU","19410",0.0],["CAGNOLI SA","INVIU","3404",0.0],["Carro, Alfonso Martin","INVIU","191047",0.0],["Francia, Alejandro Domingo Jose","INVIU","186248",0.0],["Bernardi, Susana Mabel","INVIU","2253",0.0],["MORKEN S A","INVIU","200337",0.0],["TALLERES GRAFICOS GAROFALO S R L","INVIU","200209",0.0],["- CERA Nelson, Juan Santiago","INVIU","480044",0.0],["CHIERA, MIRIAM VIVIANA","INVIU","218170",0.0],["Mayo, Hebe Judith","INVIU","13239",0.0],["Baigorri, Jorge Ignacio Vicente","INVIU","2384",0.0],["LIGA ARGENTINA DE LUCHA CONTRA EL CANCER","INVIU","194803",0.0],["Stanic, Nicolas Alejandro","INVIU","19416",0.0],["CERA - SILVA, EMILIO FEDERICO","INVIU","480743",0.0],["Chardon, Federico Raul","INVIU","174932",0.0],["CERA - CASTIELLA, MARCELO GUILLERMO","INVIU","480464",0.0],["Pisarri, Nicolas Enzo","INVIU","234157",0.0],["DASS ARGENTINA SRL","BALANZ","21047",0.0],["ORTIZ DE ROZAS MARCELO","BALANZ","23124",0.0],["VECCHI CARLOS ROBERTO","BALANZ","26349",0.0],["CANTARELLI ALEJANDRO OSCAR","BALANZ","26897",0.0],["BENEVIA SRL","BALANZ","100268",0.0],["COMADIRA FERNANDEZ MARIA EUGENIA Y/O CHAIMAN FEDERICO","BALANZ","267312",0.0],["PASSARELLI ROMINA HAYDEE","BALANZ","27995",0.0],["CESARINI MARTIN GONZALO","BALANZ","29027",0.0],["BRUNNER CHRISTIAN Y/O FERNANDEZ JORGELINA SOLEDAD","BALANZ","32113",0.0],["FONT DANIEL EZEQUIEL Y/O FONT ELIANA SABRINA","BALANZ","34315",0.0],["TRANSMART SRL","BALANZ","100659",0.0],["CAYETANO RIPAMONTI LTDA","BALANZ","100732",0.0],["SCHEIDECKER CAROLINE SUSANNE ANNE MARIE Y/O SCHEIDECKER JAVIER LUIS ROBERTO","BALANZ","36398",0.0],["SCEIDECKER JAVIER LUIS ROBERTO","BALANZ","36446",0.0],["PEREYRA ZORRAQUIN, ICHASO Y ASOCIADOS SA","BALANZ","100878",0.0],["SASIA MARCELO CARLOS","BALANZ","37932",0.0],["MEZZADRA TERESA","BALANZ","318608",0.0],["KLONAL SRL","BALANZ","101173",0.0],["ZEPEDA MENDEZ OSCAR Y/O CLUA BRAUN MONIQUE","BALANZ","325358",0.0],["ESTABLECIMIENTO LA MERCED","BALANZ","101264",0.0],["DE MICHELI JUAN IGNACIO","BALANZ","328895",0.0],["FASSI MIGUEL ANGEL","BALANZ","331627",0.0],["VORTEN SRL","BALANZ","101363",0.0],["DURAÑONA IGNACIO Y/O RODRIGUEZ REIMUNDES JOSEFINA","BALANZ","336103",0.0],["MITIKILE SA","BALANZ","101635",0.0],["HOFIAL SA","BALANZ","101682",0.0],["Corda, Alejandro y/o Antic, Dana Nieves","BALANZ","",0.0],["ROHDE PABLO","BALANZ","349002",0.0],["GANADERA YVOTY SA","BALANZ","101790",0.0],["MARTIN Y HERRERA ESTEBAN","BALANZ","357069",0.0],["ENVIO POSTAL SA","BALANZ","101893",0.0],["MAU PORA SA","BALANZ","102222",0.0],["MOLINA MARCELO RUBEN Y/O KROOP RIO VANESSA CECILIA","BALANZ","377311",0.0],["LTYC SA","BALANZ","102381",0.0],["SOMMER SEBASTIAN","BALANZ","386382",0.0],["SIBILIA JOSE ALFREDO Y/O BOTTINO MARCELA PAULA","BALANZ","386749",0.0],["HABATO SRL","BALANZ","102569",0.0],["EXPRESO RUTA 12 DE SALOMON CANIEVSKY SA","BALANZ","102605",0.0],["DASS ELDORADO SRL","BALANZ","102714",0.0],["ALEJANDRO CAMERON SA","BALANZ","102951",0.0],["CALDERON LUCAS","BALANZ","426752",0.0],["RIVAROSA S.A.","BALANZ","103266",0.0],["BCSA SD GALILEO RENTA FCI","BALANZ","40561",0.0],["SAVAGE CAROLA ANA Y/O BRIZUELA GASTON FERNANDO","BALANZ","446643",0.0],["GIULIANI PAOLA VERÓNICA","BALANZ","448042",0.0],["DI PAOLO VALERIA MERCEDES","BALANZ","449174",0.0],["CALIZ MATEO","BALANZ","457985",0.0],["SALMON BLUMBERG EDUARDO DAVID Y/O BACMAN ADRIANA ELIZABETH","BALANZ","463228",0.0],["DUARTE PAULA MARIA DEL PILAR Y/O FERNANDEZ DUARTE CAMILA MARIA","BALANZ","472832",0.0],["OXISUR GASES INDUSTRIALES SRL","BALANZ","104456",0.0],["VERBITSKY GRACIELA Y/O MUSARRA MARTIN DIEGO","BALANZ","478804",0.0],["BASANTA DANIEL MARIO","BALANZ","501209",0.0],["ROSENBERG ALAN EZEQUIEL","BALANZ","508795",0.0],["MEZZOTERO FEDERICO JOSE Y/O VIDAL VICTORIA EUGENIA","BALANZ","539300",0.0],["ALMIROTY E HIJOS SRL","BALANZ","105630",0.0],["PIAZZA MARIA JOSE","BALANZ","561220",0.0],["GONZALEZ ENRIQUE ALFONSO","BALANZ","564641",0.0],["MARTINEZ MARIA DANIELA","BALANZ","565425",0.0],["LOPEZ LATRE IGNACIO JAVIER","BALANZ","574293",0.0],["RUFUS SOCIAL MEDIA SA","BALANZ","106093",0.0],["ARGLOG S.A.S.","BALANZ","106575",0.0],["MOSSOTTI EMILIANO RAÚL","BALANZ","738858",0.0],["SEPULVEDA MIRTA TRINIDAD","BALANZ","741510",0.0],["DASS SUAREZ S.A.","BALANZ","107304",0.0],["PAZZI MARCOS","BALANZ","756772",0.0],["PALOU DAMIAN MARTIN Y/O ALEXANDER CAROLINA","BALANZ","765232",0.0],["ARITRANS SA","BALANZ","107717",0.0],["EUROPA DEL CENTRO S.A.","BALANZ","107770",0.0],["MERCADO GRAFICO SRL","BALANZ","107831",0.0],["GOWLAND ALEJANDRO","BALANZ","",0.0],["DUCKAS SRL","BALANZ","108692",0.0],["BINDI GABRIELA ELENA Y/O BLOCH RICARDO HORACIO","BALANZ","",0.0],["PEREZ ALVARO ISMAEL JAVIER Y/O SARQUIS ELENA MARIA","BALANZ","",0.0],["GROSZMANN ANDRÉS RICARDO","BALANZ","1061553",0.0],["CASTIELLA PATRICIO AGUSTIN","BALANZ","1066836",0.0],["CERA - RODRIGUEZ TRAVERSO MARIO FERNANDO","BALANZ","1083504",0.0],["CERA - PICONE DANIEL NESTOR","BALANZ","1123749",0.0],["RUIZ LUQUE EZEQUIEL MARIANO","BALANZ","",0.0],["CERA - VIRASORO MIGUEL","BALANZ","1138743",0.0],["CERA - FALCO FERNANDO LUIS","BALANZ","1140798",0.0],["CERA - QUINTEROS CARLA DANIELA","BALANZ","1142724",0.0],["CERA - MARCO DEL PONT SANTIAGO MIGUEL","BALANZ","1144357",0.0],["CERA - QUINTEROS PABLO DAMIAN","BALANZ","1145899",0.0],["CERA - QUINTEROS CARLOS ALBERTO","BALANZ","1146102",0.0],["CERA - SIBILIA FRANCO OMAR","BALANZ","1156916",0.0],["CERA - ORTIZ MARCELA LAURA","BALANZ","1156925",0.0],["CERA - FALCO MARIA ELENA","BALANZ","1165185",0.0],["CERA - ALMIROTY CARLOS ALBERTO","BALANZ","1166545",0.0],["CERA - DEL AZAR JALID ALBERTO","BALANZ","1183152",0.0],["CERA - BERTINO GERMAN ARIEL","BALANZ","1184404",0.0],["CERA - HANDLEY HERBERT BRIAN","BALANZ","1193449",0.0],["MARINCOLO FLORENCIA NOEMI","BALANZ","1209107",0.0],["ESPASANDIN ANALIA","BALANZ","",0.0],["CERA - FRIZZERA OSCAR MARTIN","BALANZ","1410910",0.0],["CERA - ABASCAL GUSTAVO ALFONSO","BALANZ","1450121",0.0],["CASARES CARLOS MAXWELL Y/O ROMERO VICTORICA JOSEFINA","BALANZ","1472092",0.0],["BELLA REGINA S.A","BALANZ","162409",0.0],["MAFFI CASAL FRANCISCO JOSE","BALANZ","1505728",0.0],["OPENTEC SA","BALANZ","162998",0.0],["BARBARULO JUAN PABLO","BALANZ","1544155",0.0],["ABASCAL GUSTAVO ALFONSO Y/O ABASCAL CHANTRILL GASTON","BALANZ","1554211",0.0],["VAER SA","BALANZ","163200",0.0],["GRUPO DE AFINIDAD PORCINA SAS","BALANZ","163294",0.0],["TERMOBORO SRL","BALANZ","163447",0.0],["DAGHERO JOSE CARLOS","BALANZ","1598705",0.0],["DARGET FRANCO GASPAR AUGUSTO","BALANZ","1611913",0.0],["XENTA COMUNICACIONES GRAFICAS SA","BALANZ","164137",0.0],["LA LEONOR SCA","BALANZ","164406",0.0],["AGUER JUANA","BALANZ","1703292",0.0],["CHIARETTA MARIANO","BALANZ","1708343",0.0],["BRUSAU JUAN MARIA","BALANZ","758404",-0.05],["MARTINEZ CELIA CARMEN","BALANZ","367600",-0.09],["LAGROTTERIA HECTOR SERGIO","BALANZ","731102",-0.1],["DIAZ GUILLERMO JUAN Y/O FASCIOLO SILVANA","BALANZ","",-14.2],["RICCA OSCAR ARMANDO Y/O RICCA MELINA Y/O RICCA MAURO","BALANZ","371357",-29.62],["RAMPONE MARIA ELENA Y/O RICCA MELINA Y/O RICCA MAURO","BALANZ","371358",-29.86]];
+
+const TIERS = [
+  { k:'Tier 1',       min:1000000,   color:'#5b86c7' },
+  { k:'Tier 2',       min:500000,    color:'#4b73b0' },
+  { k:'Tier 3',       min:100000,    color:'#3c5f96' },
+  { k:'Tier 4 / Out', min:-Infinity, color:'#243656' }
+];
+const tierOf = a => TIERS.find(t => a >= t.min).k;
+
+const CAMPOS = [
+  ['estado','Estado',['OK','Excepción','Autodidacta','Corregir','Potencial']],
+  ['cartera','Tipo de cartera',['Administrada','Autodidacta']],
+  ['perfil','Perfil',['Conservador','Moderado','Agresivo']],
+  ['objetivo','Objetivo',['Liquidez','Retorno total','Dólar','Inflación']],
+  ['productor','Of. productor',null],
+  ['comercial','Of. comercial',null],
+  ['inversion','Of. de inversión',null]
+];
+
+const BASE = RAW.map(r => ({ n:r[0], c:r[1], cta:r[2], a:r[3],
+                             id:r[1] + '|' + (r[2] || r[0]), manual:false }));
+
+let manuales = [];   // cuentas cargadas a mano, sincronizadas
+let clasif = {};     // clasificación por id
+let rows = [], TOTAL = 0, byId = {};
+let tierSel = '', sortK = 'a', sortDir = -1;
+
+const val = (r,f) => (clasif[r.id] && clasif[r.id][f]) || '';
+const usd = n => n.toLocaleString('es-AR',{maximumFractionDigits:0});
+const pct = n => (n*100).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2}) + '%';
+const esc = s => String(s == null ? '' : s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+/* ---------- base de filas ---------- */
+function rebuild(){
+  rows = BASE.concat(manuales.map(m => ({ n:m.n, c:m.c, cta:m.cta, a:m.a, id:m.id, manual:true })))
+             .sort((x,y) => y.a - x.a);
+  rows.forEach((r,i) => { r.i = i + 1; r.t = tierOf(r.a); });
+  TOTAL = rows.reduce((s,r) => s + r.a, 0);
+  byId = {};
+  rows.forEach(r => { byId[r.id] = r; });
+  pintarEncabezado();
+  render();
+}
+
+function pintarEncabezado(){
+  document.getElementById('lead-total').textContent = 'USD ' + usd(TOTAL);
+  document.getElementById('lead-sub').textContent = rows.length + ' cuentas · Inviu + Balanz' +
+    (manuales.length ? ' + ' + manuales.length + ' a mano' : '');
+  const stats = TIERS.map(t => {
+    const g = rows.filter(r => r.t === t.k);
+    return { k:t.k, color:t.color, n:g.length, aum:g.reduce((s,r) => s + r.a, 0) };
+  });
+  document.getElementById('tierbar').innerHTML = stats.map(s =>
+    '<button style="flex:' + Math.max(TOTAL ? s.aum/TOTAL : 0, 0.05) + ';background:' + s.color +
+    '" data-tier="' + s.k + '" aria-pressed="' + (tierSel === s.k) + '" title="' + s.k + ': ' +
+    s.n + ' cuentas, USD ' + usd(s.aum) + '">' + pct(TOTAL ? s.aum/TOTAL : 0) + '</button>').join('');
+  document.getElementById('tierlegend').innerHTML = stats.map(s =>
+    '<span><i style="background:' + s.color + '"></i>' + s.k + ' · <b>' + s.n +
+    '</b> cuentas · <b>USD ' + usd(s.aum) + '</b></span>').join('');
+}
+
+document.getElementById('tierbar').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  tierSel = (tierSel === b.dataset.tier) ? '' : b.dataset.tier;
+  document.querySelectorAll('#tierbar button').forEach(x =>
+    x.setAttribute('aria-pressed', String(x.dataset.tier === tierSel)));
+  render();
+});
+
+/* ---------- alta de cuentas ---------- */
+function toggleAlta(forzar){
+  const el = document.getElementById('alta');
+  el.hidden = (forzar === false) ? true : !el.hidden;
+  if (!el.hidden) document.getElementById('a-cli').focus();
+  else document.getElementById('alta-msg').textContent = '';
+}
+function parseMonto(txt){
+  let s = String(txt).trim().replace(/\s|USD|usd|\$/g,'');
+  if (!s) return NaN;
+  if (s.indexOf(',') > -1 && s.indexOf('.') > -1) s = s.replace(/\./g,'').replace(',','.');
+  else if (s.indexOf(',') > -1) s = s.replace(',','.');
+  return Number(s);
+}
+function altaCuenta(){
+  const msg = document.getElementById('alta-msg');
+  msg.className = 'alta-msg';
+  const n = document.getElementById('a-cli').value.trim();
+  const c = document.getElementById('a-cus').value;
+  const cta = document.getElementById('a-cta').value.trim();
+  const a = parseMonto(document.getElementById('a-aum').value);
+  if (!n) { msg.textContent = 'Falta el nombre del cliente.'; return; }
+  if (!isFinite(a)) { msg.textContent = 'El AUM tiene que ser un número.'; return; }
+  const idNatural = c + '|' + (cta || n);
+  if (byId[idNatural] || byId['MANUAL|' + idNatural]) {
+    msg.textContent = 'Ya existe una cuenta ' + c + ' con ese comitente o nombre.';
+    return;
+  }
+  manuales.push({ id:'MANUAL|' + idNatural, n:n, c:c, cta:cta, a:a });
+  document.getElementById('a-cli').value = '';
+  document.getElementById('a-cta').value = '';
+  document.getElementById('a-aum').value = '';
+  document.getElementById('a-cli').focus();
+  msg.className = 'alta-msg ok';
+  msg.textContent = n + ' agregada por USD ' + usd(a) + '.';
+  rebuild(); guardarFirestore();
+}
+function borrarCuenta(id){
+  const m = manuales.find(x => x.id === id); if (!m) return;
+  if (!confirm('¿Borrar la cuenta ' + m.n + '? Solo se puede con las cargadas a mano.')) return;
+  manuales = manuales.filter(x => x.id !== id);
+  delete clasif[id];
+  rebuild(); guardarFirestore();
+}
+function editarManual(id, campo){
+  const m = manuales.find(x => x.id === id); if (!m) return;
+  if (campo === 'a') {
+    const v = parseMonto(prompt('AUM en USD para ' + m.n, String(m.a)));
+    if (!isFinite(v)) return;
+    m.a = v;
+  } else {
+    const v = prompt('Nombre del cliente', m.n);
+    if (v === null || !v.trim()) return;
+    m.n = v.trim();
+  }
+  rebuild(); guardarFirestore();
+}
+
+/* ---------- tabla ---------- */
+function visibles(){
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  const fc = document.getElementById('fCust').value;
+  const fe = document.getElementById('fEstado').value;
+  const fk = document.getElementById('fCartera').value;
+  const fo = document.getElementById('fOrigen').value;
+  return rows.filter(r =>
+    (!tierSel || r.t === tierSel) &&
+    (!fc || r.c === fc) &&
+    (!fe || (fe === 'Sin clasificar' ? !val(r,'estado') : val(r,'estado') === fe)) &&
+    (!fk || val(r,'cartera') === fk) &&
+    (!fo || (fo === 'Cargadas a mano' ? r.manual : !r.manual)) &&
+    (!q || r.n.toLowerCase().includes(q) || r.cta.includes(q)));
+}
+
+function render(){
+  const v = visibles().slice().sort((x,y) => {
+    const a = x[sortK], b = y[sortK];
+    return (typeof a === 'number' ? a - b : String(a).localeCompare(String(b),'es')) * sortDir;
+  });
+  const sum = v.reduce((s,r) => s + r.a, 0);
+  const sinClasif = rows.filter(r => !val(r,'estado')).length;
+  document.getElementById('tally').textContent =
+    v.length + ' cuentas · USD ' + usd(sum) + ' · ' + sinClasif + ' sin clasificar';
+  document.getElementById('empty').hidden = v.length > 0;
+
+  let prev = null;
+  document.getElementById('tb').innerHTML = v.map(r => {
+    const cut = (sortK === 'a' && sortDir === -1 && prev && prev !== r.t);
+    prev = r.t;
+    const picks = CAMPOS.map(function(c){
+      const x = val(r, c[0]);
+      return '<td class="pick' + (x ? ' set' : '') + '" data-id="' + esc(r.id) + '" data-f="' + c[0] +
+             '">' + esc(x || '—') + '</td>';
+    }).join('');
+    const nombre = esc(r.n) + (r.manual ? '<span class="manual">manual</span>' : '');
+    return '<tr class="' + (cut ? 'cut' : '') + '">' +
+      '<td class="num">' + r.i + '</td>' +
+      '<td class="name' + (r.manual ? ' editable' : '') + '"' +
+        (r.manual ? ' onclick="editarManual(\'' + esc(r.id) + '\',\'n\')"' : '') + '>' + nombre + '</td>' +
+      '<td>' + esc(r.c) + '</td>' +
+      '<td class="num">' + (r.cta ? esc(r.cta) : '<span class="sd">s/d</span>') + '</td>' +
+      '<td class="right' + (r.manual ? ' editable' : '') + '"' +
+        (r.manual ? ' onclick="editarManual(\'' + esc(r.id) + '\',\'a\')"' : '') + '>' + usd(r.a) + '</td>' +
+      '<td class="tier-tag">' + r.t + '</td>' + picks +
+      '<td class="right ' + (r.a < 0 ? 'down' : 'up') + '">' + pct(TOTAL ? r.a/TOTAL : 0) + '</td>' +
+      '<td>' + (r.manual ? '<button class="del" title="Borrar" onclick="borrarCuenta(\'' +
+        esc(r.id) + '\')">✕</button>' : '') + '</td></tr>';
+  }).join('');
+}
+
+document.getElementById('tb').addEventListener('click', e => {
+  const td = e.target.closest('.pick');
+  if (!td || td.querySelector('select,input')) return;
+  const id = td.dataset.id, f = td.dataset.f;
+  const opts = CAMPOS.find(c => c[0] === f)[2];
+  const actual = (clasif[id] && clasif[id][f]) || '';
+  const el = document.createElement(opts ? 'select' : 'input');
+  if (opts) {
+    el.innerHTML = '<option value="">—</option>' + opts.map(o =>
+      '<option' + (o === actual ? ' selected' : '') + '>' + o + '</option>').join('');
+  } else {
+    el.type = 'text'; el.value = actual; el.placeholder = 'Nombre';
+  }
+  td.textContent = ''; td.appendChild(el); el.focus();
+  let cerrado = false;
+  const guardar = () => { if (cerrado) return; cerrado = true; setCampo(id, f, el.value.trim()); };
+  el.addEventListener('change', guardar);
+  el.addEventListener('blur', guardar);
+  el.addEventListener('keydown', ev => {
+    if (ev.key === 'Enter') el.blur();
+    if (ev.key === 'Escape') { cerrado = true; render(); }
+  });
+});
+
+function setCampo(id, f, valor){
+  if (!clasif[id]) clasif[id] = {};
+  if (valor) clasif[id][f] = valor; else delete clasif[id][f];
+  if (!Object.keys(clasif[id]).length) delete clasif[id];
+  render();
+  guardarFirestore();
+}
+
+document.querySelectorAll('th.sortable').forEach(th => th.addEventListener('click', () => {
+  const k = th.dataset.k;
+  sortDir = (k === sortK) ? -sortDir : (k === 'a' ? -1 : 1);
+  sortK = k; render();
+}));
+['q','fCust','fEstado','fCartera','fOrigen'].forEach(id =>
+  document.getElementById(id).addEventListener('input', render));
+document.getElementById('a-aum').addEventListener('keydown', e => {
+  if (e.key === 'Enter') altaCuenta();
+});
+
+/* ---------- exportar / importar ---------- */
+function exportCSV(){
+  const head = ['#','Cliente','Custodio','Cuenta','AUM USD','Tramo']
+    .concat(CAMPOS.map(c => c[1])).concat(['% del total','Origen']);
+  const q = s => '"' + String(s == null ? '' : s).replace(/"/g,'""') + '"';
+  const body = visibles().map(r =>
+    [r.i, r.n, r.c, r.cta, r.a.toFixed(2), r.t]
+      .concat(CAMPOS.map(c => val(r, c[0])))
+      .concat([(TOTAL ? r.a/TOTAL : 0).toFixed(6), r.manual ? 'Manual' : 'Archivo'])
+      .map(q).join(','));
+  bajar(new Blob(['\ufeff' + [head.map(q).join(',')].concat(body).join('\r\n')],
+        { type:'text/csv;charset=utf-8' }), 'aum_silvercloud.csv');
+}
+function exportJSON(){
+  bajar(new Blob([JSON.stringify({ clasificacion: clasif, cuentas: manuales,
+        updatedAt: Date.now() }, null, 2)], { type:'application/json' }),
+        'aum_clasificacion.json');
+}
+function bajar(blob, nombre){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = nombre; a.click();
+  URL.revokeObjectURL(a.href);
+}
+function importJSON(ev){
+  const file = ev.target.files[0]; if (!file) return;
+  const fr = new FileReader();
+  fr.onload = () => {
+    try {
+      const j = JSON.parse(fr.result);
+      if (Array.isArray(j.cuentas)) {
+        j.cuentas.forEach(m => { if (!manuales.some(x => x.id === m.id)) manuales.push(m); });
+      }
+      rebuild();
+      const c = j.clasificacion || j;
+      let ok = 0;
+      Object.keys(c).forEach(id => { if (byId[id]) { clasif[id] = c[id]; ok++; } });
+      render(); guardarFirestore();
+      estado(ok ? 'online' : 'error', ok ? ok + ' cuentas importadas' : 'Ninguna coincide');
+    } catch(e) { estado('error', 'Archivo inválido'); }
+  };
+  fr.readAsText(file);
+  ev.target.value = '';
+}
+function resetClasificacion(){
+  if (!confirm('Se borra la clasificación de las ' + Object.keys(clasif).length +
+               ' cuentas cargadas. Las cuentas dadas de alta a mano quedan. ¿Seguir?')) return;
+  clasif = {}; render(); guardarFirestore();
+}
+
+/* ---------- Firestore ---------- */
+let fb = null, guardando = null;
+function estado(clase, texto){
+  const el = document.getElementById('fb-status');
+  el.className = 'fb-status ' + clase;
+  el.querySelector('span:last-child').textContent = texto;
+}
+function guardarFirestore(){
+  if (!fb) return;
+  clearTimeout(guardando);
+  guardando = setTimeout(async () => {
+    try {
+      estado('syncing','Guardando');
+      await fb.setDoc(fb.ref, { data: clasif, cuentas: manuales, updatedAt: Date.now() });
+      estado('online','Sincronizado');
+    } catch(e) { estado('error','Sin guardar'); }
+  }, 600);
+}
+function initFirebase(){
+  if (!window.SC_FB) { estado('offline','Local'); return; }
+  const { db, doc, setDoc, onSnapshot } = window.SC_FB;
+  const ref = doc(db, 'silvercloud', 'aum');
+  fb = { ref: ref, setDoc: setDoc };
+  onSnapshot(ref, snap => {
+    const d = snap.data();
+    if (d) {
+      if (d.data) clasif = d.data;
+      manuales = Array.isArray(d.cuentas) ? d.cuentas : [];
+      rebuild();
+    }
+    estado('online','Sincronizado');
+  }, () => estado('error','Sin conexión'));
+}
+window.addEventListener('firebase-ready', initFirebase, { once:true });
+if (window.SC_FB) initFirebase();
+setTimeout(() => {
+  if (!fb && document.getElementById('fb-status').classList.contains('connecting'))
+    estado('offline','Local');
+}, 6000);
+
+rebuild();
+</script>
+</body>
+</html>
